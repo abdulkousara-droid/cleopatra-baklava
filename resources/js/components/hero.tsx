@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Hero() {
     return (
-        <section className="relative mt-20 flex h-[570px] w-full items-center justify-center overflow-hidden">
+        <section className="relative mt-22 flex h-[570px] w-full items-center justify-center overflow-hidden">
             {/* Background Image Container */}
             <div className="absolute inset-0 z-0">
                 <img

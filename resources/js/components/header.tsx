@@ -4,12 +4,25 @@ import { Search, ShoppingBag } from 'lucide-react';
 
 export default function Header() {
     return (
-        <header className="fixed top-0 z-50 flex h-20 w-full items-center border-b border-border bg-background/90 shadow-sm backdrop-blur-md">
+        <header className="fixed top-0 z-50 flex h-22 w-full items-center border-b border-border bg-background/90 shadow-sm backdrop-blur-md">
             <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 md:px-16">
                 {/* Logo / Brand Title using theme Primary color */}
-                <h1 className="font-serif text-3xl font-semibold tracking-tight text-primary">
-                    Cleopatra Baklava
-                </h1>
+
+                <div className={'flex flex-row items-center'}>
+                    <Link
+                        href={'/'}
+                        className="group flex items-center gap-3 focus:outline-hidden"
+                    >
+                        <img
+                            src={'/logo.svg'}
+                            alt="Cleopatra Baklava Logo"
+                            className="h-25 w-auto object-contain transition-transform duration-300 group-hover:scale-107"
+                        />
+                    </Link>{' '}
+                    <h1 className="font-serif text-3xl font-semibold tracking-tight text-primary">
+                        Cleopatra Baklava
+                    </h1>
+                </div>
 
                 {/* Desktop Navigation Links mapped to semantic Foreground / Muted states */}
                 <nav className="hidden items-center gap-8 md:flex">
@@ -43,15 +56,15 @@ export default function Header() {
                 <div className="flex items-center gap-6 text-primary">
                     <button className="flex cursor-pointer transition-all duration-300 hover:scale-110">
                         <Search className="material-symbols-outlined" />
-                        <span className="ml-3 material-symbols-outlined">
+                        {/*  <span className="material-symbols-outlined ml-3">
                             Search
-                        </span>
+                        </span>*/}
                     </button>
                     <button className="flex cursor-pointer transition-all duration-300 hover:scale-110">
                         <ShoppingBag className="material-symbols-outlined" />
-                        <span className="material-symbols-outlined ml-3">
+                        {/*  <span className="material-symbols-outlined ml-3">
                             Shopping Bag
-                        </span>
+                        </span>*/}
                     </button>
                 </div>
             </div>
