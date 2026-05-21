@@ -4,14 +4,16 @@ import Newsletter from '@/components/newsletter';
 import PopularProductGrid from '@/components/popularproductgrid';
 import Footer from '@/components/footer';
 
-export default function MostPopular() {
+export default function MostPopular({products}: {products: any}) {
+    console.log('MostPopular', products);
+
     return (
         <>
             <Header />
-            <div className="text-on-background font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen bg-background antialiased">
+            <div className="text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen bg-background font-body-md antialiased">
                 {/* Hero Title Section */}
                 <section className="max-w-container-max px-margin-desktop mx-auto mb-16 pt-32 text-center">
-                    <h1 className="font-display-lg text-display-lg text-on-background mb-4">
+                    <h1 className="text-display-lg text-on-background mb-4 font-display-lg">
                         Most Popular{' '}
                         <span role="img" aria-label="heart red">
                             ❤️
@@ -25,7 +27,7 @@ export default function MostPopular() {
                         <div className="h-[1px] w-16 bg-primary/30"></div>
                     </div>
 
-                    <p className="font-body-lg text-body-lg text-on-surface-variant mx-auto max-w-2xl leading-relaxed">
+                    <p className="text-body-lg text-on-surface-variant mx-auto max-w-2xl font-body-lg leading-relaxed">
                         Discover Barcelona's finest artisanal selection. Each
                         piece is a masterpiece of heritage, crafted with premium
                         Mediterranean ingredients and traditional Arabic
@@ -35,7 +37,7 @@ export default function MostPopular() {
 
                 {/* Main Grid View */}
                 <main className="pb-24">
-                    <PopularProductGrid />
+                    <PopularProductGrid products={products} />
                 </main>
             </div>
             <Newsletter />

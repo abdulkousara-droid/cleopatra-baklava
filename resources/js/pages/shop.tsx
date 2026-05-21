@@ -3,6 +3,7 @@ import ProductCard from '@/components/productcard';
 import StickyCartBar from '@/components/stickycartbar';
 import Header from '@/components/header';
 import { Gem } from 'lucide-react';
+import type { products } from '@/types/auth';
 
 const SHOP_PRODUCTS = [
     {
@@ -71,7 +72,7 @@ const SHOP_PRODUCTS = [
 
 const CATEGORIES = ['All', 'Baklava', 'Kunafa', 'Mamoul', 'Gift Boxes'];
 
-export default function Shop() {
+export default function Shop({products}: {products: products[]}) {
     const [activeCategory, setActiveCategory] = useState('All');
     const [showStickyCart, setShowStickyCart] = useState(false);
     const [cartItemsCount, setCartItemsCount] = useState(2);
@@ -102,6 +103,8 @@ export default function Shop() {
         setCartItemsCount(prev => prev + 1);
         setCartTotal(prev => prev + product.price);
     };
+
+    console.log('Shop', products);
 
     return (
         <>

@@ -1,4 +1,5 @@
 import React from 'react';
+import type { products } from '@/types/auth';
 
 const NEW_ARRIVALS_DATA = [
     {
@@ -43,27 +44,28 @@ const NEW_ARRIVALS_DATA = [
     },
 ];
 
-export default function ProductGrid({ onAddToCart }: any) {
+export default function ProductGrid({ onAddToCart, products }:{ onAddToCart: () => void, products: products[]}) {
+    console.log(products);
+
     return (
         <section className="max-w-container-max px-margin-desktop mx-auto pb-24">
             <div className="gap-gutter grid grid-cols-1 md:grid-cols-3">
-                {NEW_ARRIVALS_DATA.map((product) => (
+                {products.map((product) => (
                     <div
                         key={product.id}
-                        className="max-w-sm mb-3
-                        bg-white mx-auto group bg-surface-container-lowest ambient-shadow translate-y-0 transform overflow-hidden rounded-xl opacity-100 transition-all duration-500 hover:-translate-y-2"
+                        className="group bg-surface-container-lowest ambient-shadow mx-auto mb-3 max-w-sm translate-y-0 transform overflow-hidden rounded-xl bg-white opacity-100 transition-all duration-500 hover:-translate-y-2"
                     >
                         {/* Image Box */}
                         <div className="bg-surface-container relative aspect-square overflow-hidden">
                             <img
                                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 src={product.image}
-                                alt={product.alt}
+                                alt={'img'}
                             />
-                            {product.tag && (
+                            {product.badge && (
                                 <div className="absolute top-4 right-4">
-                                    <span className="font-label-md rounded-full bg-primary/10 px-3 py-1 text-primary backdrop-blur-md">
-                                        {product.tag}
+                                    <span className="rounded-full bg-primary/10 px-3 py-1 font-label-md text-primary backdrop-blur-md">
+                                        {product.badge}
                                     </span>
                                 </div>
                             )}
@@ -72,14 +74,14 @@ export default function ProductGrid({ onAddToCart }: any) {
                         {/* Product Meta Body */}
                         <div className="p-8">
                             <div className="mb-2 flex items-start justify-between">
-                                <h3 className="font-headline-sm text-headline-sm text-on-surface">
+                                <h3 className="text-headline-sm text-on-surface font-headline-sm">
                                     {product.title}
                                 </h3>
-                                <span className="font-headline-sm text-headline-sm text-primary">
+                                <span className="text-headline-sm font-headline-sm text-primary">
                                     {product.price}
                                 </span>
                             </div>
-                            <p className="font-body-md text-body-md text-on-surface-variant mb-6 min-h-[48px]">
+                            <p className="text-body-md text-on-surface-variant mb-6 min-h-[48px] font-body-md">
                                 {product.description}
                             </p>
 
@@ -87,7 +89,7 @@ export default function ProductGrid({ onAddToCart }: any) {
                             <button
                                 onClick={onAddToCart}
                                 aria-label={`Buy ${product.title} now`}
-                                className="text-on-primary font-label-md hover:bg-primary-container hover:text-on-primary-container w-full cursor-pointer rounded-lg bg-primary py-4 tracking-widest uppercase transition-all duration-300"
+                                className="text-on-primary hover:bg-primary-container hover:text-on-primary-container w-full cursor-pointer rounded-lg bg-primary py-4 font-label-md tracking-widest uppercase transition-all duration-300"
                             >
                                 Buy Now
                             </button>

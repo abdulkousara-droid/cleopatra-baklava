@@ -14,6 +14,21 @@ export type Auth = {
     user: User;
 };
 
+export type products = {
+    id: number;
+    name: string;
+    title: string;
+    price: number;
+    description: string;
+    image: string;
+    badge: string | null;
+    tags: string | null;
+    category: string | null;
+    rating_score: number | null;
+    reviews_count: number | null;
+    created_at: string | null;
+};
+
 /* @chisel-passkeys */
 export type Passkey = {
     id: number;

@@ -1,5 +1,6 @@
-import React from 'react';
 import { Plus, Star } from 'lucide-react';
+import React from 'react';
+import type { products } from '@/types/auth';
 
 const BESTSELLERS_DATA = [
     {
@@ -44,7 +45,7 @@ const BESTSELLERS_DATA = [
     }
 ];
 
-export default function Popularproductgrid() {
+export default function PopularProductGrid({products}: { products: products[] }) {
     const handleAddItemToCart = (productId: any) => {
         // Implement Inertia.post or shopping state connection logic here
         console.log(`Adding product ID variant: ${productId} to current user bag session.`);
@@ -53,15 +54,15 @@ export default function Popularproductgrid() {
     return (
         <section className="max-w-container-max px-margin-desktop mx-auto">
             {/* Kept your original requested Grid layouts */}
-            <div className="gap-gutter grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-                {BESTSELLERS_DATA.map((product) => (
+            <div className="gap-gutter grid grid-cols-1 gap-y-8 md:grid-cols-2 lg:grid-cols-4">
+                {products.map((product) => (
                     <div
                         key={product.id}
-                        className="mx-auto bg-white group bg-surface-container-lowest ambient-shadow relative flex max-w-[280px] flex-col overflow-hidden rounded-xl p-4 transition-all duration-300 hover:-translate-y-1"
+                        className="group bg-surface-container-lowest ambient-shadow relative mx-auto flex max-w-[280px] flex-col overflow-hidden rounded-xl bg-white p-4 transition-all duration-300 hover:-translate-y-1"
                     >
                         {/* Upper Bestseller Badge */}
                         <div className="absolute top-6 left-6 z-10">
-                            <span className="text-on-primary font-label-md rounded-full bg-primary px-3 py-1 text-[10px] tracking-widest uppercase shadow-sm">
+                            <span className="text-on-primary rounded-full bg-primary px-3 py-1 font-label-md text-[10px] tracking-widest uppercase shadow-sm">
                                 Bestseller
                             </span>
                         </div>
@@ -71,7 +72,7 @@ export default function Popularproductgrid() {
                             <img
                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 src={product.image}
-                                alt={product.alt}
+                                alt={'img'}
                             />
                         </div>
 
@@ -87,16 +88,16 @@ export default function Popularproductgrid() {
                                     <Star />
                                 </span>
                                 <span className="font-label-md text-primary">
-                                    {product.rating}
+                                    {product.rating_score}
                                 </span>
                                 <span className="text-on-surface-variant/60 text-caption ml-1">
-                                    ({product.reviewsCount} reviews)
+                                    ({product.reviews_count} reviews)
                                 </span>
                             </div>
-                            <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">
+                            <h3 className="text-headline-sm text-on-surface mb-2 font-headline-sm">
                                 {product.title}
                             </h3>
-                            <p className="text-on-surface-variant font-body-md mb-4 line-clamp-2">
+                            <p className="text-on-surface-variant mb-4 line-clamp-2 font-body-md">
                                 {product.description}
                             </p>
                         </div>
@@ -104,7 +105,7 @@ export default function Popularproductgrid() {
                         {/* Footer Pricing action card anchor split row */}
                         <div className="border-outline-variant/30 mt-auto flex items-center justify-between border-t pt-4">
                             <span className="font-headline-sm text-primary">
-                                {product.price}
+                                €{product.price}
                             </span>
                             <button
                                 onClick={() => handleAddItemToCart(product.id)}

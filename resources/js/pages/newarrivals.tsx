@@ -6,7 +6,7 @@ import Footer from '@/components/footer';
 import { Star } from 'lucide-react';
 
 
-export default function NewArrivals() {
+export default function NewArrivals({products}: {products: any}) {
     const [cartCount, setCartCount] = useState(0);
 
     const handleAddToCart = () => {
@@ -16,19 +16,19 @@ export default function NewArrivals() {
     return (
         <>
             <Header />
-            <div className="text-on-background font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen bg-background">
+            <div className="text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen bg-background font-body-md">
                 {/* Structural Header Wrapper */}
                 <header className="max-w-container-max px-margin-desktop mx-auto mb-16 pt-32 text-center">
                     <span className="mb-3 block text-xs font-semibold tracking-[0.25em] text-primary uppercase">
                         Fresh From The Bakery
                     </span>
-                    <h1 className="font-display-lg text-display-lg text-on-background mb-4 flex items-center justify-center gap-2">
+                    <h1 className="text-display-lg text-on-background mb-4 flex items-center justify-center gap-2 font-display-lg">
                         New Arrivals{' '}
                         <span role="img" aria-label="shining star">
                             🌟
                         </span>
                     </h1>
-                    <p className="font-body-lg text-body-lg text-on-surface-variant mx-auto max-w-2xl leading-relaxed">
+                    <p className="text-body-lg text-on-surface-variant mx-auto max-w-2xl font-body-lg leading-relaxed">
                         Step into our Barcelona boutique's newest seasonal
                         collection. Discover artisanal creations where
                         Mediterranean zest meets the ancient traditions of
@@ -38,7 +38,10 @@ export default function NewArrivals() {
 
                 {/* Main Content Sections */}
                 <main>
-                    <ProductGrid onAddToCart={handleAddToCart} />
+                    <ProductGrid
+                        onAddToCart={handleAddToCart}
+                        products={products}
+                    />
 
                     {/* Divider Graphic*/}
                     <div className="my-16 flex items-center justify-center gap-4">
@@ -50,7 +53,6 @@ export default function NewArrivals() {
 
                         <div className="h-px w-100 bg-[#c8a45d]" />
                     </div>
-
 
                     <Newsletter />
 

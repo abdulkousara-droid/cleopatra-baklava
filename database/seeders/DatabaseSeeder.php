@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Categories;
+use App\Models\Products;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Factories\CategoriesFactory;
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,9 +19,17 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        $categories = ['All','Baklava', 'Kunafa', 'Mamoul', 'Traditional', 'Gift Boxes'];
+
+        foreach ($categories as $category) {
+            Categories::firstOrCreate(['name' => $category]);
+        }
+
+        Products::factory(20)->create();
+
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
         ]);
     }
 }
