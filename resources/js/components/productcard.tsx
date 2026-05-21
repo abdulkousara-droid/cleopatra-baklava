@@ -1,0 +1,89 @@
+import { MessageSquareText, ShoppingBag } from 'lucide-react';
+import React from 'react';
+
+export default function ProductCard({ product, onAddToCart }) {
+    const handleWhatsappOrder = () => {
+        const message = encodeURIComponent(
+            `Hello Cleopatra Baklava, I would like to order "${product.title}" for €${product.price}.`,
+        );
+        window.open(`https://wa.me/34931234567?text=${message}`, '_blank');
+    };
+
+    return (
+        <div
+            className={`group bg-surface-container-lowest luxury-shadow flex h-full max-w-[350px] flex-col overflow-hidden rounded-xl bg-white transition-transform duration-500 hover:-translate-y-2 ${
+                product.borderAccent ? 'border border-primary/20' : ''
+            }`}
+        >
+            {/* Product Image and Badges */}
+            <div className="bg-surface-container relative aspect-square overflow-hidden">
+                <img
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    src={product.image}
+                    alt={product.title}
+                />
+                {product.badge && (
+                    <span
+                        className={`absolute top-4 left-4 rounded-sm px-3 py-1 font-label-md text-[12px] tracking-wider uppercase ${
+                            product.badge === 'New'
+                                ? 'bg-tertiary-container text-on-tertiary-container'
+                                : product.badge === 'Premium Choice'
+                                  ? 'bg-on-primary-fixed-variant text-primary-fixed'
+                                  : 'bg-primary-fixed text-on-primary-fixed'
+                        }`}
+                    >
+                        {product.badge}
+                    </span>
+                )}
+            </div>
+
+            {/* Content & Details */}
+            <div className="flex flex-grow flex-col p-8">
+                <div className="mb-2 flex items-start justify-between gap-4">
+                    <h3 className="text-headline-sm text-on-surface line-clamp-1 font-headline-sm">
+                        {product.title}
+                    </h3>
+                    <span className="text-headline-sm font-headline-sm text-primary">
+                        €{product.price}
+                    </span>
+                </div>
+
+                <p className="text-body-md text-on-surface-variant mb-6 line-clamp-3 font-body-md">
+                    {product.description}
+                </p>
+
+                {/* Categories / Tags pills */}
+                <div className="mb-6 flex flex-wrap items-center space-x-2 gap-y-2">
+                    {product.tags.map((tag, idx) => (
+                        <span
+                            key={idx}
+                            className="bg-secondary-container text-on-secondary-container rounded-full bg-pink-200 px-3 py-1 text-[12px] font-semibold"
+                        >
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+
+                {/* CTA Actions buttons */}
+                <div className="space-y-3">
+                    <button
+                        onClick={() => onAddToCart(product)}
+                        className="text-on-primary hover:bg-on-primary-container luxury-shadow flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-primary py-4 font-label-md text-white transition-all"
+                    >
+                        {/* Note: Removed the material-symbols-outlined class around Lucide components to prevent icon rendering bugs */}
+                        <ShoppingBag size={20} />
+                        <span>ADD TO CART</span>
+                    </button>
+
+                    <button
+                        onClick={handleWhatsappOrder}
+                        className="hover:bg-primary-fixed/20 flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg border border-primary py-4 font-label-md text-primary transition-all"
+                    >
+                        <MessageSquareText size={20} />
+                        <span>ORDER VIA WHATSAPP</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Search, ShoppingBag } from 'lucide-react';
-
 export default function Header() {
+    const { url } = usePage();
+
     return (
         <header className="fixed top-0 z-50 flex h-22 w-full items-center border-b border-border bg-background/90 shadow-sm backdrop-blur-md">
             <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 md:px-16">
@@ -27,26 +28,29 @@ export default function Header() {
                 {/* Desktop Navigation Links mapped to semantic Foreground / Muted states */}
                 <nav className="hidden items-center gap-8 md:flex">
                     <Link
-                        className="border-b-2 border-primary pb-1 text-sm font-semibold tracking-widest text-primary uppercase"
-                        href="#"
+                        href="/"
+                        className={`font-label-md text-label-md tracking-widest uppercase transition-colors duration-300 ${url === '/' ? 'border-b-2 border-primary pb-1 text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                     >
                         Home
                     </Link>
+
                     <Link
-                        className="text-sm font-semibold tracking-widest text-muted-foreground uppercase transition-colors duration-300 hover:text-primary"
-                        href="#"
+                        href="/newarrivals"
+                        className={`font-label-md text-label-md tracking-widest uppercase transition-colors duration-300 ${url.startsWith('/newarrivals') ? 'border-b-2 border-primary pb-1 text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                     >
                         New Arrivals
                     </Link>
+
                     <Link
-                        className="text-sm font-semibold tracking-widest text-muted-foreground uppercase transition-colors duration-300 hover:text-primary"
-                        href="#"
+                        href="/mostpopular"
+                        className={`font-label-md text-label-md tracking-widest uppercase transition-colors duration-300 ${url.startsWith('/mostpopular') ? 'border-b-2 border-primary pb-1 text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                     >
                         Most Popular
                     </Link>
+
                     <Link
-                        className="text-sm font-semibold tracking-widest text-muted-foreground uppercase transition-colors duration-300 hover:text-primary"
-                        href="#"
+                        href="/shop"
+                        className={`font-label-md text-label-md tracking-widest uppercase transition-colors duration-300 ${url.startsWith('/shop') ? 'border-b-2 border-primary pb-1 text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                     >
                         Shop
                     </Link>

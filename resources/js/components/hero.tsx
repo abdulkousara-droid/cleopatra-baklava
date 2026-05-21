@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 
 export default function Hero() {
     return (
@@ -27,11 +28,11 @@ export default function Hero() {
                 {/* Call to Actions using your customized CSS Theme buttons */}
                 <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                     <button className="w-full cursor-pointer rounded-full bg-primary px-10 py-4 text-sm font-semibold tracking-widest text-primary-foreground uppercase shadow-lg transition-all duration-300 hover:opacity-90 sm:w-auto">
-                        Shop the Collection
+                       <Link href={'/shop'}> Shop the Collection</Link>
                     </button>
 
                     <button className="w-full cursor-pointer rounded-full border border-white/60 px-10 py-4 text-sm font-semibold tracking-widest text-white uppercase backdrop-blur-xs transition-all duration-300 hover:bg-white/10 sm:w-auto">
-                        Our Story
+                        <a href="#story-section">Our Story</a>
                     </button>
                 </div>
             </div>

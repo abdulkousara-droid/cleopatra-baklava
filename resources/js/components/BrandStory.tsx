@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function BrandStory() {
     return (
-        <section className="bg-muted/40 py-24 md:py-32 overflow-hidden relative">
+        <section id="story-section" className="bg-muted/40 py-24 md:py-32 overflow-hidden relative">
             {/* Subtle Geometric Background Overlay using native Tailwind v4 radial pattern */}
             <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#c9a84c_1px,transparent_1px)] [background-size:24px_24px]"></div>
 

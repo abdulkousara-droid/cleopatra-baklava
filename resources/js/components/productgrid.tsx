@@ -46,11 +46,12 @@ const NEW_ARRIVALS_DATA = [
 export default function ProductGrid({ onAddToCart }: any) {
     return (
         <section className="max-w-container-max px-margin-desktop mx-auto pb-24">
-            <div className="ml-20 gap-gutter grid grid-cols-1 md:grid-cols-3">
+            <div className="gap-gutter grid grid-cols-1 md:grid-cols-3">
                 {NEW_ARRIVALS_DATA.map((product) => (
                     <div
                         key={product.id}
-                        className="max-w-sm group bg-surface-container-lowest ambient-shadow translate-y-0 transform overflow-hidden rounded-xl opacity-100 transition-all duration-500 hover:-translate-y-2"
+                        className="max-w-sm mb-3
+                        bg-white mx-auto group bg-surface-container-lowest ambient-shadow translate-y-0 transform overflow-hidden rounded-xl opacity-100 transition-all duration-500 hover:-translate-y-2"
                     >
                         {/* Image Box */}
                         <div className="bg-surface-container relative aspect-square overflow-hidden">

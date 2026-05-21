@@ -11,6 +11,14 @@
     --font-serif: "Playfair Display", serif;
     --font-sans: "Instrument Sans", sans-serif;
 
+    /* Mapping your exact font configurations to Tailwind utility rules */
+    --font-display-lg: "Playfair Display", serif;
+    --font-headline-md: "Playfair Display", serif;
+    --font-headline-sm: "Playfair Display", serif;
+    --font-body-md: "Instrument Sans", sans-serif;
+    --font-body-lg: "Instrument Sans", sans-serif;
+    --font-label-md: "Instrument Sans", sans-serif;
+
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
