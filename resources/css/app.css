@@ -65,109 +65,78 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Material Design Aliases used in components */
+    --color-on-primary: var(--primary-foreground);
+    --color-on-surface: var(--foreground);
+    --color-on-surface-variant: var(--muted-foreground);
+    --color-surface-container: var(--card);
+    --color-surface-container-low: var(--muted);
+    --color-surface-container-lowest: var(--card);
+    --color-surface-variant: var(--muted);
+    --color-primary-container: var(--accent);
+    --color-on-primary-container: var(--accent-foreground);
+    --color-outline-variant: var(--border);
+    --color-tertiary: var(--secondary);
+    --color-on-primary-fixed: var(--primary-foreground);
+    --color-primary-fixed: var(--primary);
+
+    --spacing-margin-desktop: 64px;
+    --spacing-margin-mobile: 20px;
+    --spacing-container-max: 1200px;
+    --spacing-gutter: 24px;
 }
 
 :root {
-    /* --- Your Custom Palette Mapping (Light Mode) --- */
-    /* background: #fff8ec (Forth Natural) */
-    --background: oklch(0.98 0.01 75.0);
-    /* foreground: #2c1a0e (Second espresso) */
-    --foreground: oklch(0.18 0.03 44.0);
+    /* --- Cleopatra Baklava Brand Palette --- */
+    --background: #fff9ef;
+    --foreground: #1e1b14;
 
-    /* card & popovers mirror the soft natural background */
-    --card: oklch(0.98 0.01 75.0);
-    --card-foreground: oklch(0.18 0.03 44.0);
-    --popover: oklch(0.98 0.01 75.0);
-    --popover-foreground: oklch(0.18 0.03 44.0);
+    --card: #ffffff;
+    --card-foreground: #1e1b14;
+    --popover: #ffffff;
+    --popover-foreground: #1e1b14;
 
-    /* primary button: #c9a84c (Primary Gold) with espresso text */
-    --primary: oklch(0.72 0.13 83.5);
-    --primary-foreground: oklch(0.18 0.03 44.0);
+    --primary: #755b00;
+    --primary-foreground: #ffffff;
 
-    /* accent blocks: #d97706 (Third Amber) */
-    --accent: oklch(0.61 0.19 54.9);
-    --accent-foreground: oklch(0.98 0.01 75.0);
+    --secondary: #72594a;
+    --secondary-foreground: #ffffff;
 
-    /* secondary states & structural subtle variations */
-    --secondary: oklch(0.93 0.02 75.0);
-    --secondary-foreground: oklch(0.18 0.03 44.0);
-    --muted: oklch(0.93 0.02 75.0);
-    --muted-foreground: oklch(0.45 0.02 44.0);
+    --muted: #e8e2d6;
+    --muted-foreground: #4d4637;
 
-    /* Borders & utility rings scaled to blend smoothly with your espresso/cream */
-    --border: oklch(0.88 0.01 75.0);
-    --input: oklch(0.88 0.01 75.0);
-    --ring: oklch(0.72 0.13 83.5);
+    --accent: #c9a84c;
+    --accent-foreground: #503d00;
 
-    /* Defaults retained for semantic safety */
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.985 0 0);
+    --destructive: #ba1a1a;
+    --destructive-foreground: #ffffff;
+
+    --border: #d0c5b2;
+    --input: #d0c5b2;
+    --ring: #755b00;
+    
     --radius: 0.625rem;
 
-    /* Sidebar styling using your deep espresso layout theme */
-    --sidebar: oklch(0.18 0.03 44.0);
-    --sidebar-foreground: oklch(0.98 0.01 75.0);
-    --sidebar-primary: oklch(0.72 0.13 83.5);
-    --sidebar-primary-foreground: oklch(0.18 0.03 44.0);
-    --sidebar-accent: oklch(0.25 0.03 44.0);
-    --sidebar-accent-foreground: oklch(0.98 0.01 75.0);
-    --sidebar-border: oklch(0.25 0.03 44.0);
-    --sidebar-ring: oklch(0.72 0.13 83.5);
+    /* Sidebar matching light UI */
+    --sidebar: #fff9ef;
+    --sidebar-foreground: #1e1b14;
+    --sidebar-primary: #755b00;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #e8e2d6;
+    --sidebar-accent-foreground: #1e1b14;
+    --sidebar-border: #d0c5b2;
+    --sidebar-ring: #755b00;
 
     /* Chart parameters updated to complement the amber/gold baseline */
-    --chart-1: oklch(0.72 0.13 83.5);
-    --chart-2: oklch(0.61 0.19 54.9);
-    --chart-3: oklch(0.38 0.05 44.0);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
+    --chart-1: #755b00;
+    --chart-2: #c9a84c;
+    --chart-3: #72594a;
+    --chart-4: #fb912a;
+    --chart-5: #e6c364;
 }
 
-.dark {
-    /* --- Your Custom Palette Mapping (Dark Mode inversion) --- */
-    /* Dark mode background shifts to rich deep espresso */
-    --background: oklch(0.15 0.03 44.0);
-    --foreground: oklch(0.98 0.01 75.0);
-
-    --card: oklch(0.15 0.03 44.0);
-    --card-foreground: oklch(0.98 0.01 75.0);
-    --popover: oklch(0.15 0.03 44.0);
-    --popover-foreground: oklch(0.98 0.01 75.0);
-
-    /* Primary buttons glow cleanly on the dark espresso canvas */
-    --primary: oklch(0.72 0.13 83.5);
-    --primary-foreground: oklch(0.15 0.03 44.0);
-
-    --secondary: oklch(0.22 0.03 44.0);
-    --secondary-foreground: oklch(0.98 0.01 75.0);
-    --muted: oklch(0.22 0.03 44.0);
-    --muted-foreground: oklch(0.65 0.02 75.0);
-
-    --accent: oklch(0.61 0.19 54.9);
-    --accent-foreground: oklch(0.15 0.03 44.0);
-
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-
-    --border: oklch(0.25 0.03 44.0);
-    --input: oklch(0.25 0.03 44.0);
-    --ring: oklch(0.72 0.13 83.5);
-
-    /* Dark sidebar handles inversion */
-    --sidebar: oklch(0.11 0.02 44.0);
-    --sidebar-foreground: oklch(0.92 0.01 75.0);
-    --sidebar-primary: oklch(0.72 0.13 83.5);
-    --sidebar-primary-foreground: oklch(0.11 0.02 44.0);
-    --sidebar-accent: oklch(0.18 0.03 44.0);
-    --sidebar-accent-foreground: oklch(0.98 0.01 75.0);
-    --sidebar-border: oklch(0.18 0.03 44.0);
-    --sidebar-ring: oklch(0.72 0.13 83.5);
-
-    --chart-1: oklch(0.72 0.13 83.5);
-    --chart-2: oklch(0.61 0.19 54.9);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-}
+/* Design is strictly LIGHT mode. The .dark class overrides are removed to enforce this. */
 
 @layer base {
     * {

@@ -4,25 +4,21 @@ import ProductGrid from '@/components/productgrid';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { Star } from 'lucide-react';
+import type { Product } from '@/types';
+import { Head } from '@inertiajs/react';
 
-
-export default function NewArrivals({products}: {products: any}) {
-    const [cartCount, setCartCount] = useState(0);
-
-    const handleAddToCart = () => {
-        setCartCount(prev => prev + 1);
-    };
-
+export default function NewArrivals({products}: {products: Product[]}) {
     return (
         <>
+            <Head title="New Arrivals" />
             <Header />
             <div className="text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen bg-background font-body-md">
                 {/* Structural Header Wrapper */}
-                <header className="max-w-container-max px-margin-desktop mx-auto mb-16 pt-32 text-center">
+                <header className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto mb-16 pt-32 text-center">
                     <span className="mb-3 block text-xs font-semibold tracking-[0.25em] text-primary uppercase">
                         Fresh From The Bakery
                     </span>
-                    <h1 className="text-display-lg text-on-background mb-4 flex items-center justify-center gap-2 font-display-lg">
+                    <h1 className="text-display-lg text-on-background mb-4 flex items-center justify-center gap-2 font-display-lg text-[36px] md:text-[48px] leading-tight">
                         New Arrivals{' '}
                         <span role="img" aria-label="shining star">
                             🌟
@@ -39,7 +35,6 @@ export default function NewArrivals({products}: {products: any}) {
                 {/* Main Content Sections */}
                 <main>
                     <ProductGrid
-                        onAddToCart={handleAddToCart}
                         products={products}
                     />
 

@@ -1,45 +1,48 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { ShoppingCart } from 'lucide-react';
+import { useCart } from '@/lib/cart';
 
-export default function StickyCartBar({ isVisible, count, total, onClear }) {
+export default function StickyCartBar({ isVisible }: { isVisible: boolean }) {
+    const { itemCount, cartTotal, clearCart } = useCart();
     return (
         <div
-            className={`bg-surface/95 border-outline-variant fixed right-0 bottom-0 left-0 z-40 border-t backdrop-blur-lg transition-transform duration-500 ${
-                isVisible ? 'translate-y-0' : 'translate-y-full'
+            className={`bg-surface/95 border-outline-variant fixed right-0 md:bottom-0 bottom-[72px] left-0 z-40 border-t backdrop-blur-lg transition-all duration-500 ${
+                isVisible ? 'translate-y-0 opacity-100' : 'translate-y-32 md:translate-y-full opacity-0 md:opacity-100'
             }`}
         >
-            <div className="max-w-container-max px-margin-desktop mx-auto flex items-center justify-between py-4">
-                <div className="flex items-center space-x-4">
-                    <div className="bg-primary-container rounded-full p-2">
+            <div className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto flex items-center justify-between py-3 md:py-4">
+                <div className="flex items-center space-x-3 md:space-x-4">
+                    <div className="bg-primary-container rounded-full p-2 hidden sm:block">
                         <span className="material-symbols-outlined text-on-primary-container">
                             <ShoppingCart />
                         </span>
                     </div>
                     <div>
-                        <p className="font-label-md text-label-md text-on-surface">
-                            {count} Items in Your Basket
+                        <p className="font-label-md text-label-md text-on-surface text-xs md:text-sm">
+                            {itemCount} {itemCount === 1 ? 'Item' : 'Items'}
                         </p>
-                        <p className="font-body-md text-body-md font-bold text-primary">
-                            Total: €{total.toFixed(2)}
+                        <p className="font-body-md text-body-md font-bold text-primary text-sm md:text-base">
+                            Total: €{cartTotal.toFixed(2)}
                         </p>
                     </div>
                 </div>
 
-                <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-3 md:space-x-6">
                     <button
-                        onClick={onClear}
-                        className="text-on-surface-variant font-label-md cursor-pointer transition-colors hover:text-primary"
+                        onClick={clearCart}
+                        className="text-on-surface-variant font-label-md cursor-pointer transition-colors hover:text-primary hidden sm:block text-sm"
                     >
                         Clear All
                     </button>
 
-                    {/* Strict Inertia link routing back to /cart */}
+                    {/* Strict Inertia link routing back to /checkout */}
                     <Link
-                        href="/cart"
-                        className="text-on-primary font-label-md luxury-shadow inline-block rounded-lg bg-primary px-10 py-3 transition-transform hover:scale-105"
+                        href="/checkout"
+                        className="text-on-primary font-label-md luxury-shadow inline-block rounded-lg bg-primary px-5 md:px-10 py-2.5 md:py-3 transition-transform hover:scale-105 text-xs md:text-sm tracking-widest text-center"
                     >
-                        VIEW CART & CHECKOUT
+                        <span className="sm:hidden uppercase font-bold">Checkout</span>
+                        <span className="hidden sm:inline uppercase">View Cart & Checkout</span>
                     </Link>
                 </div>
             </div>

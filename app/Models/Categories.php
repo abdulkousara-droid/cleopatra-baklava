@@ -14,6 +14,7 @@ class Categories extends Model
 
     public function products(): HasMany
     {
-        return $this->hasMany(Products::class);
+        // Tell Laravel specifically to use 'category_id' instead of 'categories_id'
+        return $this->hasMany(Products::class, 'category_id');
     }
 }

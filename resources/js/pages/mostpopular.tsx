@@ -3,17 +3,20 @@ import Header from '@/components/header';
 import Newsletter from '@/components/newsletter';
 import PopularProductGrid from '@/components/popularproductgrid';
 import Footer from '@/components/footer';
+import type { Product } from '@/types';
+import { Head } from '@inertiajs/react';
 
-export default function MostPopular({products}: {products: any}) {
+export default function MostPopular({products}: {products: Product[]}) {
     console.log('MostPopular', products);
 
     return (
         <>
+            <Head title="Most Popular" />
             <Header />
             <div className="text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen bg-background font-body-md antialiased">
                 {/* Hero Title Section */}
-                <section className="max-w-container-max px-margin-desktop mx-auto mb-16 pt-32 text-center">
-                    <h1 className="text-display-lg text-on-background mb-4 font-display-lg">
+                <section className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto mb-16 pt-32 text-center">
+                    <h1 className="text-display-lg text-on-background mb-4 font-display-lg text-[36px] md:text-[48px] leading-tight">
                         Most Popular{' '}
                         <span role="img" aria-label="heart red">
                             ❤️

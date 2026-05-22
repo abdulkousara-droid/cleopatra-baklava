@@ -8,7 +8,7 @@ export default function Hero() {
                 {/* Background Image Container */}
                 <div className="absolute inset-0 z-0">
                     <img
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAiFP-LDB1Zln5IBYE1MpGc9ubHb09MdlPmuPqiKabr1bbMMo2xIGP6oSqL9Bc8UdC4ItgEpDuovh5NKLOzPkh4ZOpq9vygyEnD7jyijWXo5O0pxJxDIjWADIS8FXzdALH_QiAhM66NpRBWMEy_m0ujVdRRWLhK7pLA2jQ6heIXQ2g4jrDSQeTQWUCcv6kRP3ntB8pMd_tObVM6eVc94BCwnHNwL9ZcWYMyb31RnzyXeCM9yn63isUl_Pdp8cvGMobQJAVn50G-UGy"
+                        src="/hero-baklava.png"
                         alt="Artisanal baklava layers with pistachios"
                         className="h-full w-full object-cover"
                     />
@@ -17,8 +17,8 @@ export default function Hero() {
                 </div>
 
                 {/* Hero Content Wrapper */}
-                <div className="relative z-10 max-w-4xl px-6 text-center text-white md:px-16">
-                    <h2 className="mb-4 font-serif text-5xl leading-tight font-bold tracking-tight md:text-6xl">
+                <div className="relative z-10 max-w-4xl px-margin-mobile text-center text-white md:px-margin-desktop">
+                    <h2 className="mb-4 font-serif text-[36px] leading-tight font-bold tracking-tight md:text-[48px]">
                         Cleopatra Baklava
                     </h2>
 

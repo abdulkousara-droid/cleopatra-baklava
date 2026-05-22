@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categories;
 use App\Models\Products;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -11,13 +12,11 @@ class StorefrontController extends Controller
 {
     /**
      * Page 1: Shop Page
-     * Displays all items grouped by their category listings.
-     * Supports: Best Seller, New, Premium Choice, or null badges.
      */
     public function shop(): Response
     {
         return Inertia::render('shop', [
-            // Pull everything so the frontend can easily toggle categories dynamically
+            'categories' => Categories::withCount('products')->get(),
             'products' => Products::with('category')->select([
                 'id', 'title', 'description', 'price', 'category_id', 'badge', 'image', 'tags'
             ])->latest()->get()->map(function ($product) {
@@ -30,29 +29,129 @@ class StorefrontController extends Controller
 
     /**
      * Page 2: New Arrivals Page
-     * Exclusively showcases items labeled with the "New Collection" badge flag.
      */
     public function newArrivals(): Response
     {
         return Inertia::render('newarrivals', [
             'products' => Products::where('badge', 'New Collection')
                 ->select(['id', 'title', 'description', 'price', 'badge', 'image'])
-                ->latest()
-                ->get()
+                ->latest()->get()
         ]);
     }
 
     /**
      * Page 3: Most Popular Page
-     * Fetches high-performing catalog variants showing rating and review metrics.
      */
     public function mostPopular(): Response
     {
         return Inertia::render('mostpopular', [
             'products' => Products::where('badge', 'Best Seller')
                 ->select(['id', 'title', 'description', 'price', 'badge', 'image', 'reviews_count', 'rating_score'])
-                ->orderBy('rating_score', 'desc')
-                ->get()
+                ->orderBy('rating_score', 'desc')->get()
         ]);
+    }
+
+    /**
+     * Home Page — shows 3 featured products in the Bestsellers section
+     */
+    public function home(): Response
+    {
+        $columns = ['id', 'title', 'description', 'price', 'badge', 'image'];
+
+        $featuredProducts = Products::whereIn('badge', ['Best Seller', 'Top Rated'])
+            ->select($columns)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        if ($featuredProducts->count() < 3) {
+            $fallbackProducts = Products::whereNotIn('id', $featuredProducts->pluck('id'))
+                ->select($columns)
+                ->latest()
+                ->take(3 - $featuredProducts->count())
+                ->get();
+
+            $featuredProducts = $featuredProducts->concat($fallbackProducts)->values();
+        }
+
+        return Inertia::render('home', [
+            'products' => $featuredProducts,
+        ]);
+    }
+
+    /**
+     * Product Show Page
+     * Returns full product data + up to 4 related products from same category.
+     */
+    public function productshow(Request $request): Response
+    {
+        $id = $request->query('id');
+
+        $product = Products::with('category')
+            ->where('id', $id)
+            ->select(['id', 'title', 'description', 'price', 'badge', 'image',
+                      'additional_images', 'tags', 'category_id', 'reviews_count', 'rating_score'])
+            ->first();
+
+        if (!$product) {
+            $product = Products::with('category')
+                ->select(['id', 'title', 'description', 'price', 'badge', 'image',
+                          'additional_images', 'tags', 'category_id', 'reviews_count', 'rating_score'])
+                ->first();
+        }
+
+        // Build product data with camelCase additionalImages for React
+        $productData = [
+            'id'               => $product->id,
+            'title'            => $product->title,
+            'description'      => $product->description,
+            'price'            => $product->price,
+            'badge'            => $product->badge,
+            'image'            => $product->image,
+            'additionalImages' => $product->additional_images ?? [],
+            'tags'             => $product->tags ?? [],
+            'category'         => $product->category ? $product->category->name : null,
+            'reviews_count'    => $product->reviews_count,
+            'rating_score'     => $product->rating_score,
+        ];
+
+        // Fetch up to 4 related products (same category, exclude current)
+        $relatedProducts = [];
+        if ($product->category_id) {
+            $relatedProducts = Products::where('category_id', $product->category_id)
+                ->where('id', '!=', $product->id)
+                ->select(['id', 'title', 'price', 'badge', 'image'])
+                ->take(4)
+                ->get()
+                ->map(fn($p) => [
+                    'id'    => $p->id,
+                    'title' => $p->title,
+                    'price' => $p->price,
+                    'badge' => $p->badge,
+                    'image' => $p->image,
+                ])
+                ->toArray();
+        }
+
+        return Inertia::render('productshow', [
+            'product'         => $productData,
+            'relatedProducts' => $relatedProducts,
+        ]);
+    }
+
+    /**
+     * API: Search Products
+     */
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+        if (!$query) {
+            return response()->json([]);
+        }
+        $products = Products::where('title', 'ilike', '%' . $query . '%')
+            ->orWhere('description', 'ilike', '%' . $query . '%')
+            ->select(['id', 'title', 'price', 'image', 'description'])
+            ->take(5)->get();
+        return response()->json($products);
     }
 }
