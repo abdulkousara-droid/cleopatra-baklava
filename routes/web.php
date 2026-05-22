@@ -11,7 +11,6 @@ Route::inertia('/checkout', 'checkout')->name('checkout');
 Route::get('/productshow', [StorefrontController::class, 'productshow'])->name('productshow');
 
 Route::get('/shop', [StorefrontController::class, 'shop'])->name('shop.index');
-Route::get('/new-arrivals', [StorefrontController::class, 'newArrivals'])->name('shop.new-arrivals');
-Route::get('/most-popular', [StorefrontController::class, 'mostPopular'])->name('shop.most-popular');
+Route::get('/newarrivals', [StorefrontController::class, 'newArrivals'])->name('shop.new-arrivals');
+Route::get('/mostpopular', [StorefrontController::class, 'mostPopular'])->name('shop.most-popular');
 
-require __DIR__.'/settings.php';

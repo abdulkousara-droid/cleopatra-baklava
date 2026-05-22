@@ -1,19 +1,21 @@
-import type { Auth } from '@/types/auth';
+import type { route as routeFn } from 'ziggy-js';
 
-declare module 'react' {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    interface InputHTMLAttributes<T> {
-        passwordrules?: string;
-    }
+declare global {
+    const route: typeof routeFn;
 }
 
-declare module '@inertiajs/core' {
-    export interface InertiaConfig {
-        sharedPageProps: {
-            name: string;
-            auth: Auth;
-            sidebarOpen: boolean;
-            [key: string]: unknown;
-        };
-    }
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface PageProps {
+    auth: {
+        user: User | null;
+    };
+    [key: string]: unknown;
 }

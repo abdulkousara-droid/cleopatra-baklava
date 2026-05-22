@@ -4,25 +4,16 @@ import { Search, ShoppingBag, Plus, Minus, Trash2, Home, Sparkles, Heart, Store 
 import { useCart } from '@/lib/cart';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
-// 1. Import 'home' from the root index where Route::inertia links land
-
-// 2. Import your StorefrontController actions from their generated action file
-// Wayfinder creates these named exactly after your PHP methods!
-import {
-    shop,
-    newArrivals,
-    mostPopular,
-} from '@/actions/App/Http/Controllers/StorefrontController';
-import { home } from '@/routes/index';
+// Hardcoded routes (no wayfinder needed)
 
 export default function Header() {
     const { url } = usePage();
 
-    // 3. Generate the URLs using the .url() function attached directly to the exports
-    const homeUrl = home.url();
-    const shopUrl = shop.url();
-    const newArrivalsUrl = newArrivals.url();
-    const mostPopularUrl = mostPopular.url();
+    // Route URLs
+    const homeUrl = '/';
+    const shopUrl = '/shop';
+    const newArrivalsUrl = '/newarrivals';
+    const mostPopularUrl = '/mostpopular';
 
     // 4. Cart and Search State
     const { cartItems, itemCount, cartTotal, updateQuantity, removeFromCart, addToCart } = useCart();

@@ -24,7 +24,13 @@ export default function ProductGrid({ products }:{ products: Product[] }) {
                             />
                             {product.badge && (
                                 <div className="absolute top-4 right-4 pointer-events-none">
-                                    <span className="rounded-full bg-primary/10 px-3 py-1 font-label-md text-primary backdrop-blur-md">
+                                    <span className={`rounded-full px-3 py-1 font-label-md text-[12px] tracking-wider uppercase backdrop-blur-md shadow-sm ${
+                                        product.badge === 'New' || product.badge === 'New Collection'
+                                            ? 'bg-[#e8e2d6]/90 text-[#4d4637]'
+                                            : product.badge === 'Premium Choice'
+                                              ? 'bg-[#1e1b14]/90 text-[#c9a84c]'
+                                              : 'bg-[#755b00]/90 text-white'
+                                    }`}>
                                         {product.badge}
                                     </span>
                                 </div>

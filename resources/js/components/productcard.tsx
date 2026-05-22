@@ -27,11 +27,11 @@ export default function ProductCard({ product }: { product: any }) {
                 {product.badge && (
                     <span
                         className={`absolute top-4 left-4 rounded-sm px-3 py-1 font-label-md text-[12px] tracking-wider uppercase ${
-                            product.badge === 'New'
-                                ? 'bg-tertiary-container text-on-tertiary-container'
+                            product.badge === 'New' || product.badge === 'New Collection'
+                                ? 'bg-[#e8e2d6] text-[#4d4637]'
                                 : product.badge === 'Premium Choice'
-                                  ? 'bg-on-primary-fixed-variant text-primary-fixed'
-                                  : 'bg-primary-fixed text-on-primary-fixed'
+                                  ? 'bg-[#1e1b14] text-[#c9a84c]'
+                                  : 'bg-[#755b00] text-white'
                         }`}
                     >
                         {product.badge}

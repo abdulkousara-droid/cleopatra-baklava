@@ -21,12 +21,20 @@ export default function PopularProductGrid({products}: { products: Product[] }) 
                         key={product.id}
                         className="group bg-surface-container-lowest ambient-shadow relative mx-auto flex max-w-[280px] flex-col overflow-hidden rounded-xl bg-white p-4 transition-all duration-300 hover:-translate-y-1"
                     >
-                        {/* Upper Bestseller Badge */}
-                        <div className="absolute top-6 left-6 z-10">
-                            <span className="text-on-primary rounded-full bg-primary px-3 py-1 font-label-md text-[10px] tracking-widest uppercase shadow-sm">
-                                Bestseller
-                            </span>
-                        </div>
+                        {/* Upper Badge */}
+                        {product.badge && (
+                            <div className="absolute top-6 left-6 z-10">
+                                <span className={`rounded-full px-3 py-1 font-label-md text-[10px] tracking-widest uppercase shadow-sm ${
+                                    product.badge === 'New' || product.badge === 'New Collection'
+                                        ? 'bg-[#e8e2d6] text-[#4d4637]'
+                                        : product.badge === 'Premium Choice'
+                                          ? 'bg-[#1e1b14] text-[#c9a84c]'
+                                          : 'bg-[#755b00] text-white'
+                                }`}>
+                                    {product.badge}
+                                </span>
+                            </div>
+                        )}
 
                         {/* Img frame view box */}
                         <Link href={`/productshow?id=${product.id}`} className="block bg-surface-container mb-6 aspect-square overflow-hidden rounded-lg">

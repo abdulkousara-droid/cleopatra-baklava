@@ -37,7 +37,13 @@ export default function Bestsellers({ products }: { products: Product[] }) {
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                             {product.badge && (
-                                <div className="absolute top-4 right-4 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider shadow-sm">
+                                <div className={`absolute top-4 right-4 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider shadow-sm ${
+                                    product.badge === 'New' || product.badge === 'New Collection'
+                                        ? 'bg-[#e8e2d6] text-[#4d4637]'
+                                        : product.badge === 'Premium Choice'
+                                          ? 'bg-[#1e1b14] text-[#c9a84c]'
+                                          : 'bg-[#755b00] text-white'
+                                }`}>
                                     {product.badge}
                                 </div>
                             )}

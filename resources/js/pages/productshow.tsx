@@ -61,8 +61,16 @@ export default function ProductShow({ product, relatedProducts = [] }: { product
                                         src={activeImage || currentProduct.image}
                                     />
                                     {currentProduct.badge && (
-                                        <div className="text-on-primary absolute top-6 left-6 rounded-full bg-primary px-4 py-1 font-label-md text-[12px] tracking-tighter uppercase shadow-lg">
-                                            {currentProduct.badge}
+                                        <div className="absolute top-6 left-6 z-10 pointer-events-none">
+                                            <span className={`rounded-full px-4 py-1 font-label-md text-[12px] tracking-wider uppercase shadow-lg ${
+                                                currentProduct.badge === 'New' || currentProduct.badge === 'New Collection'
+                                                    ? 'bg-[#e8e2d6] text-[#4d4637]'
+                                                    : currentProduct.badge === 'Premium Choice'
+                                                      ? 'bg-[#1e1b14] text-[#c9a84c]'
+                                                      : 'bg-[#755b00] text-white'
+                                            }`}>
+                                                {currentProduct.badge}
+                                            </span>
                                         </div>
                                     )}
                                 </div>
@@ -218,7 +226,13 @@ export default function ProductShow({ product, relatedProducts = [] }: { product
                                                 src={item.image}
                                             />
                                             {item.badge && (
-                                                <span className="absolute top-3 right-3 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                                                <span className={`absolute top-3 right-3 rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${
+                                                    item.badge === 'New' || item.badge === 'New Collection'
+                                                        ? 'bg-[#e8e2d6] text-[#4d4637]'
+                                                        : item.badge === 'Premium Choice'
+                                                          ? 'bg-[#1e1b14] text-[#c9a84c]'
+                                                          : 'bg-[#755b00] text-white'
+                                                }`}>
                                                     {item.badge}
                                                 </span>
                                             )}
