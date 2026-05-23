@@ -3,7 +3,7 @@ import type { CartItem } from '@/types';
 
 type CartContextType = {
     cartItems: CartItem[];
-    addToCart: (product: any, quantity?: number) => void;
+    addToCart: (product: Pick<CartItem, 'id' | 'title' | 'price' | 'badge' | 'image' | 'description'>, quantity?: number) => void;
     removeFromCart: (id: number | string) => void;
     updateQuantity: (id: number | string, quantity: number) => void;
     clearCart: () => void;
@@ -32,7 +32,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('cart', JSON.stringify(cartItems));
     }, [cartItems]);
 
-    const addToCart = (product: any, quantity = 1) => {
+    const addToCart = (product: Pick<CartItem, 'id' | 'title' | 'price' | 'badge' | 'image' | 'description'>, quantity = 1) => {
         setCartItems(prev => {
             const existing = prev.find(item => item.id === product.id);
             if (existing) {
@@ -47,7 +47,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 {
                     id: product.id,
                     title: product.title,
-                    price: product.price,
+                    price: Number(product.price),
                     quantity,
                     badge: product.badge,
                     image: product.image,
@@ -75,7 +75,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setCartItems([]);
     };
 
-    const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const cartTotal = cartItems.reduce((total, item) => total + Number(item.price) * item.quantity, 0);
     const itemCount = cartItems.reduce((count, item) => count + item.quantity, 0);
 
     return (

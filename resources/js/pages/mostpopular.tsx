@@ -1,8 +1,11 @@
 import React from 'react';
-import Header from '@/components/header';
-import Newsletter from '@/components/newsletter';
-import PopularProductGrid from '@/components/popularproductgrid';
-import Footer from '@/components/footer';
+import Header from '@/components/Header';
+
+import Newsletter from '@/components/Newsletter';
+
+import PopularProductGrid from '@/components/PopularProductGrid';
+
+import Footer from '@/components/Footer';
 import type { Product } from '@/types';
 import { Head } from '@inertiajs/react';
 

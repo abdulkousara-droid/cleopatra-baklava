@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Products;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
@@ -15,7 +15,7 @@ class AdminProductController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'exists:categories,id'],
             'description' => ['required', 'string'],
-            'image' => ['required', 'string'],
+            'image' => ['required', 'url'],
             'badge' => ['nullable', 'string', 'max:50'],
             'tags' => ['nullable'],
             'allergens' => ['nullable'],
@@ -53,7 +53,7 @@ class AdminProductController extends Controller
         $data['reviews_count'] = 0;
         $data['rating_score'] = 5.0;
 
-        Products::create($data);
+        Product::create($data);
 
         return redirect()->route('admin.index')->with('success', 'Product created successfully!');
     }
@@ -61,14 +61,14 @@ class AdminProductController extends Controller
     /**
      * Update the specified product in database.
      */
-    public function update(Request $request, Products $product): RedirectResponse
+    public function update(Request $request, Product $product): RedirectResponse
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255', 'unique:products,title,' . $product->id],
             'price' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'exists:categories,id'],
             'description' => ['required', 'string'],
-            'image' => ['required', 'string'],
+            'image' => ['required', 'url'],
             'badge' => ['nullable', 'string', 'max:50'],
             'tags' => ['nullable'],
             'allergens' => ['nullable'],
@@ -110,7 +110,7 @@ class AdminProductController extends Controller
     /**
      * Remove the specified product from database.
      */
-    public function destroy(Products $product): RedirectResponse
+    public function destroy(Product $product): RedirectResponse
     {
         $product->delete();
 

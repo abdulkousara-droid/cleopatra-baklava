@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Products;
+use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ReviewController extends Controller
+class ReviewController extends Controller implements \Illuminate\Routing\Controllers\HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            'throttle:reviews',
+        ];
+    }
+
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -22,16 +29,9 @@ class ReviewController extends Controller
         // Save review
         $review = Review::create($validated);
 
-        // Recalculate product rating_score and reviews_count
-        $product = Products::findOrFail($validated['product_id']);
-        $aggregates = Review::where('product_id', $product->id)
-            ->where('approved', true)
-            ->selectRaw('COUNT(*) as total, AVG(rating) as avg_rating')
-            ->first();
+        Product::recalculateRating($validated['product_id']);
 
-        $product->reviews_count = $aggregates->total ?? 0;
-        $product->rating_score  = round($aggregates->avg_rating ?? 0, 1);
-        $product->save();
+        $product = Product::findOrFail($validated['product_id']);
 
         return response()->json([
             'status'  => 'created',

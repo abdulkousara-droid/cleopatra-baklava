@@ -13,9 +13,9 @@ import {
 } from 'lucide-react';
 import { Head, router, Link } from '@inertiajs/react';
 import { useCart } from '@/lib/cart';
-import Header from '@/components/header';
-import Footer from '@/components/footer';
+import Header from '@/components/Header';
 
+import Footer from '@/components/Footer';
 // ── Types ────────────────────────────────────────────────────────────────────
 interface ProductReview {
     id: number;
@@ -25,11 +25,19 @@ interface ProductReview {
     created_at: string;
 }
 
+interface RelatedProduct {
+    id: number;
+    title: string;
+    price: number;
+    badge: string | null;
+    image: string;
+}
+
 interface ProductData {
     id: number;
     title: string;
     price: number;
-    badge?: string;
+    badge: string | null;
     description: string;
     tags?: string[];
     allergens?: string[];
@@ -101,7 +109,7 @@ export default function ProductShow({
     reviews: initialReviews = [],
 }: {
     product: ProductData;
-    relatedProducts: any[];
+    relatedProducts: RelatedProduct[];
     reviews: ProductReview[];
 }) {
     const { addToCart } = useCart();
@@ -126,7 +134,8 @@ export default function ProductShow({
         setQuantity((prev) => Math.max(1, prev + change));
     };
 
-    const currentProduct = product || {
+    const currentProduct: ProductData = product || {
+        id: 0,
         title: 'Pistachio Baklava',
         price: 4.5,
         badge: 'House Special',
@@ -135,10 +144,13 @@ export default function ProductShow({
         tags: ['Gaziantep Pistachios', 'Organic Honey', 'Artisanal Butter'],
         image: '',
         additionalImages: [],
+        category: '',
+        reviews_count: 0,
+        rating_score: 0,
     };
 
     const handleAddToCart = () => {
-        for (let i = 0; i < quantity; i++) addToCart(currentProduct as any);
+        for (let i = 0; i < quantity; i++) addToCart(currentProduct);
     };
     const handleBuyNow = () => {
         handleAddToCart();
@@ -209,6 +221,7 @@ export default function ProductShow({
                                         alt={currentProduct.title}
                                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                                         src={activeImage || currentProduct.image}
+                                        fetchPriority="high"
                                     />
                                     {currentProduct.badge && (
                                         <div className="absolute top-6 left-6 z-10 pointer-events-none">
@@ -237,7 +250,7 @@ export default function ProductShow({
                                                 : 'border-outline-variant/30 hover:border-primary'
                                         }`}
                                     >
-                                        <img alt="Main product" className="h-full w-full object-cover" src={currentProduct.image} />
+                                        <img alt="Main product" className="h-full w-full object-cover" src={currentProduct.image} loading="lazy" />
                                     </div>
                                     {currentProduct.additionalImages?.map((imgUrl, index) => (
                                         <div
@@ -249,7 +262,7 @@ export default function ProductShow({
                                                     : 'border-outline-variant/30 hover:border-primary'
                                             }`}
                                         >
-                                            <img alt={`Detail view ${index + 1}`} className="h-full w-full object-cover" src={imgUrl} />
+                                            <img alt={`Detail view ${index + 1}`} className="h-full w-full object-cover" src={imgUrl} loading="lazy" />
                                         </div>
                                     ))}
                                 </div>

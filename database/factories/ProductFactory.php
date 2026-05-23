@@ -2,20 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Categories;
-use App\Models\Products;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProductsFactory extends Factory
+class ProductFactory extends Factory
 {
-    protected $model = Products::class;
+    protected $model = Product::class;
 
     public function definition(): array
     {
-        // Fetch a random category
-        $category = Categories::inRandomOrder()->first() ?? Categories::factory()->create();
+        $category = Category::inRandomOrder()->first() ?? Category::factory()->create();
 
-        // Image map
         $imageMap = [
             'Gift Boxes'  => 'https://lh3.googleusercontent.com/aida-public/AB6AXuAI2c3WNcm5Mbi8S6fE11yJC21B4uurKolTmvEwohxNHO5SyvrpUp0lcCV2APb2odMrng9glfWc_EovgzjZ8NvVoa7oMGk0etoA4dsXg6KQeWRkfEuwWglmDs_SkoEp1BUdFf7hgssyY3npobonNDcLHji2GUByEsl6u2g5sddaeaZi0swt-yxyg5XWh4PACQZXWPUkDM_JuQ-UcDn79WDb8J71vZhu7yLtZlY1coeQKE7hTWe3tr02jrPxGsacHp5pfpmEwGAJ7vUv',
             'Kunafa'      => 'https://lh3.googleusercontent.com/aida-public/AB6AXuAdFRfB7QbF0209oPzIlBaryseFx2Tnwdw8t8BHmipdZb4DRaFht019gDQOaHo4io52KH9Auj14lzNhQ9VskcEQG5zfK0kHKlNHX6MJAA3-nxWfGFek5ZfWHUxcVJkjG7LHUit25Yc3cs5vLVYbKH1jiuotiqnygcHu1uDhlQM7I6asVfw_uNSqXJhcDr8g66epCmSeWMV2aJICrKZFTvCGm6p8-ldhoTgbhdmWV5nSNd_qkY2P5Nysd2NQJ2pYhhiSiZ0bdzUBEKxE',

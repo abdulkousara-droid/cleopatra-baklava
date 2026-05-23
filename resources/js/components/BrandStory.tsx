@@ -17,6 +17,7 @@ export default function BrandStory() {
                         <img
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuArBr2E9jfeUhxP8azQLxr4uZ-d3g-9xXTGmRjaJC8x1Xz8oGfLLJaEv6PHVZVll6YTUYFRP74S0trfx9eQ9c5oaXjE7L9eNzPWNJlKtar4QMsca76kLQL8jgzcG06-jghosTuk7GgzbhqTiazUF6g_QRnBhuoiZI2FNfvY9HOpHh7corENHiX5opsNdM0fBUoAH57ZtkeYiBgiXXVj10EKxFqaGB36pgdaPKMYaY959ER6C5k80CRh2bAW6V9SAyHq1U7QxNoBy5P5"
                             alt="Elegant interior of the Cleopatra Baklava luxury boutique in Barcelona"
+                            loading="lazy"
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                     </div>

@@ -1,12 +1,12 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { MessageSquareText, ShoppingBag, ArrowLeft, Plus, Minus, Trash2 } from 'lucide-react';
-import Footer from '@/components/footer';
-import Header from '@/components/header';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import { useCart } from '@/lib/cart';
 
 export default function Checkout() {
     const { cartItems, cartTotal, itemCount, updateQuantity, removeFromCart } = useCart();
-    const { whatsapp_number } = usePage().props as { whatsapp_number: string };
+    const { whatsapp_number } = usePage().props as unknown as { whatsapp_number: string };
 
     const handleWhatsappCheckout = () => {
         if (cartItems.length === 0) {
@@ -16,7 +16,7 @@ export default function Checkout() {
         let message = `Hello Cleopatra Baklava! I would like to place an order for the following items:\n\n`;
 
         cartItems.forEach((item) => {
-            message += `- ${item.quantity}x ${item.title} (€${item.price.toFixed(2)})\n`;
+            message += `- ${item.quantity}x ${item.title} (€${Number(item.price).toFixed(2)})\n`;
         });
 
         message += `\nTotal: €${cartTotal.toFixed(2)}\n\nPlease let me know the next steps!`;
@@ -64,7 +64,7 @@ export default function Checkout() {
                                             <Link href={`/productshow?id=${item.id}`} className="flex-shrink-0">
                                                 {item.image && (
                                                     <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg border border-outline-variant/30">
-                                                        <img src={item.image} alt={item.title} className="h-full w-full object-cover object-center" />
+                                                        <img src={item.image} alt={item.title} loading="lazy" className="h-full w-full object-cover object-center" />
                                                     </div>
                                                 )}
                                             </Link>
@@ -72,7 +72,7 @@ export default function Checkout() {
                                                 <div>
                                                     <div className="flex justify-between items-start">
                                                         <Link href={`/productshow?id=${item.id}`} className="text-lg font-headline-sm hover:text-primary transition-colors">{item.title}</Link>
-                                                        <p className="text-lg font-bold text-primary">€{(item.price * item.quantity).toFixed(2)}</p>
+                                                        <p className="text-lg font-bold text-primary">€{(Number(item.price) * item.quantity).toFixed(2)}</p>
                                                     </div>
                                                     <p className="mt-1 text-sm text-on-surface-variant font-body-md line-clamp-2 md:pr-12">{item.description}</p>
                                                 </div>
@@ -93,7 +93,7 @@ export default function Checkout() {
                                                                 <Plus className="h-3.5 w-3.5" />
                                                             </button>
                                                         </div>
-                                                        <p className="text-sm text-on-surface-variant font-label-md">€{item.price.toFixed(2)} / pc</p>
+                                                        <p className="text-sm text-on-surface-variant font-label-md">€{Number(item.price).toFixed(2)} / pc</p>
                                                     </div>
                                                     <button
                                                         onClick={() => removeFromCart(item.id)}

@@ -1,9 +1,14 @@
-import Bestsellers from '@/components/bestsellers';
+import Bestsellers from '@/components/BestSellers';
+
 import BrandStory from '@/components/BrandStory';
-import Footer from '@/components/footer';
-import Header from '@/components/header';
-import Hero from '@/components/hero';
-import Newsletter from '@/components/newsletter';
+
+import Footer from '@/components/Footer';
+
+import Header from '@/components/Header';
+
+import Hero from '@/components/Hero';
+
+import Newsletter from '@/components/Newsletter';
 import type { Product } from '@/types';
 import { Head } from '@inertiajs/react';
 

@@ -1,9 +1,11 @@
 import { Head, router } from '@inertiajs/react';
 import { Gem } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/header';
-import ProductCard from '@/components/productcard';
-import StickyCartBar from '@/components/stickycartbar';
+import Header from '@/components/Header';
+
+import ProductCard from '@/components/ProductCard';
+
+import StickyCartBar from '@/components/StickyCartBar';
 import type { Product, Category } from '@/types';
 
 export default function Shop({ products, categories, initialCategory = 'All' }: { products: Product[]; categories: Category[]; initialCategory?: string }) {

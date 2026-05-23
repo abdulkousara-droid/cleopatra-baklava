@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Categories;
-use App\Models\Products;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -20,10 +20,10 @@ class DatabaseSeeder extends Seeder
         $categories = ['Baklava', 'Kunafa', 'Mamoul', 'Traditional', 'Gift Boxes'];
 
         foreach ($categories as $category) {
-            Categories::firstOrCreate(['name' => $category]);
+            Category::firstOrCreate(['name' => $category]);
         }
 
-        Products::factory(20)->create();
+        Product::factory(20)->create();
 
         User::factory()->create([
             'name' => 'Admin',

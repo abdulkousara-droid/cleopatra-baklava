@@ -16,7 +16,7 @@ class AdminAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check() || Auth::user()->email !== 'admin@cleopatrabaklava.com') {
+        if (!Auth::check() || Auth::user()->email !== config('app.admin_email')) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Unauthorized Access.'], 403);
             }

@@ -8,8 +8,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'Cleopatra Baklava';
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     resolve: (name) => {
-        const pages = import.meta.glob('./pages/**/*.tsx', { eager: true });
-        return pages[`./pages/${name}.tsx`];
+        const pages = import.meta.glob('./pages/**/*.tsx');
+        return pages[`./pages/${name}.tsx`]();
     },
     setup({ el, App, props }) {
         if (el) {

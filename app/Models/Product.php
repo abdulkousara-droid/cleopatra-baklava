@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Products extends Model
+class Product extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductsFactory> */
+    /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -27,6 +27,23 @@ class Products extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Categories::class);
+        return $this->belongsTo(Category::class);
+    }
+
+    public static function recalculateRating(int $productId): void
+    {
+        $product = self::find($productId);
+        if (!$product) {
+            return;
+        }
+
+        $aggregates = Review::where('product_id', $productId)
+            ->where('approved', true)
+            ->selectRaw('COUNT(*) as total, AVG(rating) as avg_rating')
+            ->first();
+
+        $product->reviews_count = $aggregates->total ?? 0;
+        $product->rating_score  = round($aggregates->avg_rating ?? 0, 1);
+        $product->save();
     }
 }

@@ -6,11 +6,19 @@ use App\Mail\NewsletterSubscribed;
 use App\Models\NewsletterSubscription;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
-class NewsletterController extends Controller
+class NewsletterController extends Controller implements \Illuminate\Routing\Controllers\HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            'throttle:newsletter',
+        ];
+    }
+
     public function subscribe(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -31,7 +39,11 @@ class NewsletterController extends Controller
         NewsletterSubscription::create(['email' => $validated['email']]);
 
         // Send the luxury welcome email
-        Mail::to($validated['email'])->send(new NewsletterSubscribed($validated['email']));
+        try {
+            Mail::to($validated['email'])->send(new NewsletterSubscribed($validated['email']));
+        } catch (\Throwable $e) {
+            Log::error('Newsletter welcome email failed: ' . $e->getMessage());
+        }
 
         return response()->json([
             'status'  => 'subscribed',

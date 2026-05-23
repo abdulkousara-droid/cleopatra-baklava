@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
-use App\Models\Products;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\Review;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,8 +19,8 @@ class StorefrontController extends Controller
         $category = request('category');
 
         return Inertia::render('shop', [
-            'categories' => Categories::where('name', '!=', 'All')->withCount('products')->get(),
-            'products' => Products::with('category')->select([
+            'categories' => Category::where('name', '!=', 'All')->withCount('products')->get(),
+            'products' => Product::with('category')->select([
                 'id', 'title', 'description', 'price', 'category_id', 'badge', 'image', 'tags'
             ])->latest()->get()->map(function ($product) {
                 $data = $product->toArray();
@@ -37,7 +37,7 @@ class StorefrontController extends Controller
     public function newArrivals(): Response
     {
         return Inertia::render('newarrivals', [
-            'products' => Products::where('badge', 'New Collection')
+            'products' => Product::where('badge', 'New Collection')
                 ->select(['id', 'title', 'description', 'price', 'badge', 'image'])
                 ->latest()->get()
         ]);
@@ -49,7 +49,7 @@ class StorefrontController extends Controller
     public function mostPopular(): Response
     {
         return Inertia::render('mostpopular', [
-            'products' => Products::where('badge', 'Best Seller')
+            'products' => Product::where('badge', 'Best Seller')
                 ->select(['id', 'title', 'description', 'price', 'badge', 'image', 'reviews_count', 'rating_score'])
                 ->orderBy('rating_score', 'desc')->get()
         ]);
@@ -62,14 +62,14 @@ class StorefrontController extends Controller
     {
         $columns = ['id', 'title', 'description', 'price', 'badge', 'image'];
 
-        $featuredProducts = Products::whereIn('badge', ['Best Seller', 'Top Rated'])
+        $featuredProducts = Product::whereIn('badge', ['Best Seller', 'Top Rated'])
             ->select($columns)
             ->latest()
             ->take(3)
             ->get();
 
         if ($featuredProducts->count() < 3) {
-            $fallbackProducts = Products::whereNotIn('id', $featuredProducts->pluck('id'))
+            $fallbackProducts = Product::whereNotIn('id', $featuredProducts->pluck('id'))
                 ->select($columns)
                 ->latest()
                 ->take(3 - $featuredProducts->count())
@@ -91,17 +91,10 @@ class StorefrontController extends Controller
     {
         $id = $request->query('id');
 
-        $product = Products::with('category')
-            ->where('id', $id)
-            ->select(['id', 'title', 'description', 'price', 'badge', 'image',
-                      'additional_images', 'tags', 'allergens', 'category_id', 'reviews_count', 'rating_score'])
-            ->first();
+        $product = Product::with('category')->find($id);
 
         if (!$product) {
-            $product = Products::with('category')
-                ->select(['id', 'title', 'description', 'price', 'badge', 'image',
-                          'additional_images', 'tags', 'allergens', 'category_id', 'reviews_count', 'rating_score'])
-                ->first();
+            abort(404);
         }
 
         // Build product data with camelCase additionalImages for React
@@ -123,7 +116,7 @@ class StorefrontController extends Controller
         // Fetch up to 4 related products (same category, exclude current)
         $relatedProducts = [];
         if ($product->category_id) {
-            $relatedProducts = Products::where('category_id', $product->category_id)
+            $relatedProducts = Product::where('category_id', $product->category_id)
                 ->where('id', '!=', $product->id)
                 ->select(['id', 'title', 'price', 'badge', 'image'])
                 ->take(4)
@@ -167,7 +160,7 @@ class StorefrontController extends Controller
         if (!$query) {
             return response()->json([]);
         }
-        $products = Products::where('title', 'ilike', '%' . $query . '%')
+        $products = Product::where('title', 'ilike', '%' . $query . '%')
             ->orWhere('description', 'ilike', '%' . $query . '%')
             ->select(['id', 'title', 'price', 'image', 'description'])
             ->take(5)->get();

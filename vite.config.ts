@@ -18,4 +18,20 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    build: {
+        target: 'es2020',
+        cssCodeSplit: true,
+        rollupOptions: {
+            output: {
+                manualChunks(id: string) {
+                    if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/@inertiajs/react')) {
+                        return 'vendor';
+                    }
+                    if (id.includes('node_modules/lucide-react')) {
+                        return 'icons';
+                    }
+                },
+            },
+        },
+    },
 });

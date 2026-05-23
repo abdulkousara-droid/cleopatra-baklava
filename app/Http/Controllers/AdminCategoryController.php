@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
@@ -14,12 +14,12 @@ class AdminCategoryController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:categories,name'],
         ]);
 
-        Categories::create($data);
+        Category::create($data);
 
         return redirect()->route('admin.index')->with('success', 'Category created successfully!');
     }
 
-    public function update(Request $request, Categories $category): RedirectResponse
+    public function update(Request $request, Category $category): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:categories,name,' . $category->id],
@@ -30,7 +30,7 @@ class AdminCategoryController extends Controller
         return redirect()->route('admin.index')->with('success', 'Category updated successfully!');
     }
 
-    public function destroy(Categories $category): RedirectResponse
+    public function destroy(Category $category): RedirectResponse
     {
         $category->delete();
 

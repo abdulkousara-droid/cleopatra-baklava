@@ -8,23 +8,28 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewsletterSubscribed extends Mailable
+class OfferEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public string $subscriberEmail) {}
+    public function __construct(
+        public string $subject,
+        public string $body,
+        public string $ctaText,
+        public string $ctaLink,
+    ) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '✦ Welcome to the Cleopatra Baklava Inner Circle',
+            subject: $this->subject,
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.newsletter',
+            view: 'emails.offer',
         );
     }
 }

@@ -8,7 +8,7 @@ export interface CartItem {
     title: string;
     price: number | string;
     quantity: number;
-    badge: string;
+    badge: string | null;
     image: string;
     description: string;
 }

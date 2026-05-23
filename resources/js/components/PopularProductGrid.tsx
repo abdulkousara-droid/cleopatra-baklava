@@ -8,7 +8,7 @@ import { useCart } from '@/lib/cart';
 export default function PopularProductGrid({products}: { products: Product[] }) {
     const { addToCart } = useCart();
 
-    const handleAddItemToCart = (product: any) => {
+    const handleAddItemToCart = (product: Product) => {
         addToCart(product);
     };
 
@@ -42,6 +42,7 @@ export default function PopularProductGrid({products}: { products: Product[] }) 
                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 src={product.image}
                                 alt={product.title}
+                                loading="lazy"
                             />
                         </Link>
 

@@ -8,11 +8,17 @@ export default function Hero() {
             <section className="relative mt-22 flex w-full items-center justify-center overflow-hidden text-white h-[75vh] min-h-[560px] md:h-[80vh] md:min-h-[560px] lg:min-h-[680px]">
                 {/* Background Image Container with modern Ken Burns zoom effect */}
                 <div className="absolute inset-0 z-0 overflow-hidden">
-                    <img
-                        src="/hero-baklava.png"
-                        alt="Artisanal baklava layers with pistachios"
-                        className="h-full w-full object-cover scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]"
-                    />
+                    <picture>
+                        <source srcSet="/hero-baklava.webp" type="image/webp" />
+                        <img
+                            src="/hero-baklava.png"
+                            alt="Artisanal baklava layers with pistachios"
+                            width="1024"
+                            height="1024"
+                            fetchPriority="high"
+                            className="h-full w-full object-cover scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]"
+                        />
+                    </picture>
                     {/* Dark gradient overlays for cinematic lighting and high text legibility */}
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80"></div>
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)]"></div>

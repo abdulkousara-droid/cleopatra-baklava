@@ -2,8 +2,9 @@ import { ShoppingBag } from 'lucide-react';
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { useCart } from '@/lib/cart';
+import type { Product } from '@/types';
 
-export default function ProductCard({ product }: { product: any }) {
+export default function ProductCard({ product }: { product: Product }) {
     const { addToCart } = useCart();
 
     return (
@@ -18,6 +19,7 @@ export default function ProductCard({ product }: { product: any }) {
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     src={product.image}
                     alt={product.title}
+                    loading="lazy"
                 />
                 {product.badge && (
                     <span

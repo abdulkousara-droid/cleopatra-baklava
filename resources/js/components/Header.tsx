@@ -4,6 +4,7 @@ import { Search, ShoppingBag, Plus, Minus, Trash2, Home, Sparkles, Heart, Store,
 import { useCart } from '@/lib/cart';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import type { Product } from '@/types';
 
 // Hardcoded routes (no wayfinder needed)
 
@@ -20,7 +21,7 @@ export default function Header() {
     const { cartItems, itemCount, cartTotal, updateQuantity, removeFromCart, addToCart } = useCart();
 
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [searchResults, setSearchResults] = useState<Product[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [cartOpen, setCartOpen] = useState(false);
@@ -49,7 +50,7 @@ export default function Header() {
         return () => clearTimeout(debounce);
     }, [searchQuery]);
 
-    const handleSearchItemAdd = (product: any) => {
+    const handleSearchItemAdd = (product: Product) => {
         addToCart(product);
         setSearchOpen(false);
         setSearchQuery('');
@@ -160,7 +161,7 @@ export default function Header() {
                                                 <li key={product.id} className="flex items-center gap-4 p-3 hover:bg-orange-50/50 rounded-xl transition-colors border border-transparent hover:border-orange-100">
                                                     <Link href={`/productshow?id=${product.id}`} onClick={() => { setSearchOpen(false); setSearchQuery(''); }} className="flex items-center gap-4 flex-1 min-w-0 no-underline">
                                                         {product.image ? (
-                                                            <img src={product.image} alt={product.title} className="h-14 w-14 rounded-lg object-cover shadow-sm flex-shrink-0" />
+                                                            <img src={product.image} alt={product.title} loading="lazy" className="h-14 w-14 rounded-lg object-cover shadow-sm flex-shrink-0" />
                                                         ) : (
                                                             <div className="h-14 w-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><ShoppingBag className="h-5 w-5 text-gray-400"/></div>
                                                         )}
@@ -226,13 +227,13 @@ export default function Header() {
                                                     <li key={item.id} className="flex items-center space-x-4 border-b border-gray-50 pb-5 last:border-b-0 last:pb-0">
                                                         <Link href={`/productshow?id=${item.id}`} onClick={() => setCartOpen(false)} className="flex items-center space-x-4 flex-1 min-w-0 no-underline">
                                                             {item.image ? (
-                                                                <img src={item.image} alt={item.title} className="h-16 w-16 rounded-lg object-cover border border-gray-100 shadow-sm flex-shrink-0" />
+                                                                <img src={item.image} alt={item.title} loading="lazy" className="h-16 w-16 rounded-lg object-cover border border-gray-100 shadow-sm flex-shrink-0" />
                                                             ) : (
                                                                 <div className="h-16 w-16 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><ShoppingBag className="h-6 w-6 text-gray-300"/></div>
                                                             )}
                                                             <div className="flex-1 min-w-0">
                                                                 <h4 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-tight">{item.title}</h4>
-                                                                <p className="text-primary font-bold text-sm mt-1">€{item.price.toFixed(2)}</p>
+                                                                <p className="text-primary font-bold text-sm mt-1">€{Number(item.price).toFixed(2)}</p>
                                                             </div>
                                                         </Link>
                                                         <div className="flex flex-col items-center gap-1.5">
