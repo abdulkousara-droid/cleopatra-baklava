@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -60,19 +61,19 @@ export default function Footer() {
                     </h5>
                     <ul className="space-y-2 text-sm">
                         <li>
-                            <a href="#menu" className="text-muted-foreground hover:text-primary transition-colors duration-200">
+                            <Link href="/collections" className="text-muted-foreground hover:text-primary transition-colors duration-200">
                                 Our Collections
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a href="#story" className="text-muted-foreground hover:text-primary transition-colors duration-200">
+                            <Link href="/heritage" className="text-muted-foreground hover:text-primary transition-colors duration-200">
                                 Our Heritage Story
-                            </a>
+                            </Link>
                         </li>
                         <li>
-                            <a href="#shipping" className="text-muted-foreground hover:text-primary transition-colors duration-200">
+                            <Link href="/catering" className="text-muted-foreground hover:text-primary transition-colors duration-200">
                                 Catering & Delivery
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>
@@ -85,8 +86,8 @@ export default function Footer() {
                     &copy; {currentYear} Cleopatra Baklava. All rights reserved.
                 </p>
                 <div className="flex gap-6">
-                    <a href="#privacy" className="hover:text-primary transition-colors">Privacy Policy</a>
-                    <a href="#terms" className="hover:text-primary transition-colors">Terms of Service</a>
+                    <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+                    <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
                 </div>
             </div>
         </footer>

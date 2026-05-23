@@ -9,7 +9,7 @@ export default function Bestsellers({ products }: { products: Product[] }) {
     const bestsellerProducts = products.slice(0, 3);
 
     return (
-        <section className="py-24 max-w-7xl mx-auto px-6 md:px-16 bg-background">
+        <section id="bestsellers-section" className="py-24 max-w-7xl mx-auto px-6 md:px-16 bg-background scroll-mt-22">
 
             {/* Section Header */}
             <div className="flex flex-col items-center mb-16 text-center">

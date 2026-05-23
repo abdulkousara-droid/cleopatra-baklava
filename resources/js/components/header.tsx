@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { Search, ShoppingBag, Plus, Minus, Trash2, Home, Sparkles, Heart, Store } from 'lucide-react';
+import { Search, ShoppingBag, Plus, Minus, Trash2, Home, Sparkles, Heart, Store, X } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 // Hardcoded routes (no wayfinder needed)
 
@@ -17,7 +18,7 @@ export default function Header() {
 
     // 4. Cart and Search State
     const { cartItems, itemCount, cartTotal, updateQuantity, removeFromCart, addToCart } = useCart();
-    
+
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [isSearching, setIsSearching] = useState(false);
@@ -114,20 +115,28 @@ export default function Header() {
                                 <Search className="h-6 w-6" />
                             </button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-xl top-[20%] translate-y-0 bg-white shadow-2xl rounded-xl border-none">
-                            <div className="flex flex-col gap-4">
-                                <div className="relative border-b border-gray-100 pb-3">
-                                    <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                        <DialogContent hideClose className="sm:max-w-xl top-[20%] translate-y-0 bg-white shadow-2xl rounded-2xl border border-gray-100 p-0 overflow-hidden">
+                            <div className="flex flex-col">
+                                {/* Search Input Row */}
+                                <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+                                    <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
                                     <input
                                         type="text"
                                         placeholder="Search for baklava, kunafa, mamoul..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-lg focus:bg-white focus:border-primary/30 focus:ring-2 focus:ring-primary/20 text-lg placeholder:text-gray-400 transition-all"
+                                        className="flex-1 bg-transparent text-base placeholder:text-gray-400 text-gray-900 focus:outline-none"
                                         autoFocus
                                     />
+                                    <DialogPrimitive.Close
+                                        onClick={() => { setSearchQuery(''); }}
+                                        className="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </DialogPrimitive.Close>
                                 </div>
-                                <div className="max-h-[60vh] overflow-y-auto pr-2">
+                                {/* Results */}
+                                <div className="max-h-[60vh] overflow-y-auto p-4">
                                     {isSearching && (
                                         <div className="p-8 text-center text-sm text-gray-500 flex flex-col items-center">
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
@@ -140,21 +149,26 @@ export default function Header() {
                                             No products found matching "{searchQuery}".
                                         </div>
                                     )}
+                                    {!isSearching && !searchQuery && (
+                                        <div className="p-6 text-center text-sm text-gray-400">
+                                            Start typing to search our collection...
+                                        </div>
+                                    )}
                                     {!isSearching && searchResults.length > 0 && (
-                                        <ul className="space-y-3">
+                                        <ul className="space-y-2">
                                             {searchResults.map((product) => (
                                                 <li key={product.id} className="flex items-center gap-4 p-3 hover:bg-orange-50/50 rounded-xl transition-colors border border-transparent hover:border-orange-100">
                                                     {product.image ? (
-                                                        <img src={product.image} alt={product.title} className="h-14 w-14 rounded-lg object-cover shadow-sm" />
+                                                        <img src={product.image} alt={product.title} className="h-14 w-14 rounded-lg object-cover shadow-sm flex-shrink-0" />
                                                     ) : (
-                                                        <div className="h-14 w-14 rounded-lg bg-gray-100 flex items-center justify-center"><ShoppingBag className="h-5 w-5 text-gray-400"/></div>
+                                                        <div className="h-14 w-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><ShoppingBag className="h-5 w-5 text-gray-400"/></div>
                                                     )}
                                                     <div className="flex-1 min-w-0">
                                                         <h4 className="font-semibold text-gray-900 truncate">{product.title}</h4>
                                                         <p className="text-primary font-bold mt-0.5">€{Number(product.price).toFixed(2)}</p>
                                                     </div>
-                                                    <button 
-                                                        className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 shadow-sm transition-colors"
+                                                    <button
+                                                        className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 shadow-sm transition-colors flex-shrink-0"
                                                         onClick={() => handleSearchItemAdd(product)}
                                                     >
                                                         Add to Cart
@@ -169,7 +183,7 @@ export default function Header() {
                     </Dialog>
 
                     <div className="relative">
-                        <button 
+                        <button
                             className="flex cursor-pointer transition-all duration-300 hover:scale-110 relative"
                             onClick={() => setCartOpen(!cartOpen)}
                         >
@@ -183,8 +197,8 @@ export default function Header() {
 
                         {cartOpen && (
                             <>
-                                <div 
-                                    className="fixed inset-0 z-40" 
+                                <div
+                                    className="fixed inset-0 z-40"
                                     onClick={() => setCartOpen(false)}
                                 />
                                 <div className="absolute right-0 top-[120%] w-[340px] flex flex-col max-h-[85vh] bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 z-50 origin-top-right animate-in fade-in zoom-in-95">
@@ -197,7 +211,7 @@ export default function Header() {
                                             <div className="flex flex-col items-center justify-center text-gray-400 py-10">
                                                 <ShoppingBag className="mb-4 h-12 w-12 opacity-20" />
                                                 <p className="text-gray-500 font-medium">Your cart is empty.</p>
-                                                <button 
+                                                <button
                                                     className="mt-4 text-primary text-sm font-medium hover:underline"
                                                     onClick={() => setCartOpen(false)}
                                                 >
@@ -217,14 +231,14 @@ export default function Header() {
                                                             <h4 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-tight">{item.title}</h4>
                                                             <p className="text-primary font-bold text-sm mt-1">€{item.price.toFixed(2)}</p>
                                                             <div className="mt-2.5 flex items-center space-x-3">
-                                                                <button 
+                                                                <button
                                                                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                                                     className="h-7 w-7 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 hover:text-primary text-gray-600 transition-colors bg-white shadow-sm"
                                                                 >
                                                                     <Minus className="h-3.5 w-3.5" />
                                                                 </button>
                                                                 <span className="text-sm font-semibold w-5 text-center text-gray-800">{item.quantity}</span>
-                                                                <button 
+                                                                <button
                                                                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                                                     className="h-7 w-7 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 hover:text-primary text-gray-600 transition-colors bg-white shadow-sm"
                                                                 >
@@ -232,7 +246,7 @@ export default function Header() {
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <button 
+                                                        <button
                                                             onClick={() => removeFromCart(item.id)}
                                                             className="text-gray-300 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors flex-shrink-0"
                                                             title="Remove item"
@@ -250,8 +264,8 @@ export default function Header() {
                                                 <span>Subtotal</span>
                                                 <span className="text-primary">€{cartTotal.toFixed(2)}</span>
                                             </div>
-                                            <Link 
-                                                href="/checkout" 
+                                            <Link
+                                                href="/checkout"
                                                 onClick={() => setCartOpen(false)}
                                                 className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3.5 text-base font-bold text-white shadow-md hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
                                             >

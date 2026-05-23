@@ -1,5 +1,6 @@
 import { MessageSquareText, ShoppingBag } from 'lucide-react';
 import React from 'react';
+import { Link } from '@inertiajs/react';
 import { useCart } from '@/lib/cart';
 
 export default function ProductCard({ product }: { product: any }) {
@@ -18,7 +19,7 @@ export default function ProductCard({ product }: { product: any }) {
             }`}
         >
             {/* Product Image and Badges */}
-            <div className="bg-surface-container relative aspect-square overflow-hidden">
+            <Link href={`/productshow?id=${product.id}`} className="bg-surface-container relative aspect-square overflow-hidden block">
                 <img
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     src={product.image}
@@ -37,14 +38,14 @@ export default function ProductCard({ product }: { product: any }) {
                         {product.badge}
                     </span>
                 )}
-            </div>
+            </Link>
 
             {/* Content & Details */}
             <div className="flex flex-grow flex-col p-8">
                 <div className="mb-2 flex items-start justify-between gap-4">
-                    <h3 className="text-headline-sm text-on-surface line-clamp-1 font-headline-sm">
+                    <Link href={`/productshow?id=${product.id}`} className="text-headline-sm text-on-surface line-clamp-1 font-headline-sm hover:text-primary transition-colors">
                         {product.title}
-                    </h3>
+                    </Link>
                     <span className="text-headline-sm font-headline-sm text-primary">
                         €{product.price}
                     </span>
@@ -56,7 +57,7 @@ export default function ProductCard({ product }: { product: any }) {
 
                 {/* Categories / Tags pills */}
                 <div className="mb-6 flex flex-wrap items-center space-x-2 gap-y-2">
-                    {product.tags.map((tag, idx) => (
+                    {(product.tags ?? []).map((tag: string, idx: number) => (
                         <span
                             key={idx}
                             className="bg-secondary-container text-on-secondary-container rounded-full bg-pink-200 px-3 py-1 text-[12px] font-semibold"

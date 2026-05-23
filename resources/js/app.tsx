@@ -12,8 +12,19 @@ createInertiaApp({
         return pages[`./pages/${name}.tsx`];
     },
     setup({ el, App, props }) {
-        import('react-dom/client').then(({ createRoot }) => {
-            createRoot(el).render(
+        if (el) {
+            import('react-dom/client').then(({ createRoot }) => {
+                createRoot(el).render(
+                    <CartProvider>
+                        <TooltipProvider delayDuration={0}>
+                            <App {...props} />
+                            <Toaster />
+                        </TooltipProvider>
+                    </CartProvider>
+                );
+            });
+        } else {
+            return (
                 <CartProvider>
                     <TooltipProvider delayDuration={0}>
                         <App {...props} />
@@ -21,7 +32,7 @@ createInertiaApp({
                     </TooltipProvider>
                 </CartProvider>
             );
-        });
+        }
     },
     progress: {
         color: '#c9a84c',

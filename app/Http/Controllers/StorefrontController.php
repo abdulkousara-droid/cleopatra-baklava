@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use App\Models\Products;
+use App\Models\Review;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
@@ -15,15 +16,18 @@ class StorefrontController extends Controller
      */
     public function shop(): Response
     {
+        $category = request('category');
+
         return Inertia::render('shop', [
-            'categories' => Categories::withCount('products')->get(),
+            'categories' => Categories::where('name', '!=', 'All')->withCount('products')->get(),
             'products' => Products::with('category')->select([
                 'id', 'title', 'description', 'price', 'category_id', 'badge', 'image', 'tags'
             ])->latest()->get()->map(function ($product) {
                 $data = $product->toArray();
                 $data['category'] = $product->category ? $product->category->name : null;
                 return $data;
-            })
+            }),
+            'initialCategory' => $category ?: 'All',
         ]);
     }
 
@@ -133,9 +137,23 @@ class StorefrontController extends Controller
                 ->toArray();
         }
 
+        // Fetch approved reviews for this product (newest first)
+        $reviews = Review::where('product_id', $product->id)
+            ->where('approved', true)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn ($r) => [
+                'id'         => $r->id,
+                'name'       => $r->name,
+                'rating'     => $r->rating,
+                'comment'    => $r->comment,
+                'created_at' => $r->created_at->format('M d, Y'),
+            ]);
+
         return Inertia::render('productshow', [
             'product'         => $productData,
             'relatedProducts' => $relatedProducts,
+            'reviews'         => $reviews,
         ]);
     }
 

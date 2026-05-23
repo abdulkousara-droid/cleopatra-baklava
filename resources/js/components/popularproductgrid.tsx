@@ -48,14 +48,7 @@ export default function PopularProductGrid({products}: { products: Product[] }) 
                         {/* Product description content container */}
                         <div className="flex-grow">
                             <div className="mb-2 flex items-center gap-1">
-                                <span
-                                    className="material-symbols-outlined text-sm text-primary"
-                                    style={{
-                                        fontVariationSettings: "'FILL' 1",
-                                    }}
-                                >
-                                    <Star />
-                                </span>
+                                <Star className="text-sm text-primary" />
                                 <span className="font-label-md text-primary">
                                     {product.rating_score}
                                 </span>

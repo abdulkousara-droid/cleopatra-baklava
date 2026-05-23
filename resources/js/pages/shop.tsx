@@ -1,16 +1,13 @@
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Gem } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/header';
 import ProductCard from '@/components/productcard';
 import StickyCartBar from '@/components/stickycartbar';
-import type { Product } from '@/types';
+import type { Product, Category } from '@/types';
 
-const CATEGORIES = ['All', 'Baklava', 'Kunafa', 'Mamoul', 'Gift Boxes'];
-
-export default function Shop({ products, categories }: { products: Product[]; categories:any }) {
-    console.log('shop categories', categories);
-    const [activeCategory, setActiveCategory] = useState('All');
+export default function Shop({ products, categories, initialCategory = 'All' }: { products: Product[]; categories: Category[]; initialCategory?: string }) {
+    const [activeCategory, setActiveCategory] = useState(initialCategory);
     const [showStickyCart, setShowStickyCart] = useState(false);
 
     // Monitor scroll height to trigger the fixed checkout overlay
@@ -68,10 +65,26 @@ export default function Shop({ products, categories }: { products: Product[]; ca
                     <section className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto">
                         <div className="mb-12 flex justify-start md:justify-center overflow-x-auto pb-4 scrollbar-hide">
                             <div className="bg-surface-container-low border-outline-variant/20 flex items-center space-x-2 rounded-full border p-1.5 whitespace-nowrap">
-                                {categories.map((cat: any) => (
+                                <button
+                                    onClick={() => {
+                                        setActiveCategory('All');
+                                        router.get('/shop');
+                                    }}
+                                    className={`text-label-md cursor-pointer rounded-full px-8 py-2.5 font-label-md transition-all ${
+                                        activeCategory === 'All'
+                                            ? 'text-on-primary bg-primary shadow-md'
+                                            : 'text-on-surface-variant hover:bg-surface-variant'
+                                    }`}
+                                >
+                                    All
+                                </button>
+                                {categories.map((cat) => (
                                     <button
                                         key={cat.id}
-                                        onClick={() => setActiveCategory(cat.name)}
+                                        onClick={() => {
+                                            setActiveCategory(cat.name);
+                                            router.get(`/shop?category=${encodeURIComponent(cat.name)}`);
+                                        }}
                                         className={`text-label-md cursor-pointer rounded-full px-8 py-2.5 font-label-md transition-all ${
                                             activeCategory === cat.name
                                                 ? 'text-on-primary bg-primary shadow-md'
