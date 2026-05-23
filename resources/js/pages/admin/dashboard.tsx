@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, useForm, router, Link } from '@inertiajs/react';
-import { Package, MessageSquare, Star, Tag, Search, Trash2, Edit, Plus, X, LogOut, Globe, Loader2, Sparkles, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Package, MessageSquare, Star, Tag, Settings as SettingsIcon, Search, Trash2, Edit, Plus, X, LogOut, Globe, Loader2, Sparkles, AlertTriangle, CheckCircle, ArrowUpRight } from 'lucide-react';
 
 interface Category { id: number; name: string; }
 interface Product {
@@ -48,25 +48,47 @@ const tokenClasses = {
 };
 
 // ─── Reusable Components ──────────────────────
-const Stat = ({ icon: Icon, label, value, suffix }: { icon: any; label: string; value: string | number; suffix?: string }) => (
-    <div
-        className="bg-white rounded-xl px-6 py-[22px] flex items-center gap-[18px] cursor-default transition-[border-color,box-shadow] duration-200"
-        style={{ border: `1px solid ${c.border}` }}
-        onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = c.gold; (e.currentTarget as HTMLDivElement).style.boxShadow = `0 4px 24px rgba(201,168,76,0.08)`; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = c.border; (e.currentTarget as HTMLDivElement).style.boxShadow = 'none'; }}
-    >
-        <div className="w-[52px] h-[52px] rounded-[13px] flex items-center justify-center shrink-0" style={{ background: c.goldLight, color: c.goldDark }}>
-            <Icon size={22} />
-        </div>
-        <div>
-            <div className="text-[11px] font-bold uppercase tracking-[0.14em] mb-[5px]" style={{ color: c.textFaint }}>{label}</div>
-            <div className="text-[28px] font-extrabold leading-none flex items-baseline gap-1" style={{ color: c.dark }}>
-                {value}
-                {suffix && <span className="text-base" style={{ color: c.gold }}>{suffix}</span>}
+const Stat = ({ icon: Icon, label, value, suffix, href }: { icon: any; label: string; value: string | number; suffix?: string; href?: string }) => {
+    const inner = (
+        <div className="flex items-center gap-[18px]">
+            <div className="w-[52px] h-[52px] rounded-[13px] flex items-center justify-center shrink-0" style={{ background: c.goldLight, color: c.goldDark }}>
+                <Icon size={22} />
+            </div>
+            <div className="flex-1">
+                <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.14em]" style={{ color: c.textFaint }}>{label}</span>
+                    {href && <ArrowUpRight size={13} style={{ color: c.textFaint }} className="opacity-0 group-hover:opacity-100 transition-opacity" />}
+                </div>
+                <div className="text-[28px] font-extrabold leading-none flex items-baseline gap-1 mt-[5px]" style={{ color: c.dark }}>
+                    {value}
+                    {suffix && <span className="text-base" style={{ color: c.gold }}>{suffix}</span>}
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+
+    if (href) {
+        return (
+            <Link href={href}
+                className="group bg-white rounded-xl px-6 py-[22px] block no-underline transition-[border-color,box-shadow] duration-200"
+                style={{ border: `1px solid ${c.border}`, color: 'inherit' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = c.gold; (e.currentTarget as HTMLElement).style.boxShadow = `0 4px 24px rgba(201,168,76,0.08)`; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = c.border; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}>
+                {inner}
+            </Link>
+        );
+    }
+
+    return (
+        <div
+            className="bg-white rounded-xl px-6 py-[22px] flex items-center gap-[18px] cursor-default transition-[border-color,box-shadow] duration-200"
+            style={{ border: `1px solid ${c.border}` }}
+            onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = c.gold; (e.currentTarget as HTMLDivElement).style.boxShadow = `0 4px 24px rgba(201,168,76,0.08)`; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = c.border; (e.currentTarget as HTMLDivElement).style.boxShadow = 'none'; }}>
+            {inner}
+        </div>
+    );
+};
 
 const Pill = ({ children, gold }: { children: React.ReactNode; gold?: boolean }) => (
     <span className="inline-block px-2.5 py-[3px] rounded-[6px] text-[10px] font-bold tracking-[0.08em] uppercase"
@@ -93,17 +115,17 @@ export default function Dashboard({ products = [], categories = [], stats, flash
     const { data, setData, post, put, delete: destroy, processing, errors, reset, clearErrors } = useForm({
         id: null as number | null,
         title: '', price: '', category_id: '',
-        badge: '', description: '', image: '', tags: '', additional_images: '',
+        badge: '', description: '', image: '', tags: '', allergens: '', additional_images: '',
     });
 
     const openAdd = () => {
         clearErrors(); reset();
-        setData({ id: null, title: '', price: '', category_id: String(categories[0]?.id ?? ''), badge: '', description: '', image: '', tags: '', additional_images: '' });
+        setData({ id: null, title: '', price: '', category_id: String(categories[0]?.id ?? ''), badge: '', description: '', image: '', tags: '', allergens: '', additional_images: '' });
         setModalOpen(true);
     };
     const openEdit = (p: Product) => {
         clearErrors();
-        setData({ id: p.id, title: p.title, price: String(p.price), category_id: String(p.category_id), badge: p.badge ?? '', description: p.description, image: p.image, tags: (p.tags ?? []).join(', '), additional_images: (p.additional_images ?? []).join(', ') });
+        setData({ id: p.id, title: p.title, price: String(p.price), category_id: String(p.category_id), badge: p.badge ?? '', description: p.description, image: p.image, tags: (p.tags ?? []).join(', '), allergens: (p.allergens ?? []).join(', '), additional_images: (p.additional_images ?? []).join(', ') });
         setModalOpen(true);
     };
     const handleSubmit = (e: React.FormEvent) => {
@@ -138,7 +160,7 @@ export default function Dashboard({ products = [], categories = [], stats, flash
             <div className="min-h-screen" style={{ background: c.bg }}>
 
                 {/* ────── TOPBAR ────── */}
-                <nav className="sticky top-0 z-[100 flex items-center justify-between px-8 h-16" style={{ background: c.nav, borderBottom: '1px solid rgba(201,168,76,0.12)', boxShadow: '0 1px 16px rgba(0,0,0,0.25)' }}>
+                <nav className="sticky top-0 z-[100] flex items-center justify-between px-8 h-16" style={{ background: c.nav, borderBottom: '1px solid rgba(201,168,76,0.12)', boxShadow: '0 1px 16px rgba(0,0,0,0.25)' }}>
                     <div className="flex items-center gap-3.5">
                         <img src="/logo.svg" alt="Logo" className="h-10 w-auto" />
                         <div>
@@ -150,6 +172,18 @@ export default function Dashboard({ products = [], categories = [], stats, flash
                     </div>
 
                     <div className="flex items-center gap-5">
+                        <Link href="/admin/categories" className="flex items-center gap-[7px] text-[#7a6e5e] no-underline text-xs font-semibold tracking-[0.1em] uppercase transition-colors duration-200 hover:no-underline"
+                            onMouseEnter={e => (e.currentTarget.style.color = c.gold)} onMouseLeave={e => (e.currentTarget.style.color = '#7a6e5e')}>
+                            <Tag size={15} /> Categories
+                        </Link>
+                        <Link href="/admin/reviews" className="flex items-center gap-[7px] text-[#7a6e5e] no-underline text-xs font-semibold tracking-[0.1em] uppercase transition-colors duration-200 hover:no-underline"
+                            onMouseEnter={e => (e.currentTarget.style.color = c.gold)} onMouseLeave={e => (e.currentTarget.style.color = '#7a6e5e')}>
+                            <MessageSquare size={15} /> Reviews
+                        </Link>
+                        <Link href="/admin/settings" className="flex items-center gap-[7px] text-[#7a6e5e] no-underline text-xs font-semibold tracking-[0.1em] uppercase transition-colors duration-200 hover:no-underline"
+                            onMouseEnter={e => (e.currentTarget.style.color = c.gold)} onMouseLeave={e => (e.currentTarget.style.color = '#7a6e5e')}>
+                            <SettingsIcon size={15} /> Settings
+                        </Link>
                         <Link href="/" className="flex items-center gap-[7px] text-[#7a6e5e] no-underline text-xs font-semibold tracking-[0.1em] uppercase transition-colors duration-200 hover:no-underline"
                             onMouseEnter={e => (e.currentTarget.style.color = c.gold)} onMouseLeave={e => (e.currentTarget.style.color = '#7a6e5e')}>
                             <Globe size={15} /> Shopfront
@@ -176,9 +210,9 @@ export default function Dashboard({ products = [], categories = [], stats, flash
                     {/* ── STATS ── */}
                     <div className="grid grid-cols-4 gap-4 mb-8">
                         <Stat icon={Package} label="Products" value={stats.total_products} />
-                        <Stat icon={Tag} label="Categories" value={stats.total_categories} />
-                        <Stat icon={MessageSquare} label="Reviews" value={stats.total_reviews} />
-                        <Stat icon={Star} label="Avg Rating" value={stats.avg_rating} suffix="★" />
+                        <Stat icon={Tag} label="Categories" value={stats.total_categories} href="/admin/categories" />
+                        <Stat icon={MessageSquare} label="Reviews" value={stats.total_reviews} href="/admin/reviews" />
+                        <Stat icon={Star} label="Avg Rating" value={stats.avg_rating} suffix="★" href="/admin/reviews" />
                     </div>
 
                     {/* ── TOOLBAR ── */}
@@ -384,6 +418,14 @@ export default function Dashboard({ products = [], categories = [], stats, flash
                                 <div>
                                     <label className="block text-[11px] font-bold tracking-[0.12em] uppercase mb-[7px]" style={{ color: c.textMuted }}>Tags <span className="font-normal normal-case tracking-normal" style={{ color: c.textFaint }}>(comma separated)</span></label>
                                     <input type="text" value={data.tags} onChange={e => setData('tags', e.target.value)} placeholder="Pistachio, Honey, Rosewater"
+                                        className="block w-full box-border px-3.5 py-[11px] rounded-xl text-sm outline-none transition-[border-color] duration-200 font-inherit"
+                                        style={{ border: `1.5px solid ${c.border}`, color: c.text, background: c.bg }}
+                                        onFocus={e => (e.target.style.borderColor = c.gold)} onBlur={e => (e.target.style.borderColor = c.border)} />
+                                </div>
+
+                                <div className="col-span-2">
+                                    <label className="block text-[11px] font-bold tracking-[0.12em] uppercase mb-[7px]" style={{ color: c.textMuted }}>Allergens <span className="font-normal normal-case tracking-normal" style={{ color: c.textFaint }}>(comma separated)</span></label>
+                                    <input type="text" value={data.allergens} onChange={e => setData('allergens', e.target.value)} placeholder="Nuts, Gluten, Dairy"
                                         className="block w-full box-border px-3.5 py-[11px] rounded-xl text-sm outline-none transition-[border-color] duration-200 font-inherit"
                                         style={{ border: `1.5px solid ${c.border}`, color: c.text, background: c.bg }}
                                         onFocus={e => (e.target.style.borderColor = c.gold)} onBlur={e => (e.target.style.borderColor = c.border)} />

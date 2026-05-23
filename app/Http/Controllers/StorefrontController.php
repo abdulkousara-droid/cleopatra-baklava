@@ -94,13 +94,13 @@ class StorefrontController extends Controller
         $product = Products::with('category')
             ->where('id', $id)
             ->select(['id', 'title', 'description', 'price', 'badge', 'image',
-                      'additional_images', 'tags', 'category_id', 'reviews_count', 'rating_score'])
+                      'additional_images', 'tags', 'allergens', 'category_id', 'reviews_count', 'rating_score'])
             ->first();
 
         if (!$product) {
             $product = Products::with('category')
                 ->select(['id', 'title', 'description', 'price', 'badge', 'image',
-                          'additional_images', 'tags', 'category_id', 'reviews_count', 'rating_score'])
+                          'additional_images', 'tags', 'allergens', 'category_id', 'reviews_count', 'rating_score'])
                 ->first();
         }
 
@@ -114,6 +114,7 @@ class StorefrontController extends Controller
             'image'            => $product->image,
             'additionalImages' => $product->additional_images ?? [],
             'tags'             => $product->tags ?? [],
+            'allergens'        => $product->allergens ?? [],
             'category'         => $product->category ? $product->category->name : null,
             'reviews_count'    => $product->reviews_count,
             'rating_score'     => $product->rating_score,

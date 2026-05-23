@@ -158,15 +158,17 @@ export default function Header() {
                                         <ul className="space-y-2">
                                             {searchResults.map((product) => (
                                                 <li key={product.id} className="flex items-center gap-4 p-3 hover:bg-orange-50/50 rounded-xl transition-colors border border-transparent hover:border-orange-100">
-                                                    {product.image ? (
-                                                        <img src={product.image} alt={product.title} className="h-14 w-14 rounded-lg object-cover shadow-sm flex-shrink-0" />
-                                                    ) : (
-                                                        <div className="h-14 w-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><ShoppingBag className="h-5 w-5 text-gray-400"/></div>
-                                                    )}
-                                                    <div className="flex-1 min-w-0">
-                                                        <h4 className="font-semibold text-gray-900 truncate">{product.title}</h4>
-                                                        <p className="text-primary font-bold mt-0.5">€{Number(product.price).toFixed(2)}</p>
-                                                    </div>
+                                                    <Link href={`/productshow?id=${product.id}`} onClick={() => { setSearchOpen(false); setSearchQuery(''); }} className="flex items-center gap-4 flex-1 min-w-0 no-underline">
+                                                        {product.image ? (
+                                                            <img src={product.image} alt={product.title} className="h-14 w-14 rounded-lg object-cover shadow-sm flex-shrink-0" />
+                                                        ) : (
+                                                            <div className="h-14 w-14 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><ShoppingBag className="h-5 w-5 text-gray-400"/></div>
+                                                        )}
+                                                        <div className="flex-1 min-w-0">
+                                                            <h4 className="font-semibold text-gray-900 truncate">{product.title}</h4>
+                                                            <p className="text-primary font-bold mt-0.5">€{Number(product.price).toFixed(2)}</p>
+                                                        </div>
+                                                    </Link>
                                                     <button
                                                         className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 shadow-sm transition-colors flex-shrink-0"
                                                         onClick={() => handleSearchItemAdd(product)}
@@ -222,15 +224,19 @@ export default function Header() {
                                             <ul className="space-y-5">
                                                 {cartItems.map((item) => (
                                                     <li key={item.id} className="flex items-center space-x-4 border-b border-gray-50 pb-5 last:border-b-0 last:pb-0">
-                                                        {item.image ? (
-                                                            <img src={item.image} alt={item.title} className="h-16 w-16 rounded-lg object-cover border border-gray-100 shadow-sm" />
-                                                        ) : (
-                                                            <div className="h-16 w-16 rounded-lg bg-gray-100 flex items-center justify-center"><ShoppingBag className="h-6 w-6 text-gray-300"/></div>
-                                                        )}
-                                                        <div className="flex-1 min-w-0">
-                                                            <h4 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-tight">{item.title}</h4>
-                                                            <p className="text-primary font-bold text-sm mt-1">€{item.price.toFixed(2)}</p>
-                                                            <div className="mt-2.5 flex items-center space-x-3">
+                                                        <Link href={`/productshow?id=${item.id}`} onClick={() => setCartOpen(false)} className="flex items-center space-x-4 flex-1 min-w-0 no-underline">
+                                                            {item.image ? (
+                                                                <img src={item.image} alt={item.title} className="h-16 w-16 rounded-lg object-cover border border-gray-100 shadow-sm flex-shrink-0" />
+                                                            ) : (
+                                                                <div className="h-16 w-16 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><ShoppingBag className="h-6 w-6 text-gray-300"/></div>
+                                                            )}
+                                                            <div className="flex-1 min-w-0">
+                                                                <h4 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-tight">{item.title}</h4>
+                                                                <p className="text-primary font-bold text-sm mt-1">€{item.price.toFixed(2)}</p>
+                                                            </div>
+                                                        </Link>
+                                                        <div className="flex flex-col items-center gap-1.5">
+                                                            <div className="flex items-center space-x-2">
                                                                 <button
                                                                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                                                     className="h-7 w-7 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-100 hover:text-primary text-gray-600 transition-colors bg-white shadow-sm"

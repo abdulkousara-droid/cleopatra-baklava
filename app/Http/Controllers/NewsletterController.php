@@ -35,7 +35,7 @@ class NewsletterController extends Controller
 
         return response()->json([
             'status'  => 'subscribed',
-            'message' => 'Welcome to the Cleopatra Baklava Inner Circle! Check your inbox for your exclusive gift.',
+            'message' => 'Welcome to the Cleopatra Baklava Inner Circle! Check your inbox for your welcome email.',
         ], 201);
     }
 }

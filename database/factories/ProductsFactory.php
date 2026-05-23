@@ -40,6 +40,12 @@ class ProductsFactory extends Factory
                 ['Gaziantep Pistachios', 'Artisanal Butter'],
                 ['Akkawi Cheese', 'Rose Water'],
             ]),
+            'allergens' => $this->faker->randomElement([
+                ['Nuts (Pistachios)', 'Gluten (Wheat)', 'Dairy (Milk)'],
+                ['Nuts (Almonds)', 'Dairy (Milk)'],
+                ['Nuts (Walnuts)', 'Gluten (Wheat)'],
+                ['Sesame', 'Dairy (Milk)'],
+            ]),
             'reviews_count' => $this->faker->numberBetween(12, 240),
             'rating_score' => $this->faker->randomElement([4.7, 4.8, 4.9, 5.0]),
         ];

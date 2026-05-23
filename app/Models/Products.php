@@ -13,12 +13,13 @@ class Products extends Model
 
     protected $fillable = [
         'title', 'price', 'category_id', 'badge', 'description',
-        'image', 'additional_images', 'tags', 'reviews_count', 'rating_score'
+        'image', 'additional_images', 'tags', 'allergens', 'reviews_count', 'rating_score'
     ];
 
     protected $casts = [
         'tags' => 'array',
         'additional_images' => 'array',
+        'allergens' => 'array',
         'price' => 'float',
         'rating_score' => 'float',
         'reviews_count' => 'integer',

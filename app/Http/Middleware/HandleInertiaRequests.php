@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,12 +36,17 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $whatsappNumber = Setting::where('key', 'whatsapp_number')->value('value') ?? '34931234567';
+        $storeLocation = Setting::where('key', 'store_location')->value('value') ?? 'Carrer de Balmes 123, 08008 Barcelona, Spain';
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'whatsapp_number' => $whatsappNumber,
+            'store_location' => $storeLocation,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

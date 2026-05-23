@@ -1,12 +1,13 @@
-@php
-$heading = \App\Models\Setting::where('key', 'email_heading')->value('value') ?? 'Welcome to the Inner Circle.';
-$body = \App\Models\Setting::where('key', 'email_body')->value('value') ?? 'Dear Connoisseur,';
-$features = json_decode(\App\Models\Setting::where('key', 'email_features')->value('value') ?? '[]', true);
-$ctaText = \App\Models\Setting::where('key', 'email_cta_text')->value('value') ?? 'Explore the Collection';
-$footerAddress = \App\Models\Setting::where('key', 'email_footer_address')->value('value') ?? 'Carrer de les Flors 14, Barcelona, Spain';
-$appUrl = config('app.url');
-$paragraphs = explode("\n\n", $body);
-@endphp
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        $template = <<<'HTML'
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -217,7 +218,6 @@ $paragraphs = explode("\n\n", $body);
             color: #6b5e47;
             line-height: 1.8;
             margin-bottom: 20px;
-            white-space: pre-line;
         }
 
         .footer-links {
@@ -262,62 +262,106 @@ $paragraphs = explode("\n\n", $body);
 <body>
     <div class="email-wrapper">
 
+        <!-- HEADER -->
         <div class="email-header">
             <span class="header-ornament">✦ Est. Barcelona, 2008 ✦</span>
             <span class="brand-name">Cleopatra Baklava</span>
             <span class="brand-tagline">Artisanal Mediterranean Confections</span>
         </div>
 
+        <!-- BODY -->
         <div class="email-body">
             <div class="geometric-divider">◆ &nbsp; ◆ &nbsp; ◆</div>
 
             <span class="welcome-label">✦ &nbsp; You're In</span>
             <h1 class="welcome-heading">
-                {!! nl2br(e($heading)) !!}
+                Welcome to the<br />
+                <em>Inner Circle.</em>
             </h1>
 
-            @foreach($paragraphs as $paragraph)
-                @if(trim($paragraph))
-                    <p class="welcome-text">{{ $paragraph }}</p>
-                @endif
-            @endforeach
+            <p class="welcome-text">
+                Dear Connoisseur,
+            </p>
+            <p class="welcome-text">
+                We are delighted to welcome you into the heart of Cleopatra Baklava — where
+                centuries-old recipes meet European artistry. From the pistachio-laden valleys
+                of Gaziantep to the sun-drenched workshops of Barcelona, every piece we craft
+                is a quiet act of devotion.
+            </p>
+            <p class="welcome-text">
+                As a treasured member of our Inner Circle, you will be the first to receive
+                exclusive invitations, seasonal collection reveals, and tastings.
+            </p>
 
-            @if(count($features) > 0)
-                <span class="section-label">Why Cleopatra Baklava</span>
+            <!-- FEATURES -->
+            <span class="section-label">Why Cleopatra Baklava</span>
 
-                @foreach($features as $feature)
-                    <div class="feature-row">
-                        <div class="feature-icon">{{ $feature['icon'] ?? '✦' }}</div>
-                        <div class="feature-text">
-                            <h4>{{ $feature['title'] ?? '' }}</h4>
-                            <p>{{ $feature['text'] ?? '' }}</p>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
+            <div class="feature-row">
+                <div class="feature-icon">🌿</div>
+                <div class="feature-text">
+                    <h4>All-Natural Ingredients</h4>
+                    <p>We source only organic wildflower honey, first-harvest Gaziantep pistachios, and pure cultured butter — never shortcuts.</p>
+                </div>
+            </div>
 
+            <div class="feature-row">
+                <div class="feature-icon">🏛️</div>
+                <div class="feature-text">
+                    <h4>Ancient Techniques</h4>
+                    <p>Our master pastry chefs hand-roll each layer of phyllo to translucent perfection — a tradition unchanged for four centuries.</p>
+                </div>
+            </div>
+
+            <div class="feature-row">
+                <div class="feature-icon">📦</div>
+                <div class="feature-text">
+                    <h4>Express Delivery</h4>
+                    <p>Same-day delivery available in Barcelona. Every order ships in our signature collector's gift box, ready to impress.</p>
+                </div>
+            </div>
+
+            <!-- CTA -->
             <div class="cta-wrapper">
-                <a href="{{ $appUrl }}/shop" class="cta-button">
-                    {{ $ctaText }}
+                <a href="[APP_URL]/shop" class="cta-button">
+                    Explore the Collection
                 </a>
             </div>
         </div>
 
+        <!-- FOOTER -->
         <div class="email-footer">
             <div class="footer-brand">Cleopatra Baklava</div>
-            <div class="footer-address">{{ $footerAddress }}</div>
+            <div class="footer-address">
+                Carrer de les Flors 14, Barcelona, Spain<br />
+                hello@cleopatrabaklava.com &nbsp;·&nbsp; +34 93 123 4567
+            </div>
             <div class="footer-links">
-                <a href="{{ $appUrl }}/shop">Shop</a>
-                <a href="{{ $appUrl }}/newarrivals">New Arrivals</a>
-                <a href="{{ $appUrl }}/mostpopular">Most Popular</a>
+                <a href="[APP_URL]/shop">Shop</a>
+                <a href="[APP_URL]/newarrivals">New Arrivals</a>
+                <a href="[APP_URL]/mostpopular">Most Popular</a>
             </div>
             <div class="footer-divider"></div>
             <div class="footer-unsubscribe">
                 You are receiving this email because you subscribed at cleopatrabaklava.com.<br />
-                <a href="{{ $appUrl }}">Unsubscribe</a>
+                <a href="[APP_URL]">Unsubscribe</a>
             </div>
         </div>
 
     </div>
 </body>
 </html>
+HTML;
+
+        DB::table('settings')->insert([
+            'key' => 'welcome_email_template',
+            'value' => $template,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    public function down(): void
+    {
+        DB::table('settings')->where('key', 'welcome_email_template')->delete();
+    }
+};

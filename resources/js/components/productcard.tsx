@@ -1,16 +1,10 @@
-import { MessageSquareText, ShoppingBag } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { useCart } from '@/lib/cart';
 
 export default function ProductCard({ product }: { product: any }) {
     const { addToCart } = useCart();
-    const handleWhatsappOrder = () => {
-        const message = encodeURIComponent(
-            `Hello Cleopatra Baklava, I would like to order "${product.title}" for €${product.price}.`,
-        );
-        window.open(`https://wa.me/34931234567?text=${message}`, '_blank');
-    };
 
     return (
         <div
@@ -73,17 +67,8 @@ export default function ProductCard({ product }: { product: any }) {
                         onClick={() => addToCart(product)}
                         className="text-on-primary hover:bg-on-primary-container luxury-shadow flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-primary py-4 font-label-md text-white transition-all"
                     >
-                        {/* Note: Removed the material-symbols-outlined class around Lucide components to prevent icon rendering bugs */}
                         <ShoppingBag size={20} />
                         <span>ADD TO CART</span>
-                    </button>
-
-                    <button
-                        onClick={handleWhatsappOrder}
-                        className="hover:bg-primary-fixed/20 flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg border border-primary py-4 font-label-md text-primary transition-all"
-                    >
-                        <MessageSquareText size={20} />
-                        <span>ORDER VIA WHATSAPP</span>
                     </button>
                 </div>
             </div>

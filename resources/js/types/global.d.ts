@@ -17,5 +17,7 @@ export interface PageProps {
     auth: {
         user: User | null;
     };
+    whatsapp_number: string;
+    store_location: string;
     [key: string]: unknown;
 }

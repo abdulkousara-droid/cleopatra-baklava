@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { MessageSquareText, ShoppingBag, ArrowLeft, Plus, Minus, Trash2 } from 'lucide-react';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
@@ -6,6 +6,7 @@ import { useCart } from '@/lib/cart';
 
 export default function Checkout() {
     const { cartItems, cartTotal, itemCount, updateQuantity, removeFromCart } = useCart();
+    const { whatsapp_number } = usePage().props as { whatsapp_number: string };
 
     const handleWhatsappCheckout = () => {
         if (cartItems.length === 0) {
@@ -22,7 +23,7 @@ export default function Checkout() {
 
         const encodedMessage = encodeURIComponent(message);
         window.open(
-            `https://wa.me/34931234567?text=${encodedMessage}`,
+            `https://wa.me/${whatsapp_number}?text=${encodedMessage}`,
             '_blank',
         );
     };
@@ -60,15 +61,17 @@ export default function Checkout() {
                                 <ul className="divide-y divide-outline-variant/20 mb-8">
                                     {cartItems.map((item) => (
                                         <li key={item.id} className="py-6 flex flex-col md:flex-row items-start gap-6">
-                                            {item.image && (
-                                                <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg border border-outline-variant/30">
-                                                    <img src={item.image} alt={item.title} className="h-full w-full object-cover object-center" />
-                                                </div>
-                                            )}
+                                            <Link href={`/productshow?id=${item.id}`} className="flex-shrink-0">
+                                                {item.image && (
+                                                    <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg border border-outline-variant/30">
+                                                        <img src={item.image} alt={item.title} className="h-full w-full object-cover object-center" />
+                                                    </div>
+                                                )}
+                                            </Link>
                                             <div className="flex-1 flex flex-col justify-between w-full">
                                                 <div>
                                                     <div className="flex justify-between items-start">
-                                                        <h3 className="text-lg font-headline-sm">{item.title}</h3>
+                                                        <Link href={`/productshow?id=${item.id}`} className="text-lg font-headline-sm hover:text-primary transition-colors">{item.title}</Link>
                                                         <p className="text-lg font-bold text-primary">€{(item.price * item.quantity).toFixed(2)}</p>
                                                     </div>
                                                     <p className="mt-1 text-sm text-on-surface-variant font-body-md line-clamp-2 md:pr-12">{item.description}</p>

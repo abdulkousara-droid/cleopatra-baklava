@@ -1,77 +1,88 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Support\Facades\RateLimiter;
-use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Hash;
 
-test('login screen can be rendered', function () {
-    $response = $this->get(route('login'));
-
-    $response->assertOk();
+beforeEach(function () {
+    $this->admin = User::factory()->create([
+        'name' => 'Admin',
+        'email' => 'admin@cleopatrabaklava.com',
+        'password' => Hash::make('azeAZE12'),
+    ]);
 });
 
-test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+test('login screen redirects to admin login', function () {
+    $response = $this->get('/login');
+    $response->assertRedirect(route('admin.login'));
+});
 
-    $response = $this->post(route('login.store'), [
-        'email' => $user->email,
-        'password' => 'password',
+test('register screen redirects to admin login', function () {
+    $response = $this->get('/register');
+    $response->assertRedirect(route('admin.login'));
+});
+
+test('password reset screen redirects to admin login', function () {
+    $response = $this->get('/password/reset');
+    $response->assertRedirect(route('admin.login'));
+});
+
+test('admin can authenticate with correct credentials', function () {
+    $response = $this->post(route('admin.login'), [
+        'email' => 'admin@cleopatrabaklava.com',
+        'password' => 'azeAZE12',
     ]);
 
+    $response->assertRedirect(route('admin.products'));
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
 });
 
-test('users with two factor enabled are redirected to two factor challenge', function () {
-    $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
-
-    Features::twoFactorAuthentication([
-        'confirm' => true,
-        'confirmPassword' => true,
-    ]);
-
-    $user = User::factory()->withTwoFactor()->create();
-
-    $response = $this->post(route('login'), [
-        'email' => $user->email,
-        'password' => 'password',
-    ]);
-
-    $response->assertRedirect(route('two-factor.login'));
-    $response->assertSessionHas('login.id', $user->id);
-    $this->assertGuest();
-});
-
-test('users can not authenticate with invalid password', function () {
-    $user = User::factory()->create();
-
-    $this->post(route('login.store'), [
-        'email' => $user->email,
+test('admin cannot authenticate with wrong password', function () {
+    $response = $this->post(route('admin.login'), [
+        'email' => 'admin@cleopatrabaklava.com',
         'password' => 'wrong-password',
     ]);
 
+    $response->assertSessionHasErrors('email');
     $this->assertGuest();
 });
 
-test('users can logout', function () {
-    $user = User::factory()->create();
+test('non-admin email cannot authenticate via admin login', function () {
+    $user = User::factory()->create([
+        'password' => Hash::make('password123'),
+    ]);
 
-    $response = $this->actingAs($user)->post(route('logout'));
-
-    $response->assertRedirect(route('home'));
-
-    $this->assertGuest();
-});
-
-test('users are rate limited', function () {
-    $user = User::factory()->create();
-
-    RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
-
-    $response = $this->post(route('login.store'), [
+    $response = $this->post(route('admin.login'), [
         'email' => $user->email,
+        'password' => 'password123',
+    ]);
+
+    $response->assertSessionHasErrors('email');
+    $this->assertGuest();
+});
+
+test('admin can logout', function () {
+    $this->actingAs($this->admin);
+
+    $response = $this->post(route('admin.logout'));
+
+    $response->assertRedirect(route('admin.login'));
+    $this->assertGuest();
+});
+
+test('admin login is rate limited after 5 attempts', function () {
+    for ($i = 0; $i < 5; $i++) {
+        $this->post(route('admin.login'), [
+            'email' => 'admin@cleopatrabaklava.com',
+            'password' => 'wrong-password',
+        ]);
+    }
+
+    $response = $this->post(route('admin.login'), [
+        'email' => 'admin@cleopatrabaklava.com',
         'password' => 'wrong-password',
     ]);
 
-    $response->assertTooManyRequests();
+    $response->assertSessionHasErrors('email');
+    $errors = session()->get('errors');
+    expect($errors->get('email')[0])->toContain('Too many login attempts');
 });

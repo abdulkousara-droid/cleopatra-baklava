@@ -4,7 +4,6 @@ import {
     Info,
     Minus,
     Plus,
-    Truck,
     CheckCircle2,
     MessageSquarePlus,
     Loader2,
@@ -33,6 +32,7 @@ interface ProductData {
     badge?: string;
     description: string;
     tags?: string[];
+    allergens?: string[];
     image: string;
     additionalImages?: string[];
     category?: string;
@@ -306,15 +306,17 @@ export default function ProductShow({
                                         </div>
                                     )}
 
-                                    <div className="border-outline-variant/30 bg-surface-container-low rounded-xl border p-4">
-                                        <div className="mb-2 flex items-center gap-2">
-                                            <Info size={16} className="text-primary" />
-                                            <span className="text-on-surface font-label-md text-[12px] uppercase">Allergen Information</span>
+                                    {currentProduct.allergens && currentProduct.allergens.length > 0 && (
+                                        <div className="border-outline-variant/30 bg-surface-container-low rounded-xl border p-4">
+                                            <div className="mb-2 flex items-center gap-2">
+                                                <Info size={16} className="text-primary" />
+                                                <span className="text-on-surface font-label-md text-[12px] uppercase">Allergen Information</span>
+                                            </div>
+                                            <p className="text-on-surface-variant font-sans text-[12px]">
+                                                Contains: {currentProduct.allergens.join(', ')}.
+                                            </p>
                                         </div>
-                                        <p className="text-on-surface-variant font-sans text-[12px]">
-                                            Contains: Nuts (Pistachios), Gluten (Wheat), Dairy (Milk). May contain traces of other nuts.
-                                        </p>
-                                    </div>
+                                    )}
                                 </div>
 
                                 {/* Actions */}
@@ -350,11 +352,7 @@ export default function ProductShow({
                                     </button>
                                 </div>
 
-                                <div className="text-on-surface-variant border-outline-variant/30 mt-8 flex items-center justify-between border-t pt-6 font-label-md text-[12px]">
-                                    <div className="flex items-center gap-2">
-                                        <Truck size={16} className="text-primary" />
-                                        <span>Express Shipping in Barcelona</span>
-                                    </div>
+                                <div className="text-on-surface-variant border-outline-variant/30 mt-8 flex items-center justify-end border-t pt-6 font-label-md text-[12px]">
                                     <div className="flex items-center gap-2">
                                         <CheckCircle2 size={16} className="text-primary" />
                                         <span>Freshness Guaranteed</span>

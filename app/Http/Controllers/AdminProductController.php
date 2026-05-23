@@ -54,6 +54,7 @@ class AdminProductController extends Controller
             'image' => ['required', 'string'],
             'badge' => ['nullable', 'string', 'max:50'],
             'tags' => ['nullable'],
+            'allergens' => ['nullable'],
             'additional_images' => ['nullable'],
         ]);
 
@@ -64,6 +65,15 @@ class AdminProductController extends Controller
             }
         } else {
             $data['tags'] = [];
+        }
+
+        // Process allergens
+        if (isset($data['allergens'])) {
+            if (is_string($data['allergens'])) {
+                $data['allergens'] = array_values(array_filter(array_map('trim', explode(',', $data['allergens']))));
+            }
+        } else {
+            $data['allergens'] = [];
         }
 
         // Process additional images
@@ -97,6 +107,7 @@ class AdminProductController extends Controller
             'image' => ['required', 'string'],
             'badge' => ['nullable', 'string', 'max:50'],
             'tags' => ['nullable'],
+            'allergens' => ['nullable'],
             'additional_images' => ['nullable'],
         ]);
 
@@ -107,6 +118,15 @@ class AdminProductController extends Controller
             }
         } else {
             $data['tags'] = [];
+        }
+
+        // Process allergens
+        if (isset($data['allergens'])) {
+            if (is_string($data['allergens'])) {
+                $data['allergens'] = array_values(array_filter(array_map('trim', explode(',', $data['allergens']))));
+            }
+        } else {
+            $data['allergens'] = [];
         }
 
         // Process additional images

@@ -82,11 +82,10 @@ export default function Newsletter() {
                     Taste the Extraordinary
                 </h2>
                 <p className="text-[#6b5e47] font-sans text-base md:text-lg mb-3 max-w-lg mx-auto leading-relaxed">
-                    Join our Inner Circle for exclusive tasting invitations, seasonal collection reveals, and private discounts.
+                    Join our Inner Circle for exclusive tasting invitations, seasonal collection reveals, and artisan stories.
                 </p>
-                <p className="text-[#c9a84c] font-sans text-sm font-semibold mb-10">
-                    ✦ &nbsp; Get 15% off your first order when you subscribe
-                </p>
+
+                <div className="mb-10" />
 
                 {/* SUCCESS STATE */}
                 {(status === 'subscribed' || status === 'already_subscribed') && (
@@ -107,11 +106,6 @@ export default function Newsletter() {
                         <p className={`text-sm leading-relaxed mb-6 ${status === 'subscribed' ? 'text-[#9e8b6e]' : 'text-[#6b5e47]'}`}>
                             {message}
                         </p>
-                        {status === 'subscribed' && (
-                            <div className="bg-[#c9a84c] text-[#1e1b14] font-mono text-2xl font-bold tracking-[6px] py-3 px-8 inline-block rounded mb-4">
-                                CLEO15
-                            </div>
-                        )}
                         <div className="mt-2">
                             <button onClick={reset} className="text-sm text-[#c9a84c] hover:text-[#e8c96e] underline transition-colors cursor-pointer">
                                 {status === 'subscribed' ? 'Dismiss' : 'Go back'}
@@ -167,12 +161,6 @@ export default function Newsletter() {
                     </form>
                 )}
 
-                {/* Privacy note */}
-                {(status === 'idle' || status === 'loading') && (
-                    <p className="mt-4 text-[11px] text-[#b0a28c] tracking-wide">
-                        No spam, ever. Unsubscribe anytime. Your privacy is sacred to us.
-                    </p>
-                )}
             </div>
         </section>
     );

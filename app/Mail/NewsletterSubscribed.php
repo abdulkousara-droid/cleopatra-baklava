@@ -18,6 +18,7 @@ class NewsletterSubscribed extends Mailable
     {
         return new Envelope(
             subject: '✦ Welcome to the Cleopatra Baklava Inner Circle',
+            from: new \Illuminate\Mail\Mailables\Address('admin@cleopatrabaklava.com', 'Cleopatra Baklava'),
         );
     }
 
