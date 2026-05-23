@@ -4,21 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
 use Illuminate\Http\RedirectResponse;
 
 class AdminSettingController extends Controller
 {
-    public function index(): InertiaResponse
-    {
-        $settings = Setting::all()->pluck('value', 'key');
-
-        return Inertia::render('admin/settings', [
-            'settings' => $settings,
-        ]);
-    }
-
     public function update(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -39,6 +28,6 @@ class AdminSettingController extends Controller
         Setting::updateOrCreate(['key' => 'email_cta_text'], ['value' => $data['email_cta_text']]);
         Setting::updateOrCreate(['key' => 'email_footer_address'], ['value' => $data['email_footer_address']]);
 
-        return redirect()->route('admin.settings')->with('success', 'Settings saved successfully!');
+        return redirect()->route('admin.index')->with('success', 'Settings saved successfully!');
     }
 }

@@ -6,11 +6,12 @@ export default function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
+        _action: 'login',
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/admin/login', { onFinish: () => reset('password') });
+        post('/admin', { onFinish: () => reset('password') });
     };
 
     return (

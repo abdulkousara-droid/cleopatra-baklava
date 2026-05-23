@@ -4,10 +4,7 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StorefrontController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\AdminCategoryController;
-use App\Http\Controllers\AdminProductController;
-use App\Http\Controllers\AdminReviewController;
-use App\Http\Controllers\AdminSettingController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [StorefrontController::class, 'home'])->name('home');
@@ -34,38 +31,14 @@ Route::inertia('/catering', 'comingsoon', ['page' => 'Catering & Delivery'])->na
 Route::inertia('/privacy', 'comingsoon', ['page' => 'Privacy Policy'])->name('privacy');
 Route::inertia('/terms', 'comingsoon', ['page' => 'Terms of Service'])->name('terms');
 
-// Redirect any Fortify routes (/login, /register) to admin login
-Route::redirect('/login', '/admin/login')->name('login');
-Route::redirect('/register', '/admin/login');
-Route::redirect('/password/reset', '/admin/login');
+// Redirect any Fortify routes (/login, /register) to admin
+Route::redirect('/login', '/admin')->name('login');
+Route::redirect('/register', '/admin');
+Route::redirect('/password/reset', '/admin');
 
-// Admin Guest Routes
-Route::middleware('guest')->group(function () {
-    Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/admin/login', [AdminAuthController::class, 'login']);
-});
+// Admin — single route handles both login and dashboard based on auth state
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+Route::post('/admin', [AdminController::class, 'handleAction']);
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout')->middleware('auth');
 
-// Admin Protected Routes
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
-    
-    Route::get('/admin/products', [AdminProductController::class, 'index'])->name('admin.products');
-    Route::post('/admin/products', [AdminProductController::class, 'store'])->name('admin.products.store');
-    Route::put('/admin/products/{product}', [AdminProductController::class, 'update'])->name('admin.products.update');
-    Route::delete('/admin/products/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
 
-    // Categories management
-    Route::get('/admin/categories', [AdminCategoryController::class, 'index'])->name('admin.categories');
-    Route::post('/admin/categories', [AdminCategoryController::class, 'store'])->name('admin.categories.store');
-    Route::put('/admin/categories/{category}', [AdminCategoryController::class, 'update'])->name('admin.categories.update');
-    Route::delete('/admin/categories/{category}', [AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
-
-    // Reviews management
-    Route::get('/admin/reviews', [AdminReviewController::class, 'index'])->name('admin.reviews');
-    Route::put('/admin/reviews/{review}/approve', [AdminReviewController::class, 'toggleApprove'])->name('admin.reviews.approve');
-    Route::delete('/admin/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('admin.reviews.destroy');
-
-    // Settings
-    Route::get('/admin/settings', [AdminSettingController::class, 'index'])->name('admin.settings');
-    Route::put('/admin/settings', [AdminSettingController::class, 'update'])->name('admin.settings.update');
-});

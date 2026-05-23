@@ -4,22 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Products;
 use App\Models\Review;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
 use Illuminate\Http\RedirectResponse;
 
 class AdminReviewController extends Controller
 {
-    public function index(): InertiaResponse
-    {
-        $reviews = Review::with('product')->orderBy('id', 'desc')->get();
-
-        return Inertia::render('admin/reviews', [
-            'reviews' => $reviews,
-        ]);
-    }
-
     public function toggleApprove(Review $review): RedirectResponse
     {
         $review->update([
@@ -28,7 +16,7 @@ class AdminReviewController extends Controller
 
         $this->recalculateProductRating($review->product_id);
 
-        return redirect()->route('admin.reviews')->with('success',
+        return redirect()->route('admin.index')->with('success',
             $review->approved ? 'Review approved.' : 'Review disapproved.'
         );
     }
@@ -40,7 +28,7 @@ class AdminReviewController extends Controller
 
         $this->recalculateProductRating($productId);
 
-        return redirect()->route('admin.reviews')->with('success', 'Review deleted successfully!');
+        return redirect()->route('admin.index')->with('success', 'Review deleted successfully!');
     }
 
     private function recalculateProductRating(int $productId): void

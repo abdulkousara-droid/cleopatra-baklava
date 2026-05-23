@@ -20,7 +20,7 @@ class AdminAuth
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Unauthorized Access.'], 403);
             }
-            return redirect()->route('admin.login')->withErrors([
+            return redirect()->route('admin.index')->withErrors([
                 'email' => 'Unauthorized access. Only the designated administrator account is allowed.'
             ]);
         }

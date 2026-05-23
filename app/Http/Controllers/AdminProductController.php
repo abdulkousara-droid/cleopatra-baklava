@@ -2,48 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
 use App\Models\Products;
-use App\Models\Review;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
 use Illuminate\Http\RedirectResponse;
 
 class AdminProductController extends Controller
 {
-    /**
-     * Display the product list and statistics dashboard.
-     */
-    public function index(): InertiaResponse
-    {
-        $products = Products::with('category')->orderBy('id', 'desc')->get();
-        $categories = Categories::all();
-
-        // Gather metrics
-        $totalProducts = Products::count();
-        $totalReviews = Review::count();
-        $avgRating = round((float)Products::avg('rating_score'), 1);
-        if ($avgRating === 0.0) {
-            $avgRating = 5.0;
-        }
-        $totalCategories = Categories::count();
-
-        return Inertia::render('admin/dashboard', [
-            'products' => $products,
-            'categories' => $categories,
-            'stats' => [
-                'total_products' => $totalProducts,
-                'total_reviews' => $totalReviews,
-                'avg_rating' => $avgRating,
-                'total_categories' => $totalCategories,
-            ],
-        ]);
-    }
-
-    /**
-     * Store a newly created product in database.
-     */
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -91,7 +55,7 @@ class AdminProductController extends Controller
 
         Products::create($data);
 
-        return redirect()->route('admin.products')->with('success', 'Product created successfully!');
+        return redirect()->route('admin.index')->with('success', 'Product created successfully!');
     }
 
     /**
@@ -140,7 +104,7 @@ class AdminProductController extends Controller
 
         $product->update($data);
 
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
+        return redirect()->route('admin.index')->with('success', 'Product updated successfully!');
     }
 
     /**
@@ -150,6 +114,6 @@ class AdminProductController extends Controller
     {
         $product->delete();
 
-        return redirect()->route('admin.products')->with('success', 'Product deleted successfully!');
+        return redirect()->route('admin.index')->with('success', 'Product deleted successfully!');
     }
 }
