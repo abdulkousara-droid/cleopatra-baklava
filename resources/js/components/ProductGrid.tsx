@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import type { Product } from '@/types';
-
+import { RatingDisplay } from '@/components/StarRating';
 import { useCart } from '@/lib/cart';
 
 export default function ProductGrid({ products }:{ products: Product[] }) {
@@ -48,6 +48,10 @@ export default function ProductGrid({ products }:{ products: Product[] }) {
                                     €{Number(product.price).toFixed(2)}
                                 </span>
                             </div>
+                            <div className="mb-3">
+                                <RatingDisplay rating={product.rating_score ?? 0} count={product.reviews_count} />
+                            </div>
+
                             <p className="text-body-md text-on-surface-variant mb-6 min-h-[48px] font-body-md">
                                 {product.description}
                             </p>

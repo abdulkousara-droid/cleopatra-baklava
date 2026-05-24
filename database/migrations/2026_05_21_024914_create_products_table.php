@@ -23,7 +23,7 @@ return new class extends Migration
             $table->json('additional_images')->nullable();
             $table->json('tags'); // e.g., ['Pistachio', 'Organic Honey']
             $table->integer('reviews_count')->default(0); // For your Most Popular page rating layout
-            $table->decimal('rating_score', 2, 1)->default(5.0);
+            $table->decimal('rating_score', 2, 1)->default(0);
             $table->timestamps();
         });
     }

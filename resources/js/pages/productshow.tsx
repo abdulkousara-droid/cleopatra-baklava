@@ -10,9 +10,11 @@ import {
     CheckCircle,
     User,
     ChevronDown,
+    ChevronRight,
 } from 'lucide-react';
 import { Head, router, Link } from '@inertiajs/react';
 import { useCart } from '@/lib/cart';
+import { StarDisplay, RatingDisplay } from '@/components/StarRating';
 import Header from '@/components/Header';
 
 import Footer from '@/components/Footer';
@@ -31,6 +33,8 @@ interface RelatedProduct {
     price: number;
     badge: string | null;
     image: string;
+    reviews_count?: number;
+    rating_score?: number;
 }
 
 interface ProductData {
@@ -83,25 +87,6 @@ function StarPicker({
     );
 }
 
-// ── Star Display (static) ─────────────────────────────────────────────────────
-function StarDisplay({ rating, size = 16 }: { rating: number; size?: number }) {
-    return (
-        <div className="flex gap-0.5">
-            {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                    key={s}
-                    size={size}
-                    className={
-                        s <= Math.round(rating)
-                            ? 'fill-[#c9a84c] text-[#c9a84c]'
-                            : 'fill-transparent text-gray-300'
-                    }
-                />
-            ))}
-        </div>
-    );
-}
-
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function ProductShow({
     product,
@@ -121,6 +106,8 @@ export default function ProductShow({
     const [ratingsCount, setRatingsCount]     = useState(product?.reviews_count ?? 0);
     const [ratingScore, setRatingScore]       = useState(product?.rating_score ?? 0);
     const [showForm, setShowForm]             = useState(false);
+    const [showAllReviews, setShowAllReviews] = useState(false);
+    const displayedReviews                     = showAllReviews ? reviews : reviews.slice(0, 4);
     const [submitStatus, setSubmitStatus]     = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
     const [formError, setFormError]           = useState('');
     const [form, setForm] = useState({
@@ -418,6 +405,9 @@ export default function ProductShow({
                                         <h3 className="mb-1 font-serif font-bold text-foreground transition-colors group-hover:text-primary">
                                             {item.title}
                                         </h3>
+                                        <div className="mb-1">
+                                            <RatingDisplay rating={item.rating_score ?? 0} count={item.reviews_count} />
+                                        </div>
                                         <p className="font-label-md text-sm text-primary">€{Number(item.price).toFixed(2)} / pc</p>
                                     </Link>
                                 ))}
@@ -471,7 +461,7 @@ export default function ProductShow({
                                         <p className="text-sm text-[#9e8b6e]">Be the first to share your experience with this delicacy.</p>
                                     </div>
                                 ) : (
-                                    reviews.map((review) => (
+                                    displayedReviews.map((review) => (
                                         <div
                                             key={review.id}
                                             className="border border-[#e8dfc8] rounded-2xl bg-white p-6 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col"
@@ -496,6 +486,22 @@ export default function ProductShow({
                                 )}
                             </div>
                         </div>
+
+                        {/* Show more / show less toggle */}
+                        {reviews.length > 4 && (
+                            <div className="flex justify-center mt-6">
+                                <button
+                                    onClick={() => setShowAllReviews(!showAllReviews)}
+                                    className="flex items-center gap-2 text-sm font-semibold text-[#c9a84c] hover:text-[#b8983a] transition-colors cursor-pointer"
+                                >
+                                    {showAllReviews ? (
+                                        <>Show less <ChevronDown size={14} className="rotate-180" /></>
+                                    ) : (
+                                        <>Show all {reviews.length} reviews <ChevronRight size={14} /></>
+                                    )}
+                                </button>
+                            </div>
+                        )}
 
                         {/* ── Write a Review Form (slide-in) ──────────────────────────── */}
                         <div

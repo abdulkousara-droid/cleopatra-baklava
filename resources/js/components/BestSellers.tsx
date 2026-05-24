@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/lib/cart';
+import { RatingDisplay } from '@/components/StarRating';
 import type { Product } from '@/types';
 
 export default function Bestsellers({ products }: { products: Product[] }) {
@@ -55,6 +56,10 @@ export default function Bestsellers({ products }: { products: Product[] }) {
                             <Link href={`/productshow?id=${product.id}`} className="font-serif text-xl md:text-2xl font-semibold mb-2 text-primary hover:text-primary/80 transition-colors block">
                                 {product.title}
                             </Link>
+                            <div className="mb-3">
+                                <RatingDisplay rating={product.rating_score ?? 0} count={product.reviews_count} />
+                            </div>
+
                             <p className="text-muted-foreground text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
                                 {product.description}
                             </p>

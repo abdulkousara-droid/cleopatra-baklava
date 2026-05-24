@@ -21,7 +21,7 @@ class StorefrontController extends Controller
         return Inertia::render('shop', [
             'categories' => Category::where('name', '!=', 'All')->withCount('products')->get(),
             'products' => Product::with('category')->select([
-                'id', 'title', 'description', 'price', 'category_id', 'badge', 'image', 'tags'
+                'id', 'title', 'description', 'price', 'category_id', 'badge', 'image', 'tags', 'reviews_count', 'rating_score'
             ])->latest()->get()->map(function ($product) {
                 $data = $product->toArray();
                 $data['category'] = $product->category ? $product->category->name : null;
@@ -38,7 +38,7 @@ class StorefrontController extends Controller
     {
         return Inertia::render('newarrivals', [
             'products' => Product::where('badge', 'New Collection')
-                ->select(['id', 'title', 'description', 'price', 'badge', 'image'])
+                ->select(['id', 'title', 'description', 'price', 'badge', 'image', 'reviews_count', 'rating_score'])
                 ->latest()->get()
         ]);
     }
@@ -60,7 +60,7 @@ class StorefrontController extends Controller
      */
     public function home(): Response
     {
-        $columns = ['id', 'title', 'description', 'price', 'badge', 'image'];
+        $columns = ['id', 'title', 'description', 'price', 'badge', 'image', 'reviews_count', 'rating_score'];
 
         $featuredProducts = Product::whereIn('badge', ['Best Seller', 'Top Rated'])
             ->select($columns)
@@ -118,15 +118,17 @@ class StorefrontController extends Controller
         if ($product->category_id) {
             $relatedProducts = Product::where('category_id', $product->category_id)
                 ->where('id', '!=', $product->id)
-                ->select(['id', 'title', 'price', 'badge', 'image'])
+                ->select(['id', 'title', 'price', 'badge', 'image', 'reviews_count', 'rating_score'])
                 ->take(4)
                 ->get()
                 ->map(fn($p) => [
-                    'id'    => $p->id,
-                    'title' => $p->title,
-                    'price' => $p->price,
-                    'badge' => $p->badge,
-                    'image' => $p->image,
+                    'id'             => $p->id,
+                    'title'          => $p->title,
+                    'price'          => $p->price,
+                    'badge'          => $p->badge,
+                    'image'          => $p->image,
+                    'reviews_count'  => $p->reviews_count,
+                    'rating_score'   => $p->rating_score,
                 ])
                 ->toArray();
         }

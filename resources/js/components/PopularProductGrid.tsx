@@ -2,7 +2,7 @@ import { Plus } from 'lucide-react';
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import type { Product } from '@/types';
-
+import { RatingDisplay } from '@/components/StarRating';
 import { useCart } from '@/lib/cart';
 
 export default function PopularProductGrid({products}: { products: Product[] }) {
@@ -48,13 +48,8 @@ export default function PopularProductGrid({products}: { products: Product[] }) 
 
                         {/* Product description content container */}
                         <div className="flex-grow">
-                            <div className="mb-2 flex items-center gap-1">
-                                <span className="font-label-md text-primary">
-                                    {product.rating_score?.toFixed(1)}
-                                </span>
-                                <span className="text-on-surface-variant/60 text-caption ml-1">
-                                    ({product.reviews_count} reviews)
-                                </span>
+                            <div className="mb-2">
+                                <RatingDisplay rating={product.rating_score ?? 0} count={product.reviews_count} />
                             </div>
                             <Link href={`/productshow?id=${product.id}`} className="block">
                                 <h3 className="text-headline-sm text-on-surface mb-2 font-headline-sm hover:text-primary transition-colors">

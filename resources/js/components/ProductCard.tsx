@@ -2,6 +2,7 @@ import { ShoppingBag } from 'lucide-react';
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { useCart } from '@/lib/cart';
+import { RatingDisplay } from '@/components/StarRating';
 import type { Product } from '@/types';
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -45,6 +46,10 @@ export default function ProductCard({ product }: { product: Product }) {
                     <span className="text-headline-sm font-headline-sm text-primary">
                         €{product.price}
                     </span>
+                </div>
+
+                <div className="mb-3">
+                    <RatingDisplay rating={product.rating_score ?? 0} count={product.reviews_count} />
                 </div>
 
                 <p className="text-body-md text-on-surface-variant mb-6 line-clamp-3 font-body-md">
