@@ -11,7 +11,7 @@ RUN npm run build
 # ==========================================
 # Step 2: Build Production PHP Application
 # ==========================================
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Install system dependencies, Nginx, Supervisor, and Postgres development libraries
 RUN apk add --no-cache \
