@@ -57,16 +57,18 @@ export default function ProductCard({ product }: { product: Product }) {
                 </p>
 
                 {/* Categories / Tags pills */}
-                <div className="mb-6 flex flex-wrap items-center space-x-2 gap-y-2">
-                    {(product.tags ?? []).map((tag: string, idx: number) => (
-                        <span
-                            key={idx}
-                            className="bg-secondary-container text-on-secondary-container rounded-full bg-pink-200 px-3 py-1 text-[12px] font-semibold"
-                        >
-                            {tag}
-                        </span>
-                    ))}
-                </div>
+                {product.tags && product.tags.length > 0 && (
+                    <div className="mb-6 flex flex-wrap items-center space-x-2 gap-y-2">
+                        {product.tags.map((tag: string, idx: number) => (
+                            <span
+                                key={idx}
+                                className="bg-secondary-container text-on-secondary-container rounded-full bg-pink-200 px-3 py-1 text-[12px] font-semibold"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
 
                 {/* CTA Actions buttons */}
                 <div className="space-y-3">
