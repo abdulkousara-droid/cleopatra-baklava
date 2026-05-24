@@ -44,8 +44,11 @@ RUN php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache
 
-# Set permissions so web server can write to storage paths
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Set strict ownership of the entire directory to the web server user
+RUN chown -R www-data:www-data /var/www/html
+
+# Ensure correct write permissions for critical internal storage and caching locations
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
 
