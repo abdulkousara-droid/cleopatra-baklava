@@ -24,12 +24,10 @@ class DatabaseSeeder extends Seeder
 
        // Product::factory(20)->create();
 
-        User::firstOrCreate(
-            ['email' => 'admin@cleopatrabaklava.com'],
-            [
-                'name' => 'Admin',
-                'password' => Hash::make('azeAZE12'),
-            ]
-        );
+        User::factory()->create([
+            'name' => '',
+            'email' => '',
+            'password' => Hash::make(''),
+        ]);
     }
 }

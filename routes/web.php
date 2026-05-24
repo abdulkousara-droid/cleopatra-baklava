@@ -41,9 +41,3 @@ Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 Route::post('/admin', [AdminController::class, 'handleAction']);
 Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout')->middleware('auth');
 
-Route::get('/run-migrations-xyz123', function () {
-    Artisan::call('migrate:refresh', ['--seed' => true, '--force' => true]);
-    return Artisan::output();
-});
-
-
