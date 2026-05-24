@@ -17,17 +17,18 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-       // $categories = ['Baklava', 'Kunafa', 'Mamoul', 'Traditional', 'Gift Boxes'];
+       $categories = ['Baklava', 'Kunafa', 'Mamoul', 'Traditional', 'Gift Boxes'];
 
-       // foreach ($categories as $category) {
-      //      Category::firstOrCreate(['name' => $category]);}
+       foreach ($categories as $category) {
+            Category::firstOrCreate(['name' => $category]);
+       }
 
-       // Product::factory(20)->create();
+       Product::factory(20)->create();
 
         User::factory()->create([
-            'name' => '',
-            'email' => '',
-            'password' => Hash::make(''),
+            'name' => 'admin@cleopatrabaklava.com',
+            'email' => 'Admin',
+            'password' => Hash::make('azeAZE12'),
         ]);
     }
 }

@@ -1,4 +1,4 @@
-import { Plus, Star } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import type { Product } from '@/types';
@@ -49,9 +49,8 @@ export default function PopularProductGrid({products}: { products: Product[] }) 
                         {/* Product description content container */}
                         <div className="flex-grow">
                             <div className="mb-2 flex items-center gap-1">
-                                <Star className="text-sm text-primary" />
                                 <span className="font-label-md text-primary">
-                                    {product.rating_score}
+                                    {product.rating_score?.toFixed(1)}
                                 </span>
                                 <span className="text-on-surface-variant/60 text-caption ml-1">
                                     ({product.reviews_count} reviews)
