@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react'; // 1. Added useState
 import { Head, useForm, Link } from '@inertiajs/react';
-import { Lock, Mail, ArrowLeft, Loader2, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, ArrowLeft, Loader2, ShieldCheck, Eye, EyeOff } from 'lucide-react'; // 2. Added Eye & EyeOff
 
 export default function Login() {
+    // State to manage password visibility
+    const [showPassword, setShowPassword] = useState(false);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -59,7 +62,7 @@ export default function Login() {
                                     <input
                                         id="email" type="email" autoFocus autoComplete="email" required
                                         value={data.email} onChange={e => setData('email', e.target.value)}
-                                        placeholder="admin@cleopatrabaklava.com"
+                                        placeholder="example@cleopatrabaklava.com"
                                         className="block w-full pl-11 pr-4 py-3.5 bg-[#100e0a] border border-[rgba(201,168,76,0.1)] rounded-xl text-[#f5f0e8] text-sm outline-none transition-[border-color] duration-200 box-border font-inherit focus:border-[rgba(201,168,76,0.5)]"
                                     />
                                 </div>
@@ -71,11 +74,24 @@ export default function Login() {
                                 <div className="relative">
                                     <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4a4030] pointer-events-none" />
                                     <input
-                                        id="password" type="password" autoComplete="current-password" required
-                                        value={data.password} onChange={e => setData('password', e.target.value)}
+                                        id="password"
+                                        type={showPassword ? 'text' : 'password'}  // Dynamically switch types
+                                        autoComplete="current-password"
+                                        required
+                                        value={data.password}
+                                        onChange={e => setData('password', e.target.value)}
                                         placeholder="••••••••••••"
-                                        className="block w-full pl-11 pr-4 py-3.5 bg-[#100e0a] border border-[rgba(201,168,76,0.1)] rounded-xl text-[#f5f0e8] text-sm outline-none transition-[border-color] duration-200 box-border font-inherit focus:border-[rgba(201,168,76,0.5)]"
+                                        className="block w-full pl-11 pr-12 py-3.5 bg-[#100e0a] border border-[rgba(201,168,76,0.1)] rounded-xl text-[#f5f0e8] text-sm outline-none transition-[border-color] duration-200 box-border font-inherit focus:border-[rgba(201,168,76,0.5)]"
                                     />
+                                    {/* Visibility Toggle Button */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#4a4030] hover:text-[#c9a84c] transition-colors bg-transparent border-none p-0 cursor-pointer flex items-center justify-center focus:outline-none"
+                                        title={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                    </button>
                                 </div>
                             </div>
 
