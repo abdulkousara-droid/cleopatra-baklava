@@ -71,7 +71,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 )}
 
                 {/* CTA Actions buttons */}
-                <div className="space-y-3">
+                <div className="mt-auto space-y-3">
                     <button
                         onClick={() => addToCart(product)}
                         className="text-on-primary hover:bg-on-primary-container luxury-shadow flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-primary py-4 font-label-md text-white transition-all"
