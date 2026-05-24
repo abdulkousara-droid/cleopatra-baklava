@@ -4,7 +4,7 @@ import {
     Package, Tag, MessageSquare, Star, Settings as SettingsIcon,
     Send, LogOut, Globe, CheckCircle,
 } from 'lucide-react';
-import { c, Pill } from './shared';
+import { Pill } from './shared';
 import ProductsSection from './ProductsSection';
 import CategoriesSection from './CategoriesSection';
 import ReviewsSection from './ReviewsSection';
@@ -35,7 +35,7 @@ export default function AdminIndex({ products = [], categories = [], reviews = [
         { key: 'campaign', label: 'Campaign', icon: Send },
     ];
 
-    const err = (msg?: string) => msg ? <p className="mt-1 text-xs font-semibold" style={{ color: c.danger }}>{msg}</p> : null;
+    const err = (msg?: string) => msg ? <p className="mt-1 text-xs font-semibold text-red-600">{msg}</p> : null;
 
     return (
         <>
@@ -48,13 +48,13 @@ export default function AdminIndex({ products = [], categories = [], reviews = [
                 ::placeholder { color: #b5a898; }
             `}</style>
 
-            <div className="min-h-screen" style={{ background: c.bg }}>
-                <nav className="sticky top-0 z-[100] flex items-center justify-between px-8 h-16" style={{ background: c.nav, borderBottom: '1px solid rgba(201,168,76,0.12)', boxShadow: '0 1px 16px rgba(0,0,0,0.25)' }}>
+            <div className="min-h-screen bg-admin-bg">
+                <nav className="sticky top-0 z-[100] flex items-center justify-between px-8 h-16 bg-admin-nav border-b border-accent/12 shadow-[0_1px_16px_rgba(0,0,0,0.25)]">
                     <div className="flex items-center gap-3.5">
                         <img src="/logo.svg" alt="Logo" className="h-10 w-auto" />
                         <div>
                             <div className="text-[#f5f0e8] font-serif text-lg font-semibold leading-tight">
-                                Cleopatra <span className="text-[11px] font-extrabold tracking-[0.2em] uppercase align-middle" style={{ color: c.gold }}>Admin</span>
+                                Cleopatra <span className="text-[11px] font-extrabold tracking-[0.2em] uppercase align-middle text-accent">Admin</span>
                             </div>
                             <div className="text-[#5a5040] text-[10px] tracking-[0.18em] uppercase mt-0.5 font-semibold">Barcelona Workspace</div>
                         </div>
@@ -63,26 +63,18 @@ export default function AdminIndex({ products = [], categories = [], reviews = [
                     <div className="flex items-center gap-1">
                         {tabs.map(({ key, label, icon: Icon }) => (
                             <button key={key} onClick={() => setActiveTab(key)}
-                                className="flex items-center gap-[7px] px-4 py-2 text-xs font-bold tracking-[0.1em] uppercase cursor-pointer border-none rounded-lg transition-all duration-200 font-inherit"
-                                style={{
-                                    background: activeTab === key ? c.goldLight : 'transparent',
-                                    color: activeTab === key ? c.goldDark : '#7a6e5e',
-                                }}>
+                                className={`flex items-center gap-[7px] px-4 py-2 text-xs font-bold tracking-[0.1em] uppercase cursor-pointer border-none rounded-lg transition-all duration-200 font-inherit ${
+                                    activeTab === key ? 'bg-accent/10 text-primary' : 'bg-transparent text-[#7a6e5e]'
+                                }`}>
                                 <Icon size={15} /> {label}
                             </button>
                         ))}
                         <Link href="/"
-                            className="flex items-center gap-[7px] px-4 py-2 text-xs font-semibold tracking-[0.1em] uppercase no-underline rounded-lg transition-colors duration-200"
-                            style={{ color: '#7a6e5e' }}
-                            onMouseEnter={e => (e.currentTarget.style.color = c.gold)}
-                            onMouseLeave={e => (e.currentTarget.style.color = '#7a6e5e')}>
+                            className="flex items-center gap-[7px] px-4 py-2 text-xs font-semibold tracking-[0.1em] uppercase no-underline rounded-lg transition-colors duration-200 text-[#7a6e5e] hover:text-accent">
                             <Globe size={15} /> Shopfront
                         </Link>
                         <button onClick={() => router.post('/admin/logout')}
-                            className="flex items-center gap-[7px] text-[#f87171] border border-[rgba(220,38,38,0.2)] rounded-lg px-4 py-2 text-xs font-bold tracking-[0.1em] uppercase cursor-pointer transition-all duration-200"
-                            style={{ background: 'rgba(220,38,38,0.08)' }}
-                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.16)'; }}
-                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(220,38,38,0.08)'; }}>
+                            className="flex items-center gap-[7px] text-[#f87171] border border-red-600/20 rounded-lg px-4 py-2 text-xs font-bold tracking-[0.1em] uppercase cursor-pointer transition-all duration-200 bg-red-600/10 hover:bg-red-600/20">
                             <LogOut size={14} /> Sign Out
                         </button>
                     </div>
@@ -98,9 +90,8 @@ export default function AdminIndex({ products = [], categories = [], reviews = [
             </div>
 
             {toast && (
-                <div className="fixed bottom-7 right-7 z-[300] flex items-center gap-3 rounded-xl px-[22px] py-4"
-                    style={{ background: c.dark, border: '1px solid rgba(201,168,76,0.25)', boxShadow: '0 12px 40px rgba(0,0,0,0.3)' }}>
-                    <CheckCircle size={18} className="shrink-0" style={{ color: c.gold }} />
+                <div className="fixed bottom-7 right-7 z-[300] flex items-center gap-3 rounded-xl px-[22px] py-4 bg-foreground border border-accent/25 shadow-[0_12px_40px_rgba(0,0,0,0.3)]">
+                    <CheckCircle size={18} className="shrink-0 text-accent" />
                     <span className="text-sm font-semibold text-[#f5f0e8]">{toast}</span>
                 </div>
             )}

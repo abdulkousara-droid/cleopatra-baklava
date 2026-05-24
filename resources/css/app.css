@@ -66,6 +66,12 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
 
+    --color-admin-bg: #f7f5f0;
+    --color-admin-border: #e8e2d6;
+    --color-admin-faint: #b5a898;
+    --color-admin-muted: #8a7d6a;
+    --color-admin-nav: #1a1712;
+
     /* Material Design Aliases used in components */
     --color-on-primary: var(--primary-foreground);
     --color-on-surface: var(--foreground);
