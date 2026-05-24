@@ -22,35 +22,20 @@ RUN apk add --no-cache \
     bash \
     && docker-php-ext-install pdo pdo_pgsql
 
-# Set production directory
 WORKDIR /var/www/html
 
-# Copy full application context
 COPY . .
 
-# Copy compiled frontend assets from the first stage
 COPY --from=frontend-builder /app/public/build ./public/build
 
-# Install Composer production dependencies
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# Setup custom configuration files for web routing and process management
 COPY .docker/nginx.conf /etc/nginx/nginx.conf
 COPY .docker/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
-# Cache Laravel configurations for maximum production speed
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
-
-# Set strict ownership of the entire directory to the web server user
 RUN chown -R www-data:www-data /var/www/html
-
-# Ensure correct write permissions for critical internal storage and caching locations
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Force PHP-FPM to listen on TCP port 9000 instead of a Unix socket
 RUN sed -i 's/listen = \/.*/listen = 127.0.0.1:9000/g' /usr/local/etc/php-fpm.d/www.conf 2>/dev/null || true
 
 EXPOSE 80
