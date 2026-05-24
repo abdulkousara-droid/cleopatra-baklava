@@ -1,29 +1,50 @@
-# Use an official production-ready PHP-FPM image
+# ==========================================
+# Step 1: Build Frontend Assets (Vite)
+# ==========================================
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# ==========================================
+# Step 2: Build Production PHP Application
+# ==========================================
 FROM php:8.3-fpm-alpine
 
-# Install system dependencies & Postgres drivers
-RUN alpine-apk-bootstrap && apk add --no-cache \
+# Install system dependencies, Nginx, Supervisor, and Postgres development libraries
+RUN apk add --no-cache \
     nginx \
     supervisor \
     postgresql-dev \
     libpq-dev \
+    bash \
     && docker-php-ext-install pdo pdo_pgsql
 
-# Set working directory
+# Set production directory
 WORKDIR /var/www/html
 
-# Copy project files
+# Copy full application context
 COPY . .
 
-# Install production dependencies
+# Copy compiled frontend assets from the first stage
+COPY --from=frontend-builder /app/public/build ./public/build
+
+# Install Composer production dependencies
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# Configure Nginx & Supervisor configuration (Render needs Nginx to route traffic to PHP)
+# Setup custom configuration files for web routing and process management
 COPY .docker/nginx.conf /etc/nginx/nginx.conf
 COPY .docker/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
-# Set permissions for Laravel
+# Cache Laravel configurations for maximum production speed
+RUN php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache
+
+# Set permissions so web server can write to storage paths
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
