@@ -50,6 +50,9 @@ RUN chown -R www-data:www-data /var/www/html
 # Ensure correct write permissions for critical internal storage and caching locations
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Force PHP-FPM to listen on TCP port 9000 instead of a Unix socket
+RUN sed -i 's/listen = \/.*/listen = 127.0.0.1:9000/g' /usr/local/etc/php-fpm.d/www.conf 2>/dev/null || true
+
 EXPOSE 80
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisor.conf"]
