@@ -245,12 +245,12 @@ export default function ProductsSection({ products, categories, stats, err, show
                             </div>
 
                             <div className="mt-6 pt-6 border-t border-admin-border">
-                                <p className="text-[11px] font-bold tracking-[0.14em] uppercase mb-4 text-admin-faint">Optional Enhancements</p>
-                                {[
-                                    ['Tags', 'tags', tagRef, Hash] as const,
-                                    ['Allergens', 'allergens', allergenRef, Apple] as const,
-                                    ['Gallery Images', 'additional_images', imageRef, Image] as const,
-                                ].map(([label, field, inpRef, Icon], i) => (
+                                <p className="text-[11px] font-bold tracking-[0.14em] uppercase mb-4 text-admin-faint">Enhancements</p>
+                                {([
+                                    ['Tags', 'tags', tagRef, Hash],
+                                    ['Allergens', 'allergens', allergenRef, Apple],
+                                    ['Gallery Images', 'additional_images', imageRef, Image],
+                                ] as const).map(([label, field, inpRef, Icon], i) => (
                                     <div key={i} className="rounded-xl px-5 py-4 flex items-start gap-4 mb-3 bg-accent/10 border border-accent/20">
                                         <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-[rgba(201,168,76,0.15)] text-primary">
                                             <Icon size={16} />
@@ -258,7 +258,9 @@ export default function ProductsSection({ products, categories, stats, err, show
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-baseline gap-2 mb-2">
                                                 <span className="text-xs font-bold tracking-[0.08em] uppercase text-foreground">{label}</span>
-                                                <span className="text-[10px] font-semibold text-admin-faint">Optional</span>
+                                                {field !== 'tags' && (
+                                                    <span className="text-[10px] font-semibold text-admin-faint">Optional</span>
+                                                )}
                                             </div>
                                             <div className="flex flex-wrap gap-1.5 mb-2 min-h-[28px]">
                                                 {csv((ref.current as any)[field]).length === 0 && (

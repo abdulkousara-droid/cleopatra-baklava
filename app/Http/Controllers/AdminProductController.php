@@ -17,18 +17,15 @@ class AdminProductController extends Controller
             'description' => ['required', 'string'],
             'image' => ['required', 'url'],
             'badge' => ['nullable', 'string', 'max:50'],
-            'tags' => ['nullable'],
+            'tags' => ['required'],
             'allergens' => ['nullable'],
             'additional_images' => ['nullable'],
         ]);
 
         // Process tags
-        if (isset($data['tags'])) {
-            if (is_string($data['tags'])) {
-                $data['tags'] = array_values(array_filter(array_map('trim', explode(',', $data['tags']))));
-            }
-        } else {
-            $data['tags'] = [];
+        $data['tags'] = array_values(array_filter(array_map('trim', explode(',', $data['tags']))));
+        if (empty($data['tags'])) {
+            return redirect()->back()->withErrors(['tags' => 'At least one tag is required.'])->withInput();
         }
 
         // Process allergens
@@ -51,7 +48,7 @@ class AdminProductController extends Controller
 
         // Default counters
         $data['reviews_count'] = 0;
-        $data['rating_score'] = 5.0;
+        $data['rating_score'] = 0;
 
         Product::create($data);
 
@@ -70,18 +67,15 @@ class AdminProductController extends Controller
             'description' => ['required', 'string'],
             'image' => ['required', 'url'],
             'badge' => ['nullable', 'string', 'max:50'],
-            'tags' => ['nullable'],
+            'tags' => ['required'],
             'allergens' => ['nullable'],
             'additional_images' => ['nullable'],
         ]);
 
         // Process tags
-        if (isset($data['tags'])) {
-            if (is_string($data['tags'])) {
-                $data['tags'] = array_values(array_filter(array_map('trim', explode(',', $data['tags']))));
-            }
-        } else {
-            $data['tags'] = [];
+        $data['tags'] = array_values(array_filter(array_map('trim', explode(',', $data['tags']))));
+        if (empty($data['tags'])) {
+            return redirect()->back()->withErrors(['tags' => 'At least one tag is required.'])->withInput();
         }
 
         // Process allergens

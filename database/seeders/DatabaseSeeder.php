@@ -25,10 +25,6 @@ class DatabaseSeeder extends Seeder
 
        Product::factory(20)->create();
 
-        User::factory()->create([
-            'name' => 'admin@cleopatrabaklava.com',
-            'email' => 'Admin',
-            'password' => Hash::make('azeAZE12'),
-        ]);
+       
     }
 }
