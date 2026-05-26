@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
@@ -15,12 +16,19 @@ class AdminProductController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'exists:categories,id'],
             'description' => ['required', 'string'],
-            'image' => ['required', 'url'],
+            'image' => ['required_without:image_file', 'url', 'nullable'],
+            'image_file' => ['nullable', 'image', 'max:2048'],
             'badge' => ['nullable', 'string', 'max:50'],
             'tags' => ['required'],
             'allergens' => ['nullable'],
             'additional_images' => ['nullable'],
         ]);
+
+        // Handle uploaded image file if present (store)
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('products', 'public');
+            $data['image'] = Storage::disk('public')->url($path);
+        }
 
         // Process tags
         $data['tags'] = array_values(array_filter(array_map('trim', explode(',', $data['tags']))));
@@ -65,12 +73,19 @@ class AdminProductController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'exists:categories,id'],
             'description' => ['required', 'string'],
-            'image' => ['required', 'url'],
+            'image' => ['required_without:image_file', 'url', 'nullable'],
+            'image_file' => ['nullable', 'image', 'max:2048'],
             'badge' => ['nullable', 'string', 'max:50'],
             'tags' => ['required'],
             'allergens' => ['nullable'],
             'additional_images' => ['nullable'],
         ]);
+
+        // Handle uploaded image file if present (update)
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('products', 'public');
+            $data['image'] = Storage::disk('public')->url($path);
+        }
 
         // Process tags
         $data['tags'] = array_values(array_filter(array_map('trim', explode(',', $data['tags']))));
