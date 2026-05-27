@@ -11,23 +11,26 @@ class AdminProductController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate([
+        $rules = [
             'title' => ['required', 'string', 'max:255', 'unique:products,title'],
             'price' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'exists:categories,id'],
             'description' => ['required', 'string'],
-            'image' => ['required_without:image_file', 'url', 'nullable'],
             'image_file' => ['nullable', 'image', 'max:2048'],
             'badge' => ['nullable', 'string', 'max:50'],
             'tags' => ['required'],
             'allergens' => ['nullable'],
             'additional_images' => ['nullable'],
-        ]);
+        ];
+
+        $rules['image'] = ['nullable'];
+
+        $data = $request->validate($rules);
 
         // Handle uploaded image file if present (store)
         if ($request->hasFile('image_file')) {
             $path = $request->file('image_file')->store('products', 'public');
-            $data['image'] = Storage::disk('public')->url($path);
+            $data['image'] = asset('storage/' . $path);
         }
 
         // Process tags
@@ -68,23 +71,26 @@ class AdminProductController extends Controller
      */
     public function update(Request $request, Product $product): RedirectResponse
     {
-        $data = $request->validate([
+        $rules = [
             'title' => ['required', 'string', 'max:255', 'unique:products,title,' . $product->id],
             'price' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'exists:categories,id'],
             'description' => ['required', 'string'],
-            'image' => ['required_without:image_file', 'url', 'nullable'],
             'image_file' => ['nullable', 'image', 'max:2048'],
             'badge' => ['nullable', 'string', 'max:50'],
             'tags' => ['required'],
             'allergens' => ['nullable'],
             'additional_images' => ['nullable'],
-        ]);
+        ];
+
+        $rules['image'] = ['nullable'];
+
+        $data = $request->validate($rules);
 
         // Handle uploaded image file if present (update)
         if ($request->hasFile('image_file')) {
             $path = $request->file('image_file')->store('products', 'public');
-            $data['image'] = Storage::disk('public')->url($path);
+            $data['image'] = asset('storage/' . $path);
         }
 
         // Process tags

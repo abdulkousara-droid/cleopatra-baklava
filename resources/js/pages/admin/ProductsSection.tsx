@@ -15,6 +15,7 @@ export default function ProductsSection({ products, categories, stats, err, show
     const [catFilter, setCatFilter] = useState('All');
     const [modalOpen, setModalOpen] = useState(false);
     const [toDelete, setToDelete] = useState<Product | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     const tagRef = useRef<HTMLInputElement>(null);
     const allergenRef = useRef<HTMLInputElement>(null);
@@ -23,7 +24,7 @@ export default function ProductsSection({ products, categories, stats, err, show
     const { data, setData, processing, errors, reset, clearErrors } = useForm({
         id: null as number | null,
         title: '', price: '', category_id: '',
-        badge: '', description: '', image: '', tags: '', allergens: '', additional_images: '',
+        badge: '', description: '', image: '', image_file: null as File | null, tags: '', allergens: '', additional_images: '',
     });
 
     const ref = useRef(data);
@@ -57,12 +58,16 @@ export default function ProductsSection({ products, categories, stats, err, show
 
     const openAdd = () => {
         clearErrors(); reset();
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setPreviewUrl(null);
         setData({ id: null, title: '', price: '', category_id: String(categories[0]?.id ?? ''), badge: '', description: '', image: '', tags: '', allergens: '', additional_images: '' });
         setModalOpen(true);
     };
     const openEdit = (p: Product) => {
         clearErrors();
-        setData({ id: p.id, title: p.title, price: String(p.price), category_id: String(p.category_id), badge: p.badge ?? '', description: p.description, image: p.image, tags: (p.tags ?? []).join(', '), allergens: (p.allergens ?? []).join(', '), additional_images: (p.additional_images ?? []).join(', ') });
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setPreviewUrl(null);
+        setData({ id: p.id, title: p.title, price: String(p.price), category_id: String(p.category_id), badge: p.badge ?? '', description: p.description, image: p.image, image_file: null, tags: (p.tags ?? []).join(', '), allergens: (p.allergens ?? []).join(', '), additional_images: (p.additional_images ?? []).join(', ') });
         setModalOpen(true);
     };
     const handleSubmit = (e: React.FormEvent) => {
@@ -70,6 +75,8 @@ export default function ProductsSection({ products, categories, stats, err, show
         const action = data.id ? 'update-product' : 'store-product';
         router.post('/admin', { ...data, _action: action }, {
             onSuccess: () => {
+                if (previewUrl) URL.revokeObjectURL(previewUrl);
+                setPreviewUrl(null);
                 setModalOpen(false);
                 reset();
                 showToast(data.id ? 'Product updated successfully!' : 'Product created successfully!');
@@ -186,21 +193,21 @@ export default function ProductsSection({ products, categories, stats, err, show
 
             {modalOpen && (
                 <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
-                    <div onClick={() => setModalOpen(false)} className="fixed inset-0 bg-[rgba(14,12,8,0.72)] backdrop-blur-[6px]" />
+                    <div onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setModalOpen(false); }} className="fixed inset-0 bg-[rgba(14,12,8,0.72)] backdrop-blur-[6px]" />
                     <div className="relative z-10 w-full max-w-[700px] max-h-[92vh] rounded-2xl overflow-hidden flex flex-col bg-card border border-admin-border shadow-[0_40px_100px_rgba(0,0,0,0.18)]">
                         <div className="flex items-center justify-between shrink-0 px-7 py-6 bg-[#faf8f4] border-b border-admin-border">
                             <div className="flex items-center gap-2.5">
                                 <Sparkles size={20} className="text-accent" />
                                 <h3 className="font-serif text-[22px] font-bold m-0 text-foreground">{data.id ? 'Edit Product' : 'Add New Product'}</h3>
                             </div>
-                            <button onClick={() => setModalOpen(false)}
+                            <button onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setModalOpen(false); }}
                                 className="w-[34px] h-[34px] flex items-center justify-center border-none rounded-full bg-transparent cursor-pointer transition-all duration-200 text-admin-muted hover:bg-[#e8e2d6]">
                                 <X size={19} />
                             </button>
                         </div>
                         <form className="overflow-y-auto flex-1 p-7" onSubmit={handleSubmit}>
                             <div className="grid grid-cols-2 gap-5">
-                                <div className="col-span-2">
+                                                                                                                                    <div className="col-span-2">
                                     <label className={labelClass}>Product Title *</label>
                                     <input type="text" required value={data.title} onChange={e => setData('title', e.target.value)} placeholder="e.g. Cleopatra's Pistachio Nest"
                                         className={inputClass + ' focus:border-accent'} />
@@ -220,17 +227,46 @@ export default function ProductsSection({ products, categories, stats, err, show
                                         className={inputClass + ' focus:border-accent'} />
                                     {err(errors.price)}
                                 </div>
-                                <div className="col-span-2">
-                                    <label className={labelClass}>Primary Image URL *</label>
-                                    <input type="text" required value={data.image} onChange={e => setData('image', e.target.value)} placeholder="/images/product.png or https://..."
-                                        className={inputClass + ' focus:border-accent'} />
-                                    {err(errors.image)}
-                                </div>
-                                <div className="col-span-2">
+                                                                <div className="col-span-2">
                                     <label className={labelClass}>Description *</label>
                                     <textarea required rows={3} value={data.description} onChange={e => setData('description', e.target.value)} placeholder="Describe ingredients, heritage, texture..."
                                         className={inputClass + ' resize-none focus:border-accent'} />
                                     {err(errors.description)}
+                                </div>
+                                <div className="col-span-2">
+                                    <label className={labelClass}>Primary Image <span className="font-normal normal-case tracking-normal text-admin-faint">(optional)</span></label>
+                                    {(previewUrl || data.image) ? (
+                                        <div className="relative w-full max-w-[200px] rounded-lg overflow-hidden border border-admin-border mb-3">
+                                            <img src={previewUrl || data.image} alt="Preview" className="w-full h-32 object-cover" />
+                                            <button type="button" onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setData('image', ''); setData('image_file', null); }}
+                                                className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-black/50 text-white text-xs border-none cursor-pointer hover:bg-black/70 transition-colors">
+                                                ×
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="mb-3 flex items-center justify-center w-full max-w-[200px] h-32 rounded-lg border-2 border-dashed border-admin-border bg-admin-bg">
+                                            <span className="text-[10px] font-semibold text-admin-faint">No image selected</span>
+                                        </div>
+                                    )}
+                                    <div className="flex gap-2 items-center">
+                                        <label className="px-4 py-[11px] rounded-xl border-[1.5px] border-admin-border bg-white text-xs font-bold tracking-[0.06em] uppercase cursor-pointer whitespace-nowrap text-admin-muted hover:bg-[#f7f5f0] transition-colors duration-200">
+                                            <input type="file" accept="image/*" className="hidden" onChange={e => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    if (previewUrl) URL.revokeObjectURL(previewUrl);
+                                                    setData('image_file', file);
+                                                    setPreviewUrl(URL.createObjectURL(file));
+                                                }
+                                            }} />
+                                            Upload Image
+                                        </label>
+                                        <span className="text-[10px] text-admin-faint font-semibold">or</span>
+                                        <input type="url" value={data.image_file ? '' : data.image} onChange={e => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setData('image', e.target.value); setData('image_file', null); }}
+                                            placeholder="Paste image URL..."
+                                            className={inputClass + ' text-xs flex-1 min-w-0 focus:border-accent'} />
+                                    </div>
+                                    {err(errors.image)}
+                                    {err(errors.image_file)}
                                 </div>
                                 <div>
                                     <label className={labelClass}>Badge <span className="font-normal normal-case tracking-normal text-admin-faint">(optional)</span></label>
@@ -241,6 +277,7 @@ export default function ProductsSection({ products, categories, stats, err, show
                                         <option value="New Collection">New Collection</option>
                                         <option value="Premium Choice">Premium Choice</option>
                                     </select>
+                                    {err(errors.badge)}
                                 </div>
                             </div>
 
@@ -288,7 +325,7 @@ export default function ProductsSection({ products, categories, stats, err, show
                                 ))}
                             </div>
                             <div className="flex justify-end gap-2.5 mt-7 pt-5 border-t border-admin-border">
-                                <button type="button" onClick={() => setModalOpen(false)}
+                                <button type="button" onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setModalOpen(false); }}
                                     className="px-[22px] py-[11px] rounded-xl bg-white text-xs font-bold tracking-[0.1em] uppercase cursor-pointer font-inherit transition-all duration-200 border-[1.5px] border-admin-border text-admin-muted hover:bg-[#f7f5f0]">
                                     Cancel
                                 </button>
