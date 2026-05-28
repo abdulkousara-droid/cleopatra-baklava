@@ -78,7 +78,7 @@ export default function Hero() {
                 </div>
 
                 {/* Decorative Animated Scroll Indicator */}
-                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 animate-bounce text-white opacity-75 cursor-pointer z-10">
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 animate-bounce text-white opacity-75 cursor-pointer z-10 hidden md:flex">
                     <a href="#bestsellers-section" className="flex flex-col items-center group gap-1" aria-label="Scroll to Bestsellers">
                         <span className="text-[14px] font-bold tracking-[0.25em] text-stone-300 transition-colors duration-300 group-hover:text-amber-300">
                             Explore More
