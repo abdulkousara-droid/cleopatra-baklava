@@ -250,6 +250,7 @@
     "cancel": "Cancel",
     "save_changes": "Save Changes",
     "create_product": "Create Product",
+    "edit": "Edit",
     "delete_product_title": "Delete Product?",
     "delete_product_warning": "\"{title}\" will be permanently removed. This cannot be undone.",
     "delete": "Delete",
@@ -303,6 +304,9 @@
     "footer_address": "Footer Address / Contact",
     "footer_address_desc": "Shown in the email footer and store communications.",
     "save_settings": "Save Settings",
+
+    "language": "Language",
+    "language_desc": "Change the admin panel interface language.",
 
     "product": "Product",
     "reviewer": "Reviewer",

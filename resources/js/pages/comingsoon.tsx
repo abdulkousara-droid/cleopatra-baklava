@@ -7,9 +7,7 @@ export default function ComingSoon({ page = 'Page' }: { page?: string }) {
 
     return (
         <>
-            <Head>
-                <title>{t('coming_soon.title')}</title>
-            </Head>
+            <Head title={t('coming_soon.title')} />
 
             <div className="flex min-h-screen flex-col items-center justify-center bg-[#fff9ef] px-6 text-center font-sans">
                 <div className="flex items-center justify-center gap-4 md:gap-6">

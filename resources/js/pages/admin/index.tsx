@@ -41,7 +41,7 @@ export default function AdminIndex({ products = [], categories = [], reviews = [
 
     return (
         <>
-            <Head><title>{t('admin_title')} — {t('site_name')}</title></Head>
+            <Head title={t('admin_title') + ' — ' + t('site_name')} />
             <style>{`
                 body { margin: 0; }
                 @keyframes spin { to { transform: rotate(360deg); } }

@@ -250,6 +250,7 @@
     "cancel": "Cancelar",
     "save_changes": "Guardar Cambios",
     "create_product": "Crear Producto",
+    "edit": "Editar",
     "delete_product_title": "¿Eliminar Producto?",
     "delete_product_warning": "\"{title}\" será eliminado permanentemente. Esto no se puede deshacer.",
     "delete": "Eliminar",
@@ -303,6 +304,9 @@
     "footer_address": "Dirección del Pie de Página",
     "footer_address_desc": "Se muestra en el pie de página del correo y en las comunicaciones de la tienda.",
     "save_settings": "Guardar Ajustes",
+
+    "language": "Idioma",
+    "language_desc": "Cambia el idioma de la interfaz del panel de administración.",
 
     "product": "Producto",
     "reviewer": "Revisor",

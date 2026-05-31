@@ -20,7 +20,7 @@ export default function Login() {
 
     return (
         <>
-            <Head><title>{t('admin.login_title')}</title></Head>
+            <Head title={t('admin.login_title')} />
 
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f0d09] via-[#1e1b14] to-[#14100a] p-6 relative overflow-hidden">
                 <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(201,168,76,0.08)_0%,transparent_70%)] pointer-events-none" />

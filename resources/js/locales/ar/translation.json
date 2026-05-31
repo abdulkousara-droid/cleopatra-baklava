@@ -250,6 +250,7 @@
     "cancel": "إلغاء",
     "save_changes": "حفظ التغييرات",
     "create_product": "إنشاء منتج",
+    "edit": "تعديل",
     "delete_product_title": "حذف المنتج؟",
     "delete_product_warning": "\"{title}\" سيتم حذفه نهائيًا. لا يمكن التراجع عن هذا.",
     "delete": "حذف",
@@ -303,6 +304,9 @@
     "footer_address": "عنوان التذييل",
     "footer_address_desc": "يظهر في تذييل البريد الإلكتروني واتصالات المتجر.",
     "save_settings": "حفظ الإعدادات",
+
+    "language": "اللغة",
+    "language_desc": "تغيير لغة واجهة لوحة الإدارة.",
 
     "product": "المنتج",
     "reviewer": "المراجع",

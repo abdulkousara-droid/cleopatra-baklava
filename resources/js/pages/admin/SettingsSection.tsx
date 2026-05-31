@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm, router } from '@inertiajs/react';
-import { Settings as SettingsIcon, Save } from 'lucide-react';
+import { Settings as SettingsIcon, Globe, Save } from 'lucide-react';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { inputClass, labelClass, FeatureItem, parseFeatures } from './shared';
 
 export default function SettingsSection({ settings, err, showToast }: {
@@ -131,6 +132,14 @@ export default function SettingsSection({ settings, err, showToast }: {
                             placeholder="Carrer de les Flors 14, Barcelona, Spain&#10;hello@cleopatrabaklava.com"
                             className={inputClass + ' leading-relaxed focus:border-accent'} />
                         {err(errors.email_footer_address)}
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-7 mb-6 border border-admin-border">
+                    {sectionTitle(t('admin.language'), t('admin.language_desc'))}
+                    <div className="flex items-center gap-4">
+                        <Globe size={20} className="text-admin-muted shrink-0" />
+                        <LanguageSwitcher />
                     </div>
                 </div>
 
