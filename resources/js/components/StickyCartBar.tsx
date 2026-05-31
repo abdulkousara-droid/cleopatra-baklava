@@ -1,9 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from '@inertiajs/react';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/lib/cart';
 
 export default function StickyCartBar({ isVisible }: { isVisible: boolean }) {
+    const { t } = useTranslation();
     const { itemCount, cartTotal, clearCart } = useCart();
     return (
         <div
@@ -20,10 +22,10 @@ export default function StickyCartBar({ isVisible }: { isVisible: boolean }) {
                     </div>
                     <div>
                         <p className="font-label-md text-label-md text-on-surface text-xs md:text-sm">
-                            {itemCount} {itemCount === 1 ? 'Item' : 'Items'}
+                            {itemCount === 1 ? t('sticky_cart.item', { count: itemCount }) : t('sticky_cart.items', { count: itemCount })}
                         </p>
                         <p className="font-body-md text-body-md font-bold text-primary text-sm md:text-base">
-                            Total: €{cartTotal.toFixed(2)}
+                            {t('sticky_cart.total')} €{cartTotal.toFixed(2)}
                         </p>
                     </div>
                 </div>
@@ -33,16 +35,15 @@ export default function StickyCartBar({ isVisible }: { isVisible: boolean }) {
                         onClick={clearCart}
                         className="text-on-surface-variant font-label-md cursor-pointer transition-colors hover:text-primary hidden sm:block text-sm"
                     >
-                        Clear All
+                        {t('sticky_cart.clear_all')}
                     </button>
 
-                    {/* Strict Inertia link routing back to /checkout */}
                     <Link
                         href="/checkout"
                         className="text-on-primary font-label-md luxury-shadow inline-block rounded-lg bg-primary px-5 md:px-10 py-2.5 md:py-3 transition-transform hover:scale-105 text-xs md:text-sm tracking-widest text-center"
                     >
-                        <span className="sm:hidden uppercase font-bold">Checkout</span>
-                        <span className="hidden sm:inline uppercase">View Cart & Checkout</span>
+                        <span className="sm:hidden uppercase font-bold">{t('sticky_cart.checkout')}</span>
+                        <span className="hidden sm:inline uppercase">{t('sticky_cart.view_cart_checkout')}</span>
                     </Link>
                 </div>
             </div>

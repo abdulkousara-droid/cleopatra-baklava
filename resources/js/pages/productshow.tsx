@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Star,
     Info,
@@ -60,6 +61,7 @@ function StarPicker({
     value: number;
     onChange: (v: number) => void;
 }) {
+    const { t } = useTranslation();
     const [hovered, setHovered] = useState(0);
     return (
         <div className="flex gap-1">
@@ -71,7 +73,7 @@ function StarPicker({
                     onMouseEnter={() => setHovered(star)}
                     onMouseLeave={() => setHovered(0)}
                     className="transition-transform duration-150 hover:scale-110 cursor-pointer"
-                    aria-label={`Rate ${star} stars`}
+                    aria-label={t('product.rate_stars', { count: star })}
                 >
                     <Star
                         size={28}
@@ -97,11 +99,11 @@ export default function ProductShow({
     relatedProducts: RelatedProduct[];
     reviews: ProductReview[];
 }) {
+    const { t } = useTranslation();
     const { addToCart } = useCart();
     const [quantity, setQuantity]       = useState(1);
     const [activeImage, setActiveImage] = useState(product?.image);
 
-    // Reviews state
     const [reviews, setReviews]               = useState<ProductReview[]>(initialReviews);
     const [ratingsCount, setRatingsCount]     = useState(product?.reviews_count ?? 0);
     const [ratingScore, setRatingScore]       = useState(product?.rating_score ?? 0);
@@ -144,11 +146,10 @@ export default function ProductShow({
         router.visit('/checkout');
     };
 
-    // ── Review Submission ───────────────────────────────────────────────────
     const handleReviewSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (form.rating === 0) {
-            setFormError('Please select a star rating.');
+            setFormError(t('product.review_form_error'));
             return;
         }
         setFormError('');
@@ -172,7 +173,7 @@ export default function ProductShow({
                 const err = await res.json();
                 const firstError = err.errors
                     ? Object.values(err.errors as Record<string, string[]>)[0][0]
-                    : 'Submission failed. Please check your details.';
+                    : t('product.review_submit_failed');
                 setFormError(firstError);
                 setSubmitStatus('error');
                 return;
@@ -180,28 +181,25 @@ export default function ProductShow({
 
             const data = await res.json();
 
-            // Append the new review to the local list
             setReviews((prev) => [data.review, ...prev]);
             setRatingsCount(data.product.reviews_count);
             setRatingScore(data.product.rating_score);
             setSubmitStatus('done');
             setForm({ name: '', email: '', rating: 0, comment: '' });
         } catch {
-            setFormError('Network error. Please try again.');
+            setFormError(t('product.review_network_error'));
             setSubmitStatus('error');
         }
     };
 
     return (
         <>
-            <Head title={`${currentProduct.title} - Cleopatra Baklava`} />
+            <Head title={`${currentProduct.title} - ${t('site_name')}`} />
             <Header />
             <div className="text-on-surface min-h-screen bg-background font-sans">
                 <main className="pt-32 pb-28 md:pb-16">
-                    {/* ── Product Hero ───────────────────────────────────────────────── */}
                     <section className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto mb-24">
                         <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-12">
-                            {/* Left: Image Gallery */}
                             <div className="space-y-6 lg:col-span-7">
                                 <div className="group bg-surface-container relative aspect-[4/5] overflow-hidden rounded-xl shadow-xl">
                                     <img
@@ -227,7 +225,6 @@ export default function ProductShow({
                                     )}
                                 </div>
 
-                                {/* Thumbnails */}
                                 <div className="grid grid-cols-3 gap-4">
                                     <div
                                         onClick={() => setActiveImage(currentProduct.image)}
@@ -255,11 +252,9 @@ export default function ProductShow({
                                 </div>
                             </div>
 
-
-                            {/* Right: Product Details */}
                             <div className="lg:sticky lg:top-12 lg:col-span-5">
                                 <nav className="text-on-surface-variant mb-6 flex flex-wrap gap-2 font-label-md text-[12px] tracking-widest uppercase">
-                                    <Link className="hover:text-primary" href="/shop">Shop</Link>
+                                    <Link className="hover:text-primary" href="/shop">{t('nav.shop')}</Link>
                                     <span>/</span>
                                     {currentProduct.category && (
                                         <>
@@ -274,28 +269,27 @@ export default function ProductShow({
                                     {currentProduct.title}
                                 </h1>
 
-                                {/* Live rating summary */}
                                 <div className="mb-6 flex items-center gap-4">
                                     <StarDisplay rating={ratingScore} size={18} />
                                     <span className="text-on-surface-variant font-body-md text-sm">
-                                        ({ratingsCount} {ratingsCount === 1 ? 'Review' : 'Reviews'})
+                                        ({ratingsCount} {ratingsCount === 1 ? t('product.review') : t('product.reviews')})
                                     </span>
                                 </div>
 
                                 <div className="mb-8 text-3xl font-bold text-primary">
                                     €{Number(currentProduct.price).toFixed(2)}{' '}
-                                    <span className="text-on-surface-variant text-lg font-normal">/ piece</span>
+                                    <span className="text-on-surface-variant text-lg font-normal">{t('product.per_piece')}</span>
                                 </div>
 
                                 <div className="mb-10 space-y-8">
                                     <div>
-                                        <h3 className="text-label-md text-on-surface mb-3 font-label-md uppercase">The Craft</h3>
+                                        <h3 className="text-label-md text-on-surface mb-3 font-label-md uppercase">{t('product.the_craft')}</h3>
                                         <p className="text-on-surface-variant font-body-md leading-relaxed">{currentProduct.description}</p>
                                     </div>
 
                                     {currentProduct.tags && currentProduct.tags.length > 0 && (
                                         <div>
-                                            <h3 className="text-label-md text-on-surface mb-3 font-label-md uppercase">Ingredients</h3>
+                                            <h3 className="text-label-md text-on-surface mb-3 font-label-md uppercase">{t('product.ingredients')}</h3>
                                             <div className="flex flex-wrap gap-2">
                                                 {currentProduct.tags.map((tag, i) => (
                                                     <span key={i} className="rounded-full bg-primary/10 px-3 py-1 font-label-md text-[12px] text-primary">
@@ -310,16 +304,15 @@ export default function ProductShow({
                                         <div className="border-outline-variant/30 bg-surface-container-low rounded-xl border p-4">
                                             <div className="mb-2 flex items-center gap-2">
                                                 <Info size={16} className="text-primary" />
-                                                <span className="text-on-surface font-label-md text-[12px] uppercase">Allergen Information</span>
+                                                <span className="text-on-surface font-label-md text-[12px] uppercase">{t('product.allergen_info')}</span>
                                             </div>
                                             <p className="text-on-surface-variant font-sans text-[12px]">
-                                                Contains: {currentProduct.allergens.join(', ')}.
+                                                {t('product.contains', { allergens: currentProduct.allergens.join(', ') })}
                                             </p>
                                         </div>
                                     )}
                                 </div>
 
-                                {/* Actions */}
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-4">
                                         <div className="border-outline-variant flex h-14 items-center overflow-hidden rounded-lg border bg-white">
@@ -341,39 +334,37 @@ export default function ProductShow({
                                             onClick={handleBuyNow}
                                             className="text-on-primary text-label-md h-14 flex-1 cursor-pointer rounded-lg bg-primary font-label-md tracking-widest uppercase shadow-md transition-all hover:brightness-110 active:scale-[0.98]"
                                         >
-                                            Buy Now
+                                            {t('product.buy_now')}
                                         </button>
                                     </div>
                                     <button
                                         onClick={handleAddToCart}
                                         className="text-label-md h-14 w-full cursor-pointer rounded-lg border-2 border-primary bg-transparent font-label-md font-semibold tracking-widest text-primary uppercase transition-all hover:bg-primary/5"
                                     >
-                                        Add to Cart
+                                        {t('product.add_to_cart')}
                                     </button>
                                 </div>
 
                                 <div className="text-on-surface-variant border-outline-variant/30 mt-8 flex items-center justify-end border-t pt-6 font-label-md text-[12px]">
                                     <div className="flex items-center gap-2">
                                         <CheckCircle2 size={16} className="text-primary" />
-                                        <span>Freshness Guaranteed</span>
+                                        <span>{t('product.freshness_guaranteed')}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    {/* ── Geometric separator ────────────────────────────────────────── */}
                     <div className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto mb-24 flex items-center gap-4 opacity-30">
                         <div className="h-[1px] flex-1 bg-primary" />
                         <div className="h-2 w-2 rotate-45 border border-primary bg-primary" />
                         <div className="h-[1px] flex-1 bg-primary" />
                     </div>
 
-                    {/* ── Related Products ───────────────────────────────────────────── */}
                     {relatedProducts.length > 0 && (
                         <section className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto mb-32">
                             <h2 className="mb-12 text-center font-serif text-[32px] font-semibold text-foreground">
-                                Related Delights
+                                {t('product.related_delights')}
                             </h2>
                             <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
                                 {relatedProducts.map((item) => (
@@ -408,25 +399,23 @@ export default function ProductShow({
                                         <div className="mb-1">
                                             <RatingDisplay rating={item.rating_score ?? 0} count={item.reviews_count} />
                                         </div>
-                                        <p className="font-label-md text-sm text-primary">€{Number(item.price).toFixed(2)} / pc</p>
+                                        <p className="font-label-md text-sm text-primary">€{Number(item.price).toFixed(2)} {t('product.per_pc')}</p>
                                     </Link>
                                 ))}
                             </div>
                         </section>
                     )}
 
-                    {/* ── Reviews Section ────────────────────────────────────────────── */}
                     <section className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto mb-32">
 
-                        {/* Section header */}
                         <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                             <div>
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="h-px w-8 bg-primary/40" />
-                                    <span className="text-[11px] font-semibold tracking-[4px] uppercase text-primary">Customer Reviews</span>
+                                    <span className="text-[11px] font-semibold tracking-[4px] uppercase text-primary">{t('product.customer_reviews')}</span>
                                 </div>
                                 <h2 className="font-serif text-[32px] font-semibold text-foreground">
-                                    What Our Guests Say
+                                    {t('product.what_guests_say')}
                                 </h2>
                             </div>
                             <button
@@ -434,12 +423,11 @@ export default function ProductShow({
                                 className="flex items-center gap-2 rounded-full border border-primary px-6 py-3 text-sm font-semibold text-primary hover:bg-primary/5 transition-all cursor-pointer whitespace-nowrap"
                             >
                                 <MessageSquarePlus size={16} />
-                                Write a Review
+                                {t('product.write_review')}
                                 <ChevronDown size={14} className={`transition-transform duration-300 ${showForm ? 'rotate-180' : ''}`} />
                             </button>
                         </div>
 
-                        {/* Rating overview card */}
                         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
                             <div className="bg-[#1e1b14] rounded-2xl p-8 text-center flex flex-col items-center justify-center relative overflow-hidden">
                                 <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-[#c9a84c] to-transparent" />
@@ -448,17 +436,16 @@ export default function ProductShow({
                                 </div>
                                 <StarDisplay rating={ratingScore} size={18} />
                                 <p className="text-[#9e8b6e] text-sm mt-3 leading-relaxed">
-                                    Based on {ratingsCount} verified {ratingsCount === 1 ? 'review' : 'reviews'}
+                                    {ratingsCount === 1 ? t('product.based_on', { count: ratingsCount }) : t('product.based_on_plural', { count: ratingsCount })}
                                 </p>
                             </div>
 
-                            {/* Review cards list */}
                             <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {reviews.length === 0 ? (
                                     <div className="md:col-span-2 flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#e8dfc8] bg-[#fdfbf5] p-12 text-center">
                                         <Star size={36} className="text-[#e8dfc8] mb-4" />
-                                        <p className="font-serif text-lg font-semibold text-[#4d4637] mb-2">No reviews yet</p>
-                                        <p className="text-sm text-[#9e8b6e]">Be the first to share your experience with this delicacy.</p>
+                                        <p className="font-serif text-lg font-semibold text-[#4d4637] mb-2">{t('product.no_reviews_yet')}</p>
+                                        <p className="text-sm text-[#9e8b6e]">{t('product.be_first_review')}</p>
                                     </div>
                                 ) : (
                                     displayedReviews.map((review) => (
@@ -487,7 +474,6 @@ export default function ProductShow({
                             </div>
                         </div>
 
-                        {/* Show more / show less toggle */}
                         {reviews.length > 4 && (
                             <div className="flex justify-center mt-6">
                                 <button
@@ -495,15 +481,14 @@ export default function ProductShow({
                                     className="flex items-center gap-2 text-sm font-semibold text-[#c9a84c] hover:text-[#b8983a] transition-colors cursor-pointer"
                                 >
                                     {showAllReviews ? (
-                                        <>Show less <ChevronDown size={14} className="rotate-180" /></>
+                                        <>{t('product.show_less')} <ChevronDown size={14} className="rotate-180" /></>
                                     ) : (
-                                        <>Show all {reviews.length} reviews <ChevronRight size={14} /></>
+                                        <>{t('product.show_all', { count: reviews.length })} <ChevronRight size={14} /></>
                                     )}
                                 </button>
                             </div>
                         )}
 
-                        {/* ── Write a Review Form (slide-in) ──────────────────────────── */}
                         <div
                             className={`overflow-hidden transition-all duration-500 ease-in-out ${
                                 showForm ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'
@@ -511,100 +496,93 @@ export default function ProductShow({
                         >
                             <div className="mt-4 rounded-2xl border border-[#e8dfc8] bg-[#fdfbf5] p-8 shadow-sm">
 
-                                {/* Success state */}
                                 {submitStatus === 'done' ? (
                                     <div className="flex flex-col items-center justify-center py-10 text-center">
                                         <CheckCircle size={52} className="text-[#c9a84c] mb-4" />
                                         <h3 className="font-serif text-2xl font-semibold text-[#1e1b14] mb-2">
-                                            Thank you for your review!
+                                            {t('product.thank_you_review')}
                                         </h3>
                                         <p className="text-[#6b5e47] text-sm mb-6">
-                                            Your experience helps other guests discover the finest of our collection.
+                                            {t('product.review_help_text')}
                                         </p>
                                         <button
                                             onClick={() => { setSubmitStatus('idle'); setShowForm(false); }}
                                             className="px-8 py-3 rounded-full bg-[#1e1b14] text-[#c9a84c] text-sm font-semibold tracking-widest uppercase hover:bg-[#2e2a1e] transition-colors cursor-pointer"
                                         >
-                                            Close
+                                            {t('product.close')}
                                         </button>
                                     </div>
                                 ) : (
                                     <form onSubmit={handleReviewSubmit}>
                                         <div className="flex items-center gap-3 mb-6">
                                             <div className="h-px flex-1 bg-[#e8dfc8]" />
-                                            <span className="text-[11px] font-semibold tracking-[4px] uppercase text-[#c9a84c]">Share Your Experience</span>
+                                            <span className="text-[11px] font-semibold tracking-[4px] uppercase text-[#c9a84c]">{t('product.share_experience')}</span>
                                             <div className="h-px flex-1 bg-[#e8dfc8]" />
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                            {/* Name */}
                                             <div>
                                                 <label className="block text-[12px] font-semibold uppercase tracking-wider text-[#4d4637] mb-2">
-                                                    Your Name <span className="text-red-400">*</span>
+                                                    {t('product.your_name')} <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
                                                     type="text"
                                                     required
                                                     value={form.name}
                                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                                    placeholder="e.g. Sofia M."
+                                                    placeholder={t('product.name_placeholder')}
                                                     className="w-full px-4 py-3 rounded-xl border border-[#e8dfc8] bg-white text-[#1e1b14] placeholder-[#b0a28c] text-sm focus:outline-none focus:ring-2 focus:ring-[#c9a84c]/40 focus:border-[#c9a84c] transition-all"
                                                 />
                                             </div>
-                                            {/* Email */}
                                             <div>
                                                 <label className="block text-[12px] font-semibold uppercase tracking-wider text-[#4d4637] mb-2">
-                                                    Email Address <span className="text-red-400">*</span>
+                                                    {t('product.email_address')} <span className="text-red-400">*</span>
                                                 </label>
                                                 <input
                                                     type="email"
                                                     required
                                                     value={form.email}
                                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                                    placeholder="your@email.com"
+                                                    placeholder={t('product.email_placeholder')}
                                                     className="w-full px-4 py-3 rounded-xl border border-[#e8dfc8] bg-white text-[#1e1b14] placeholder-[#b0a28c] text-sm focus:outline-none focus:ring-2 focus:ring-[#c9a84c]/40 focus:border-[#c9a84c] transition-all"
                                                 />
                                             </div>
                                         </div>
 
-                                        {/* Star Rating */}
                                         <div className="mb-6">
                                             <label className="block text-[12px] font-semibold uppercase tracking-wider text-[#4d4637] mb-3">
-                                                Your Rating <span className="text-red-400">*</span>
+                                                {t('product.your_rating')} <span className="text-red-400">*</span>
                                             </label>
                                             <div className="flex items-center gap-4">
                                                 <StarPicker value={form.rating} onChange={(v) => setForm({ ...form, rating: v })} />
                                                 {form.rating > 0 && (
                                                     <span className="text-sm text-[#c9a84c] font-semibold">
-                                                        {['', 'Poor', 'Fair', 'Good', 'Great', 'Exceptional!'][form.rating]}
+                                                        {t(`product.rating_labels.${form.rating}`)}
                                                     </span>
                                                 )}
                                             </div>
                                         </div>
 
-                                        {/* Comment */}
                                         <div className="mb-6">
                                             <label className="block text-[12px] font-semibold uppercase tracking-wider text-[#4d4637] mb-2">
-                                                Your Review <span className="text-red-400">*</span>
+                                                {t('product.your_review')} <span className="text-red-400">*</span>
                                             </label>
                                             <textarea
                                                 required
                                                 rows={4}
                                                 value={form.comment}
                                                 onChange={(e) => setForm({ ...form, comment: e.target.value })}
-                                                placeholder="Describe your experience — the texture, flavour, presentation..."
+                                                placeholder={t('product.review_placeholder')}
                                                 className="w-full px-4 py-3 rounded-xl border border-[#e8dfc8] bg-white text-[#1e1b14] placeholder-[#b0a28c] text-sm focus:outline-none focus:ring-2 focus:ring-[#c9a84c]/40 focus:border-[#c9a84c] transition-all resize-none"
                                             />
                                         </div>
 
-                                        {/* Error */}
                                         {(formError || submitStatus === 'error') && (
                                             <p className="text-red-500 text-sm mb-4 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
-                                                {formError || 'An error occurred. Please try again.'}
+                                                {formError || t('product.review_network_error')}
                                             </p>
                                         )}
 
-                                        {/* Submit */}
                                         <div className="flex justify-end">
                                             <button
                                                 type="submit"
@@ -614,10 +592,10 @@ export default function ProductShow({
                                                 {submitStatus === 'loading' ? (
                                                     <>
                                                         <Loader2 size={16} className="animate-spin" />
-                                                        Submitting...
+                                                        {t('product.submitting')}
                                                     </>
                                                 ) : (
-                                                    'Submit Review'
+                                                    t('product.submit_review')
                                                 )}
                                             </button>
                                         </div>

@@ -1,18 +1,17 @@
+import { useTranslation } from 'react-i18next';
 import { Head, router } from '@inertiajs/react';
 import { Gem } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
-
 import ProductCard from '@/components/ProductCard';
-
 import StickyCartBar from '@/components/StickyCartBar';
 import type { Product, Category } from '@/types';
 
 export default function Shop({ products, categories, initialCategory = 'All' }: { products: Product[]; categories: Category[]; initialCategory?: string }) {
+    const { t } = useTranslation();
     const [activeCategory, setActiveCategory] = useState(initialCategory);
     const [showStickyCart, setShowStickyCart] = useState(false);
 
-    // Monitor scroll height to trigger the fixed checkout overlay
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 300) {
@@ -27,24 +26,20 @@ export default function Shop({ products, categories, initialCategory = 'All' }: 
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Filter products based on selected tab state
     const filteredProducts =
         activeCategory === 'All'
             ? products
             : products.filter((p) => p.category === activeCategory);
 
-    console.log('Shop', products);
-
     return (
         <>
-            <Head title="Shop Collection" />
+            <Head title={t('shop.page_title')} />
             <Header />
             <div className="text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed bg-background font-body-md antialiased">
                 <main className="pt-32 pb-24">
-                    {/* Hero Title Section */}
                     <section className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto mb-16 text-center">
                         <h1 className="text-display-lg text-on-surface mb-4 font-display-lg text-[36px] md:text-[48px] leading-tight">
-                            Shop Our Collection
+                            {t('shop.title')}
                         </h1>
 
                         <div className="mb-6 flex items-center justify-center">
@@ -57,13 +52,10 @@ export default function Shop({ products, categories, initialCategory = 'All' }: 
 
                         <div className="geometric-divider mx-auto mb-8 w-48"></div>
                         <p className="text-body-lg text-on-surface-variant mx-auto max-w-2xl font-body-lg">
-                            Handcrafted masterpieces from Barcelona, blending
-                            centuries-old traditions with modern European
-                            refinement.
+                            {t('shop.subtitle')}
                         </p>
                     </section>
 
-                    {/* Filter Navigation Bar */}
                     <section className="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto">
                         <div className="mb-12 flex justify-start md:justify-center overflow-x-auto pb-4 scrollbar-hide">
                             <div className="bg-surface-container-low border-outline-variant/20 flex items-center space-x-2 rounded-full border p-1.5 whitespace-nowrap">
@@ -78,7 +70,7 @@ export default function Shop({ products, categories, initialCategory = 'All' }: 
                                             : 'text-on-surface-variant hover:bg-surface-variant'
                                     }`}
                                 >
-                                    All
+                                    {t('shop.all')}
                                 </button>
                                 {categories.map((cat) => (
                                     <button
@@ -99,7 +91,6 @@ export default function Shop({ products, categories, initialCategory = 'All' }: 
                             </div>
                         </div>
 
-                        {/* Product Grid Layout */}
                         <div className="grid justify-items-center gap-y-8 md:grid-cols-2 lg:grid-cols-3">
                             {filteredProducts.map((product) => (
                                 <ProductCard
@@ -111,7 +102,6 @@ export default function Shop({ products, categories, initialCategory = 'All' }: 
                     </section>
                 </main>
 
-                {/* Persistent Bottom Sticky Basket Action View */}
                 <StickyCartBar isVisible={showStickyCart} />
             </div>
         </>

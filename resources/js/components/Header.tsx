@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { Search, ShoppingBag, Plus, Minus, Trash2, Home, Sparkles, Heart, Store, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useCart } from '@/lib/cart';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import type { Product } from '@/types';
 
-// Hardcoded routes (no wayfinder needed)
-
 export default function Header() {
+    const { t } = useTranslation();
     const { url } = usePage();
 
-    // Route URLs
     const homeUrl = '/';
     const shopUrl = '/shop';
     const newArrivalsUrl = '/newarrivals';
     const mostPopularUrl = '/mostpopular';
 
-    // 4. Cart and Search State
     const { cartItems, itemCount, cartTotal, updateQuantity, removeFromCart, addToCart } = useCart();
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -60,7 +59,6 @@ export default function Header() {
         <>
         <header className="fixed top-0 z-50 flex h-22 w-full items-center border-b border-border bg-background/90 shadow-sm backdrop-blur-md">
             <div className="mx-auto flex w-full max-w-container-max items-center justify-between px-margin-mobile md:px-margin-desktop">
-                {/* Logo / Brand Title */}
                 <div className="flex flex-row items-center">
                     <Link
                         href={homeUrl}
@@ -77,39 +75,36 @@ export default function Header() {
                     </h1>
                 </div>
 
-                {/* Desktop Navigation Links */}
                 <nav className="hidden items-center gap-8 md:flex">
                     <Link
                         href={homeUrl}
                         className={`text-label-md font-label-md tracking-widest uppercase transition-colors duration-300 ${url === homeUrl ? 'border-b-2 border-primary pb-1 text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                     >
-                        Home
+                        {t('nav.home')}
                     </Link>
-
                     <Link
                         href={newArrivalsUrl}
                         className={`text-label-md font-label-md tracking-widest uppercase transition-colors duration-300 ${url.startsWith(newArrivalsUrl) ? 'border-b-2 border-primary pb-1 text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                     >
-                        New Arrivals
+                        {t('nav.new_arrivals')}
                     </Link>
-
                     <Link
                         href={mostPopularUrl}
                         className={`text-label-md font-label-md tracking-widest uppercase transition-colors duration-300 ${url.startsWith(mostPopularUrl) ? 'border-b-2 border-primary pb-1 text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                     >
-                        Most Popular
+                        {t('nav.most_popular')}
                     </Link>
-
                     <Link
                         href={shopUrl}
                         className={`text-label-md font-label-md tracking-widest uppercase transition-colors duration-300 ${url.startsWith(shopUrl) ? 'border-b-2 border-primary pb-1 text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                     >
-                        Shop
+                        {t('nav.shop')}
                     </Link>
                 </nav>
 
-                {/* Action Utility Buttons */}
-                <div className="flex items-center gap-6 text-primary relative">
+                <div className="flex items-center gap-4 text-primary relative">
+                    <LanguageSwitcher />
+
                     <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
                         <DialogTrigger asChild>
                             <button className="flex cursor-pointer transition-all duration-300 hover:scale-110 relative">
@@ -118,12 +113,11 @@ export default function Header() {
                         </DialogTrigger>
                         <DialogContent hideClose className="sm:max-w-xl top-[20%] translate-y-0 bg-white shadow-2xl rounded-2xl border border-gray-100 p-0 overflow-hidden">
                             <div className="flex flex-col">
-                                {/* Search Input Row */}
                                 <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
                                     <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
                                     <input
                                         type="text"
-                                        placeholder="Search for baklava, kunafa, mamoul..."
+                                        placeholder={t('search.placeholder')}
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         className="flex-1 bg-transparent text-base placeholder:text-gray-400 text-gray-900 focus:outline-none"
@@ -136,23 +130,22 @@ export default function Header() {
                                         <X className="h-4 w-4" />
                                     </DialogPrimitive.Close>
                                 </div>
-                                {/* Results */}
                                 <div className="max-h-[60vh] overflow-y-auto p-4">
                                     {isSearching && (
                                         <div className="p-8 text-center text-sm text-gray-500 flex flex-col items-center">
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
-                                            Searching our delicious treats...
+                                            {t('search.searching')}
                                         </div>
                                     )}
                                     {!isSearching && searchQuery && searchResults.length === 0 && (
                                         <div className="p-8 text-center text-sm text-gray-500">
                                             <Search className="h-10 w-10 text-gray-200 mx-auto mb-3" />
-                                            No products found matching "{searchQuery}".
+                                            {t('search.no_results', { query: searchQuery })}
                                         </div>
                                     )}
                                     {!isSearching && !searchQuery && (
                                         <div className="p-6 text-center text-sm text-gray-400">
-                                            Start typing to search our collection...
+                                            {t('search.start_typing')}
                                         </div>
                                     )}
                                     {!isSearching && searchResults.length > 0 && (
@@ -174,7 +167,7 @@ export default function Header() {
                                                         className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 shadow-sm transition-colors flex-shrink-0"
                                                         onClick={() => handleSearchItemAdd(product)}
                                                     >
-                                                        Add to Cart
+                                                        {t('search.add_to_cart')}
                                                     </button>
                                                 </li>
                                             ))}
@@ -206,19 +199,19 @@ export default function Header() {
                                 />
                                 <div className="absolute right-0 top-[120%] w-[340px] flex flex-col max-h-[85vh] bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 z-50 origin-top-right animate-in fade-in zoom-in-95">
                                     <div className="border-b border-gray-100 px-5 py-4 bg-gray-50/50 rounded-t-xl flex justify-between items-center">
-                                        <h3 className="font-bold text-gray-900 text-lg">Your Cart</h3>
-                                        <span className="text-sm font-medium bg-primary/10 text-primary px-2.5 py-1 rounded-full">{itemCount} items</span>
+                                        <h3 className="font-bold text-gray-900 text-lg">{t('cart.your_cart')}</h3>
+                                        <span className="text-sm font-medium bg-primary/10 text-primary px-2.5 py-1 rounded-full">{t('cart.items', { count: itemCount })}</span>
                                     </div>
                                     <div className="flex-1 overflow-y-auto p-5 bg-white">
                                         {cartItems.length === 0 ? (
                                             <div className="flex flex-col items-center justify-center text-gray-400 py-10">
                                                 <ShoppingBag className="mb-4 h-12 w-12 opacity-20" />
-                                                <p className="text-gray-500 font-medium">Your cart is empty.</p>
+                                                <p className="text-gray-500 font-medium">{t('cart.empty')}</p>
                                                 <button
                                                     className="mt-4 text-primary text-sm font-medium hover:underline"
                                                     onClick={() => setCartOpen(false)}
                                                 >
-                                                    Continue Shopping
+                                                    {t('cart.continue_shopping')}
                                                 </button>
                                             </div>
                                         ) : (
@@ -256,7 +249,7 @@ export default function Header() {
                                                         <button
                                                             onClick={() => removeFromCart(item.id)}
                                                             className="text-gray-300 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors flex-shrink-0"
-                                                            title="Remove item"
+                                                            title={t('cart.title_remove')}
                                                         >
                                                             <Trash2 className="h-4.5 w-4.5" />
                                                         </button>
@@ -268,7 +261,7 @@ export default function Header() {
                                     {cartItems.length > 0 && (
                                         <div className="border-t border-gray-100 p-5 bg-gray-50/50 rounded-b-xl">
                                             <div className="mb-4 flex justify-between font-bold text-gray-900 text-lg">
-                                                <span>Subtotal</span>
+                                                <span>{t('cart.subtotal')}</span>
                                                 <span className="text-primary">€{cartTotal.toFixed(2)}</span>
                                             </div>
                                             <Link
@@ -276,7 +269,7 @@ export default function Header() {
                                                 onClick={() => setCartOpen(false)}
                                                 className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3.5 text-base font-bold text-white shadow-md hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
                                             >
-                                                Proceed to Checkout
+                                                {t('cart.proceed_checkout')}
                                             </Link>
                                         </div>
                                     )}
@@ -288,38 +281,34 @@ export default function Header() {
             </div>
         </header>
 
-        {/* Mobile Bottom Navigation */}
         <nav className="md:hidden fixed bottom-0 left-0 z-50 w-full h-[72px] bg-white border-t border-border shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex items-center justify-around px-2 pb-safe-bottom">
             <Link
                 href={homeUrl}
                 className={`flex flex-col items-center justify-center w-16 h-full space-y-1 transition-colors ${url === homeUrl ? 'text-primary' : 'text-on-surface-variant hover:text-primary'}`}
             >
                 <Home className="h-5 w-5" />
-                <span className="text-[10px] font-label-md tracking-widest uppercase">Home</span>
+                <span className="text-[10px] font-label-md tracking-widest uppercase">{t('nav.home')}</span>
             </Link>
-
             <Link
                 href={newArrivalsUrl}
                 className={`flex flex-col items-center justify-center w-20 h-full space-y-1 transition-colors ${url.startsWith(newArrivalsUrl) ? 'text-primary' : 'text-on-surface-variant hover:text-primary'}`}
             >
                 <Sparkles className="h-5 w-5" />
-                <span className="text-[10px] font-label-md tracking-widest uppercase">New</span>
+                <span className="text-[10px] font-label-md tracking-widest uppercase">{t('nav.new')}</span>
             </Link>
-
             <Link
                 href={mostPopularUrl}
                 className={`flex flex-col items-center justify-center w-20 h-full space-y-1 transition-colors ${url.startsWith(mostPopularUrl) ? 'text-primary' : 'text-on-surface-variant hover:text-primary'}`}
             >
                 <Heart className="h-5 w-5" />
-                <span className="text-[10px] font-label-md tracking-widest uppercase">Popular</span>
+                <span className="text-[10px] font-label-md tracking-widest uppercase">{t('nav.popular')}</span>
             </Link>
-
             <Link
                 href={shopUrl}
                 className={`flex flex-col items-center justify-center w-16 h-full space-y-1 transition-colors ${url.startsWith(shopUrl) ? 'text-primary' : 'text-on-surface-variant hover:text-primary'}`}
             >
                 <Store className="h-5 w-5" />
-                <span className="text-[10px] font-label-md tracking-widest uppercase">Shop</span>
+                <span className="text-[10px] font-label-md tracking-widest uppercase">{t('nav.shop')}</span>
             </Link>
         </nav>
         </>

@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from '@inertiajs/react';
 import type { Product } from '@/types';
 import { RatingDisplay } from '@/components/StarRating';
 import { useCart } from '@/lib/cart';
 
 export default function ProductGrid({ products }:{ products: Product[] }) {
+    const { t } = useTranslation();
     const { addToCart } = useCart();
 
     return (
@@ -15,7 +17,6 @@ export default function ProductGrid({ products }:{ products: Product[] }) {
                         key={product.id}
                         className="group bg-surface-container-lowest ambient-shadow mx-auto mb-3 max-w-sm translate-y-0 transform overflow-hidden rounded-xl bg-white opacity-100 transition-all duration-500 hover:-translate-y-2"
                     >
-                        {/* Image Box */}
                         <Link href={`/productshow?id=${product.id}`} className="block relative aspect-square overflow-hidden bg-surface-container">
                             <img
                                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -38,7 +39,6 @@ export default function ProductGrid({ products }:{ products: Product[] }) {
                             )}
                         </Link>
 
-                        {/* Product Meta Body */}
                         <div className="p-8">
                             <div className="mb-2 flex items-start justify-between">
                                 <Link href={`/productshow?id=${product.id}`} className="text-headline-sm text-on-surface font-headline-sm hover:text-primary transition-colors">
@@ -56,13 +56,12 @@ export default function ProductGrid({ products }:{ products: Product[] }) {
                                 {product.description}
                             </p>
 
-                            {/* Action Button */}
                             <button
                                 onClick={() => addToCart(product)}
                                 aria-label={`Buy ${product.title} now`}
                                 className="text-on-primary hover:bg-primary-container hover:text-on-primary-container w-full cursor-pointer rounded-lg bg-primary py-4 font-label-md tracking-widest uppercase transition-all duration-300"
                             >
-                                Buy Now
+                                {t('shop.buy_now')}
                             </button>
                         </div>
                     </div>

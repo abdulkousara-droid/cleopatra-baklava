@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useForm, router } from '@inertiajs/react';
 import {
     Package, Tag, MessageSquare, Star, Search, Plus, X, Sparkles,
@@ -11,6 +12,7 @@ export default function ProductsSection({ products, categories, stats, err, show
     stats: { total_products: number; total_reviews: number; avg_rating: number; total_categories: number; };
     err: (msg?: string) => React.ReactNode; showToast: (msg: string) => void;
 }) {
+    const { t } = useTranslation();
     const [search, setSearch] = useState('');
     const [catFilter, setCatFilter] = useState('All');
     const [modalOpen, setModalOpen] = useState(false);
@@ -79,16 +81,16 @@ export default function ProductsSection({ products, categories, stats, err, show
                 setPreviewUrl(null);
                 setModalOpen(false);
                 reset();
-                showToast(data.id ? 'Product updated successfully!' : 'Product created successfully!');
+                showToast(data.id ? t('admin.toast_product_updated') : t('admin.toast_product_created'));
             },
-            onError: () => showToast('Failed to save product.'),
+            onError: () => showToast(t('admin.toast_product_failed')),
         });
     };
     const handleDelete = () => {
         if (!toDelete) return;
         router.post('/admin', { _action: 'delete-product', id: toDelete.id }, {
-            onSuccess: () => { setToDelete(null); showToast('Product deleted.'); },
-            onError: () => showToast('Failed to delete product.'),
+            onSuccess: () => { setToDelete(null); showToast(t('admin.toast_product_deleted')); },
+            onError: () => showToast(t('admin.toast_product_delete_failed')),
         });
     };
 
@@ -100,31 +102,31 @@ export default function ProductsSection({ products, categories, stats, err, show
     return (
         <>
             <div className="mb-8">
-                <h2 className="font-serif text-[32px] font-bold m-0 leading-tight text-foreground">Product Catalogue</h2>
-                <p className="text-sm mt-1.5 text-admin-muted">Manage your full range of artisanal baklava products in real-time.</p>
+                <h2 className="font-serif text-[32px] font-bold m-0 leading-tight text-foreground">{t('admin.products_title')}</h2>
+                <p className="text-sm mt-1.5 text-admin-muted">{t('admin.products_desc')}</p>
             </div>
 
             <div className="grid grid-cols-4 gap-4 mb-8">
-                <Stat icon={Package} label="Products" value={stats.total_products} />
-                <Stat icon={Tag} label="Categories" value={stats.total_categories} />
-                <Stat icon={MessageSquare} label="Reviews" value={stats.total_reviews} />
-                <Stat icon={Star} label="Avg Rating" value={stats.avg_rating} suffix="★" />
+                <Stat icon={Package} label={t('admin.products')} value={stats.total_products} />
+                <Stat icon={Tag} label={t('admin.categories')} value={stats.total_categories} />
+                <Stat icon={MessageSquare} label={t('admin.reviews')} value={stats.total_reviews} />
+                <Stat icon={Star} label={t('admin.rating')} value={stats.avg_rating} suffix="★" />
             </div>
 
             <div className="bg-white rounded-xl px-5 py-4 flex items-center gap-3 mb-5 flex-wrap border border-admin-border">
                 <div className="relative flex-[1_1_260px] min-w-[200px]">
                     <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-admin-faint" />
-                    <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..."
+                    <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder={t('admin.search_products')}
                         className="block w-full px-3 py-[11px] rounded-xl text-sm outline-none transition-colors duration-200 font-inherit pl-[38px] border-[1.5px] border-admin-border text-foreground bg-admin-bg focus:border-accent" />
                 </div>
                 <select value={catFilter} onChange={e => setCatFilter(e.target.value)}
                     className="block w-auto min-w-[170px] px-3 py-[11px] rounded-xl text-sm outline-none transition-colors duration-200 font-inherit cursor-pointer border-[1.5px] border-admin-border text-foreground bg-admin-bg focus:border-accent">
-                    <option value="All">All Categories</option>
+                    <option value="All">{t('admin.all_categories')}</option>
                     {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                 </select>
                 <button onClick={openAdd}
                     className="flex items-center gap-2 px-[22px] py-[11px] border-none rounded-xl text-xs font-bold tracking-[0.12em] uppercase cursor-pointer whitespace-nowrap text-white transition-colors duration-200 bg-primary shadow-[0_2px_10px_rgba(117,91,0,0.18)] hover:bg-[#5b4600]">
-                    <Plus size={16} /> Add Product
+                    <Plus size={16} /> {t('admin.add_product')}
                 </button>
             </div>
 
@@ -132,7 +134,7 @@ export default function ProductsSection({ products, categories, stats, err, show
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-[#faf8f4] border-b border-admin-border">
-                            {['Product', 'Category', 'Price', 'Badge & Tags', 'Rating', ''].map((h, i) => (
+                            {[t('admin.product'), t('admin.category'), t('admin.price'), `${t('admin.badge')} & ${t('admin.tags')}`, t('admin.rating'), ''].map((h, i) => (
                                 <th key={i} className={`px-5 py-3 text-[10px] font-bold tracking-[0.14em] uppercase whitespace-nowrap text-admin-faint ${i === 5 ? 'text-right' : 'text-left'}`}>{h}</th>
                             ))}
                         </tr>
@@ -179,7 +181,7 @@ export default function ProductsSection({ products, categories, stats, err, show
                                             className="w-9 h-9 flex items-center justify-center rounded-lg bg-white cursor-pointer transition-all duration-200 border-[1.5px] border-admin-border text-admin-muted hover:border-primary hover:text-primary hover:bg-[#fdf9f2]">
                                             <Edit size={15} />
                                         </button>
-                                        <button onClick={() => setToDelete(p)} title="Delete"
+                                        <button onClick={() => setToDelete(p)} title={t('admin.delete')}
                                             className="w-9 h-9 flex items-center justify-center rounded-lg bg-white cursor-pointer transition-all duration-200 border-[1.5px] border-admin-border text-admin-muted hover:border-red-600 hover:text-red-600 hover:bg-[#fff5f5]">
                                             <Trash2 size={15} />
                                         </button>
@@ -198,7 +200,7 @@ export default function ProductsSection({ products, categories, stats, err, show
                         <div className="flex items-center justify-between shrink-0 px-7 py-6 bg-[#faf8f4] border-b border-admin-border">
                             <div className="flex items-center gap-2.5">
                                 <Sparkles size={20} className="text-accent" />
-                                <h3 className="font-serif text-[22px] font-bold m-0 text-foreground">{data.id ? 'Edit Product' : 'Add New Product'}</h3>
+                                <h3 className="font-serif text-[22px] font-bold m-0 text-foreground">{data.id ? t('admin.edit_product') : t('admin.add_new_product')}</h3>
                             </div>
                             <button onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setModalOpen(false); }}
                                 className="w-[34px] h-[34px] flex items-center justify-center border-none rounded-full bg-transparent cursor-pointer transition-all duration-200 text-admin-muted hover:bg-[#e8e2d6]">
@@ -208,13 +210,13 @@ export default function ProductsSection({ products, categories, stats, err, show
                         <form className="overflow-y-auto flex-1 p-7" onSubmit={handleSubmit}>
                             <div className="grid grid-cols-2 gap-5">
                                                                                                                                     <div className="col-span-2">
-                                    <label className={labelClass}>Product Title *</label>
+                                    <label className={labelClass}>{t('admin.product_title')}</label>
                                     <input type="text" required value={data.title} onChange={e => setData('title', e.target.value)} placeholder="e.g. Cleopatra's Pistachio Nest"
                                         className={inputClass + ' focus:border-accent'} />
                                     {err(errors.title)}
                                 </div>
                                 <div>
-                                    <label className={labelClass}>Category *</label>
+                                    <label className={labelClass}>{t('admin.category')}</label>
                                     <select required value={data.category_id} onChange={e => setData('category_id', e.target.value)}
                                         className={inputClass + ' cursor-pointer focus:border-accent'}>
                                         {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
@@ -222,19 +224,19 @@ export default function ProductsSection({ products, categories, stats, err, show
                                     {err(errors.category_id)}
                                 </div>
                                 <div>
-                                    <label className={labelClass}>Price (€) *</label>
+                                    <label className={labelClass}>{t('admin.price')}</label>
                                     <input type="number" step="0.01" min="0" required value={data.price} onChange={e => setData('price', e.target.value)} placeholder="24.50"
                                         className={inputClass + ' focus:border-accent'} />
                                     {err(errors.price)}
                                 </div>
                                                                 <div className="col-span-2">
-                                    <label className={labelClass}>Description *</label>
+                                    <label className={labelClass}>{t('admin.description')}</label>
                                     <textarea required rows={3} value={data.description} onChange={e => setData('description', e.target.value)} placeholder="Describe ingredients, heritage, texture..."
                                         className={inputClass + ' resize-none focus:border-accent'} />
                                     {err(errors.description)}
                                 </div>
                                 <div className="col-span-2">
-                                    <label className={labelClass}>Primary Image <span className="font-normal normal-case tracking-normal text-admin-faint">(optional)</span></label>
+                                    <label className={labelClass}>{t('admin.primary_image')} <span className="font-normal normal-case tracking-normal text-admin-faint">{t('admin.optional')}</span></label>
                                     {(previewUrl || data.image) ? (
                                         <div className="relative w-full max-w-[200px] rounded-lg overflow-hidden border border-admin-border mb-3">
                                             <img src={previewUrl || data.image} alt="Preview" className="w-full h-32 object-cover" />
@@ -245,7 +247,7 @@ export default function ProductsSection({ products, categories, stats, err, show
                                         </div>
                                     ) : (
                                         <div className="mb-3 flex items-center justify-center w-full max-w-[200px] h-32 rounded-lg border-2 border-dashed border-admin-border bg-admin-bg">
-                                            <span className="text-[10px] font-semibold text-admin-faint">No image selected</span>
+                                            <span className="text-[10px] font-semibold text-admin-faint">{t('admin.no_image')}</span>
                                         </div>
                                     )}
                                     <div className="flex gap-2 items-center">
@@ -258,21 +260,21 @@ export default function ProductsSection({ products, categories, stats, err, show
                                                     setPreviewUrl(URL.createObjectURL(file));
                                                 }
                                             }} />
-                                            Upload Image
+                                            {t('admin.upload_image')}
                                         </label>
-                                        <span className="text-[10px] text-admin-faint font-semibold">or</span>
+                                        <span className="text-[10px] text-admin-faint font-semibold">{t('admin.or')}</span>
                                         <input type="url" value={data.image_file ? '' : data.image} onChange={e => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setData('image', e.target.value); setData('image_file', null); }}
-                                            placeholder="Paste image URL..."
+                                            placeholder={t('admin.paste_image_url')}
                                             className={inputClass + ' text-xs flex-1 min-w-0 focus:border-accent'} />
                                     </div>
                                     {err(errors.image)}
                                     {err(errors.image_file)}
                                 </div>
                                 <div>
-                                    <label className={labelClass}>Badge <span className="font-normal normal-case tracking-normal text-admin-faint">(optional)</span></label>
+                                    <label className={labelClass}>{t('admin.badge')} <span className="font-normal normal-case tracking-normal text-admin-faint">{t('admin.optional')}</span></label>
                                     <select value={data.badge} onChange={e => setData('badge', e.target.value)}
                                         className={inputClass + ' cursor-pointer focus:border-accent'}>
-                                        <option value="">— No Badge —</option>
+                                        <option value="">{t('admin.no_badge')}</option>
                                         <option value="Best Seller">Best Seller</option>
                                         <option value="New Collection">New Collection</option>
                                         <option value="Premium Choice">Premium Choice</option>
@@ -282,11 +284,11 @@ export default function ProductsSection({ products, categories, stats, err, show
                             </div>
 
                             <div className="mt-6 pt-6 border-t border-admin-border">
-                                <p className="text-[11px] font-bold tracking-[0.14em] uppercase mb-4 text-admin-faint">Enhancements</p>
+                                <p className="text-[11px] font-bold tracking-[0.14em] uppercase mb-4 text-admin-faint">{t('admin.enhancements')}</p>
                                 {([
-                                    ['Tags', 'tags', tagRef, Hash],
-                                    ['Allergens', 'allergens', allergenRef, Apple],
-                                    ['Gallery Images', 'additional_images', imageRef, Image],
+                                    [t('admin.tags'), 'tags', tagRef, Hash],
+                                    [t('admin.allergens'), 'allergens', allergenRef, Apple],
+                                    [t('admin.gallery_images'), 'additional_images', imageRef, Image],
                                 ] as const).map(([label, field, inpRef, Icon], i) => (
                                     <div key={i} className="rounded-xl px-5 py-4 flex items-start gap-4 mb-3 bg-accent/10 border border-accent/20">
                                         <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-[rgba(201,168,76,0.15)] text-primary">
@@ -296,12 +298,12 @@ export default function ProductsSection({ products, categories, stats, err, show
                                             <div className="flex items-baseline gap-2 mb-2">
                                                 <span className="text-xs font-bold tracking-[0.08em] uppercase text-foreground">{label}</span>
                                                 {field !== 'tags' && (
-                                                    <span className="text-[10px] font-semibold text-admin-faint">Optional</span>
+                                                    <span className="text-[10px] font-semibold text-admin-faint">{t('admin.optional')}</span>
                                                 )}
                                             </div>
                                             <div className="flex flex-wrap gap-1.5 mb-2 min-h-[28px]">
                                                 {csv((ref.current as any)[field]).length === 0 && (
-                                                    <span className="text-[10px] italic text-admin-faint">None added yet</span>
+                                                    <span className="text-[10px] italic text-admin-faint">{t('admin.none_added')}</span>
                                                 )}
                                                 {csv((ref.current as any)[field]).map((v, j) => (
                                                     <span key={j} className="inline-flex items-center gap-1 px-2 py-[3px] rounded-[6px] text-[10px] font-bold max-w-full bg-accent/12 border border-accent/25 text-[#5b4600]">
@@ -313,11 +315,11 @@ export default function ProductsSection({ products, categories, stats, err, show
                                             </div>
                                             <div className="flex gap-1.5">
                                                 <input ref={inpRef} type="text" onKeyDown={onEnter(field, inpRef)}
-                                                    placeholder={`e.g. ${label === 'Gallery Images' ? '/images/1.png' : label === 'Allergens' ? 'Nuts' : 'Pistachio'}`}
+                                                    placeholder={`e.g. ${field === 'additional_images' ? '/images/1.png' : field === 'allergens' ? 'Nuts' : 'Pistachio'}`}
                                                     className={inputClass + ' text-xs flex-1 min-w-0 focus:border-accent'} />
                                                 <button type="button" onClick={() => act(field, inpRef.current)}
                                                     className="px-4 py-[11px] rounded-xl border-none text-xs font-bold tracking-[0.06em] uppercase cursor-pointer whitespace-nowrap transition-colors duration-200 bg-primary text-white hover:bg-[#5b4600]">
-                                                    Add
+                                                    {t('admin.add')}
                                                 </button>
                                             </div>
                                         </div>
@@ -327,12 +329,12 @@ export default function ProductsSection({ products, categories, stats, err, show
                             <div className="flex justify-end gap-2.5 mt-7 pt-5 border-t border-admin-border">
                                 <button type="button" onClick={() => { if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(null); setModalOpen(false); }}
                                     className="px-[22px] py-[11px] rounded-xl bg-white text-xs font-bold tracking-[0.1em] uppercase cursor-pointer font-inherit transition-all duration-200 border-[1.5px] border-admin-border text-admin-muted hover:bg-[#f7f5f0]">
-                                    Cancel
+                                    {t('admin.cancel')}
                                 </button>
                                 <button type="submit" disabled={processing}
                                     className="flex items-center gap-2 px-[26px] py-[11px] border-none rounded-xl text-xs font-bold tracking-[0.1em] uppercase text-white font-inherit transition-colors duration-200 disabled:cursor-not-allowed bg-primary hover:bg-[#5b4600] shadow-[0_2px_12px_rgba(117,91,0,0.18)] disabled:opacity-70">
                                     {processing && <Loader2 size={14} className="animate-spin" />}
-                                    {data.id ? 'Save Changes' : 'Create Product'}
+                                    {data.id ? t('admin.save_changes') : t('admin.create_product')}
                                 </button>
                             </div>
                         </form>
@@ -349,19 +351,19 @@ export default function ProductsSection({ products, categories, stats, err, show
                                 <AlertTriangle size={22} className="text-red-600" />
                             </div>
                             <div>
-                                <h3 className="font-serif text-xl font-bold m-0 mb-2 text-foreground">Delete Product?</h3>
+                                <h3 className="font-serif text-xl font-bold m-0 mb-2 text-foreground">{t('admin.delete_product_title')}</h3>
                                 <p className="text-sm leading-relaxed m-0 text-admin-muted">
-                                    <strong className="text-foreground">"{toDelete.title}"</strong> will be permanently removed. This cannot be undone.
+                                    {t('admin.delete_product_warning', { title: toDelete.title })}
                                 </p>
                             </div>
                         </div>
                         <div className="flex justify-end gap-2.5 pt-5 border-t border-admin-border">
                             <button onClick={() => setToDelete(null)}
-                                className="px-5 py-2.5 rounded-xl bg-white text-xs font-bold tracking-[0.1em] uppercase cursor-pointer font-inherit border-[1.5px] border-admin-border text-admin-muted">Cancel</button>
+                                className="px-5 py-2.5 rounded-xl bg-white text-xs font-bold tracking-[0.1em] uppercase cursor-pointer font-inherit border-[1.5px] border-admin-border text-admin-muted">{t('admin.cancel')}</button>
                             <button onClick={handleDelete} disabled={processing}
                                 className="flex items-center gap-2 px-5 py-2.5 border-none rounded-xl text-xs font-bold tracking-[0.1em] uppercase text-white font-inherit disabled:cursor-not-allowed bg-red-600 disabled:opacity-70">
                                 {processing && <Loader2 size={14} className="animate-spin" />}
-                                Delete
+                                {t('admin.delete')}
                             </button>
                         </div>
                     </div>

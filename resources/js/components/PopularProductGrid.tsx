@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 import React from 'react';
 import { Link } from '@inertiajs/react';
@@ -6,6 +7,7 @@ import { RatingDisplay } from '@/components/StarRating';
 import { useCart } from '@/lib/cart';
 
 export default function PopularProductGrid({products}: { products: Product[] }) {
+    const { t } = useTranslation();
     const { addToCart } = useCart();
 
     const handleAddItemToCart = (product: Product) => {

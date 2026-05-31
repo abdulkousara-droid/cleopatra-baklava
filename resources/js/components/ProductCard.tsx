@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ShoppingBag } from 'lucide-react';
 import React from 'react';
 import { Link } from '@inertiajs/react';
@@ -6,6 +7,7 @@ import { RatingDisplay } from '@/components/StarRating';
 import type { Product } from '@/types';
 
 export default function ProductCard({ product }: { product: Product }) {
+    const { t } = useTranslation();
     const { addToCart } = useCart();
 
     return (
@@ -14,7 +16,6 @@ export default function ProductCard({ product }: { product: Product }) {
                 product.borderAccent ? 'border border-primary/20' : ''
             }`}
         >
-            {/* Product Image and Badges */}
             <Link href={`/productshow?id=${product.id}`} className="bg-surface-container relative aspect-square overflow-hidden block">
                 <img
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -37,7 +38,6 @@ export default function ProductCard({ product }: { product: Product }) {
                 )}
             </Link>
 
-            {/* Content & Details */}
             <div className="flex flex-grow flex-col p-8">
                 <div className="mb-2 flex items-start justify-between gap-4">
                     <Link href={`/productshow?id=${product.id}`} className="text-headline-sm text-on-surface line-clamp-1 font-headline-sm hover:text-primary transition-colors">
@@ -56,7 +56,6 @@ export default function ProductCard({ product }: { product: Product }) {
                     {product.description}
                 </p>
 
-                {/* Categories / Tags pills */}
                 {product.tags && product.tags.length > 0 && (
                     <div className="mb-6 flex flex-wrap items-center space-x-2 gap-y-2">
                         {product.tags.map((tag: string, idx: number) => (
@@ -70,14 +69,13 @@ export default function ProductCard({ product }: { product: Product }) {
                     </div>
                 )}
 
-                {/* CTA Actions buttons */}
                 <div className="mt-auto space-y-3">
                     <button
                         onClick={() => addToCart(product)}
                         className="text-on-primary hover:bg-on-primary-container luxury-shadow flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg bg-primary py-4 font-label-md text-white transition-all"
                     >
                         <ShoppingBag size={20} />
-                        <span>ADD TO CART</span>
+                        <span>{t('shop.add_to_cart')}</span>
                     </button>
                 </div>
             </div>

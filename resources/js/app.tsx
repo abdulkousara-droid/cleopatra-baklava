@@ -2,8 +2,15 @@ import { createInertiaApp } from '@inertiajs/react';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { CartProvider } from '@/lib/cart';
+import './i18n';
+import { useLocale } from '@/hooks/useLocale';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Cleopatra Baklava';
+
+function AppWithLocale({ children }: { children: React.ReactNode }) {
+    useLocale();
+    return <>{children}</>;
+}
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -17,7 +24,9 @@ createInertiaApp({
                 createRoot(el).render(
                     <CartProvider>
                         <TooltipProvider delayDuration={0}>
-                            <App {...props} />
+                            <AppWithLocale>
+                                <App {...props} />
+                            </AppWithLocale>
                             <Toaster />
                         </TooltipProvider>
                     </CartProvider>
@@ -27,7 +36,9 @@ createInertiaApp({
             return (
                 <CartProvider>
                     <TooltipProvider delayDuration={0}>
-                        <App {...props} />
+                        <AppWithLocale>
+                            <App {...props} />
+                        </AppWithLocale>
                         <Toaster />
                     </TooltipProvider>
                 </CartProvider>

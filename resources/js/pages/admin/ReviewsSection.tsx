@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { router } from '@inertiajs/react';
 import { Star, CheckCircle, AlertTriangle, Loader2, ThumbsUp, ThumbsDown, Trash2 } from 'lucide-react';
 import { Review } from './shared';
@@ -6,6 +7,7 @@ import { Review } from './shared';
 export default function ReviewsSection({ reviews, showToast }: {
     reviews: Review[]; showToast: (msg: string) => void;
 }) {
+    const { t } = useTranslation();
     const [toDelete, setToDelete] = useState<Review | null>(null);
     const [processingId, setProcessingId] = useState<number | null>(null);
 
@@ -19,8 +21,8 @@ export default function ReviewsSection({ reviews, showToast }: {
         if (!toDelete) return;
         setProcessingId(toDelete.id);
         router.post('/admin', { _action: 'delete-review', id: toDelete.id }, {
-            onSuccess: () => { setToDelete(null); showToast('Review deleted.'); },
-            onError: () => showToast('Failed to delete review.'),
+            onSuccess: () => { setToDelete(null); showToast(t('admin.toast_review_deleted')); },
+            onError: () => showToast(t('admin.toast_review_delete_failed')),
             onFinish: () => setProcessingId(null),
         });
     };
@@ -28,22 +30,22 @@ export default function ReviewsSection({ reviews, showToast }: {
     return (
         <>
             <div className="mb-8">
-                <h2 className="font-serif text-[32px] font-bold m-0 leading-tight text-foreground">Reviews</h2>
-                <p className="text-sm mt-1.5 text-admin-muted">Moderate customer reviews and ratings.</p>
+                <h2 className="font-serif text-[32px] font-bold m-0 leading-tight text-foreground">{t('admin.reviews_title')}</h2>
+                <p className="text-sm mt-1.5 text-admin-muted">{t('admin.reviews_desc')}</p>
             </div>
 
             <div className="bg-white rounded-xl overflow-hidden border border-admin-border">
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-[#faf8f4] border-b border-admin-border">
-                            {['Product', 'Reviewer', 'Rating', 'Comment', 'Status', ''].map((h, i) => (
+                            {[t('admin.product'), t('admin.reviewer'), t('admin.rating'), t('admin.comment'), t('admin.status'), ''].map((h, i) => (
                                 <th key={i} className={`px-5 py-3 text-[10px] font-bold tracking-[0.14em] uppercase whitespace-nowrap text-admin-faint ${i === 5 ? 'text-right' : 'text-left'}`}>{h}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
                         {reviews.length === 0 && (
-                            <tr><td colSpan={6} className="px-6 py-14 text-center text-sm text-admin-faint">No reviews yet.</td></tr>
+                            <tr><td colSpan={6} className="px-6 py-14 text-center text-sm text-admin-faint">{t('admin.no_reviews')}</td></tr>
                         )}
                         {reviews.map((r) => (
                             <tr key={r.id} className="transition-colors duration-150 hover:bg-[#fdf9f2] border-b border-admin-border last:border-b-0">
@@ -69,11 +71,11 @@ export default function ReviewsSection({ reviews, showToast }: {
                                 <td className="px-5 py-4">
                                     {r.approved ? (
                                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[10px] font-bold tracking-[0.08em] uppercase bg-green-600/10 text-green-600 border border-green-600/20">
-                                            <CheckCircle size={10} /> Approved
+                                            <CheckCircle size={10} /> {t('admin.approved')}
                                         </span>
                                     ) : (
                                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[10px] font-bold tracking-[0.08em] uppercase bg-red-600/10 text-red-600 border border-red-600/20">
-                                            Pending
+                                            {t('admin.pending')}
                                         </span>
                                     )}
                                 </td>
@@ -87,7 +89,7 @@ export default function ReviewsSection({ reviews, showToast }: {
                                             }`}>
                                             {processingId === r.id ? <Loader2 size={14} className="animate-spin" /> : r.approved ? <ThumbsDown size={14} /> : <ThumbsUp size={14} />}
                                         </button>
-                                        <button onClick={() => setToDelete(r)} disabled={processingId === r.id} title="Delete"
+                                        <button onClick={() => setToDelete(r)} disabled={processingId === r.id} title={t('admin.delete')}
                                             className="w-9 h-9 flex items-center justify-center rounded-lg bg-white cursor-pointer transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 border-[1.5px] border-admin-border text-admin-muted hover:border-red-600 hover:text-red-600 hover:bg-[#fff5f5]">
                                             <Trash2 size={15} />
                                         </button>
@@ -108,19 +110,19 @@ export default function ReviewsSection({ reviews, showToast }: {
                                 <AlertTriangle size={22} className="text-red-600" />
                             </div>
                             <div>
-                                <h3 className="font-serif text-xl font-bold m-0 mb-2 text-foreground">Delete Review?</h3>
+                                <h3 className="font-serif text-xl font-bold m-0 mb-2 text-foreground">{t('admin.delete_review_title')}</h3>
                                 <p className="text-sm leading-relaxed m-0 text-admin-muted">
-                                    Review by <strong className="text-foreground">{toDelete.name}</strong> on <strong className="text-foreground">{toDelete.product?.title ?? 'Unknown'}</strong> will be permanently removed.
+                                    {t('admin.delete_review_warning', { name: toDelete.name, product: toDelete.product?.title ?? 'Unknown' })}
                                 </p>
                             </div>
                         </div>
                         <div className="flex justify-end gap-2.5 pt-5 border-t border-admin-border">
                             <button onClick={() => setToDelete(null)}
-                                className="px-5 py-2.5 rounded-xl bg-white text-xs font-bold tracking-[0.1em] uppercase cursor-pointer font-inherit border-[1.5px] border-admin-border text-admin-muted">Cancel</button>
+                                className="px-5 py-2.5 rounded-xl bg-white text-xs font-bold tracking-[0.1em] uppercase cursor-pointer font-inherit border-[1.5px] border-admin-border text-admin-muted">{t('admin.cancel')}</button>
                             <button onClick={handleDelete} disabled={processingId === toDelete.id}
                                 className="flex items-center gap-2 px-5 py-2.5 border-none rounded-xl text-xs font-bold tracking-[0.1em] uppercase text-white font-inherit disabled:cursor-not-allowed bg-red-600 disabled:opacity-70">
                                 {processingId === toDelete.id && <Loader2 size={14} className="animate-spin" />}
-                                Delete
+                                {t('admin.delete')}
                             </button>
                         </div>
                     </div>
