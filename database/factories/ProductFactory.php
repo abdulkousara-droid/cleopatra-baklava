@@ -26,7 +26,7 @@ class ProductFactory extends Factory
 
         return [
             'category_id' => $category->id,
-            'title' => $this->faker->unique()->words(3, true),
+            'title' => $this->faker->unique()->sentence(3),
             'price' => $this->faker->randomElement([4.50, 8.00, 14.00, 28.00, 42.00]),
             'badge' => $this->faker->randomElement(['New Collection', 'Best Seller', 'Premium Choice', null]),
             'description' => 'A delicate hand-crafted luxury dessert prepared fresh daily.',
