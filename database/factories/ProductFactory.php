@@ -26,7 +26,20 @@ class ProductFactory extends Factory
 
         return [
             'category_id' => $category->id,
-            'title' => $this->faker->unique()->sentence(3),
+            'title' => collect([
+    'Pistachio Royal Baklava',
+    'Rose Water Kunafa',
+    'Walnut Mamoul Delight',
+    'Saffron Honey Baklava',
+    'Almond Crescent Pastry',
+    'Cashew Phyllo Stack',
+    'Classic Lebanese Baklava',
+    'Barcelona Gold Baklava',
+    'Cardamom Pistachio Roll',
+    'Honey Sesame Brittle',
+    'Mixed Nut Tray',
+    'Premium Gift Box Set',
+])->random(),
             'price' => $this->faker->randomElement([4.50, 8.00, 14.00, 28.00, 42.00]),
             'badge' => $this->faker->randomElement(['New Collection', 'Best Seller', 'Premium Choice', null]),
             'description' => 'A delicate hand-crafted luxury dessert prepared fresh daily.',
