@@ -25,40 +25,27 @@ class ProductFactory extends Factory
         $image = $imageMap[$category->name] ?? $imageMap['Baklava'];
 
         return [
-            'category_id'       => $category->id,
-            'title' => fake()->unique()->randomElement([
-    'Pistachio Royal Baklava',
-    'Rose Water Kunafa',
-    'Walnut Mamoul Delight',
-    'Saffron Honey Baklava',
-    'Almond Crescent Pastry',
-    'Cashew Phyllo Stack',
-    'Classic Lebanese Baklava',
-    'Barcelona Gold Baklava',
-    'Cardamom Pistachio Roll',
-    'Honey Sesame Brittle',
-    'Mixed Nut Tray',
-    'Premium Gift Box Set',
-]),
-            'price'             => fake()->randomElement([4.50, 8.00, 14.00, 28.00, 42.00]),
-            'badge'             => fake()->randomElement(['New Collection', 'Best Seller', 'Premium Choice', null]),
-            'description'       => 'A delicate hand-crafted luxury dessert prepared fresh daily.',
-            'image'             => $image,
+            'category_id' => $category->id,
+            'title' => $this->faker->unique()->words(3, true),
+            'price' => $this->faker->randomElement([4.50, 8.00, 14.00, 28.00, 42.00]),
+            'badge' => $this->faker->randomElement(['New Collection', 'Best Seller', 'Premium Choice', null]),
+            'description' => 'A delicate hand-crafted luxury dessert prepared fresh daily.',
+            'image' => $image,
             'additional_images' => [
                 'https://lh3.googleusercontent.com/aida-public/AB6AXuBFifCS-VkTYKmUlBwOg8pw24ypZc8HqCmM4E-shPKbUQhxA5DJ4jm2HFIeVJrc4QOZCFeF6c7w2NeAxhUo2v-DZoc-b4bifNDNzhVx5bZd2ldTw7IyNUs7qsxURhEcL_v6_C91cX9Je9poT82oaKz2nrBNHamtGB4haL0zUeqqpEfb4zjdHRfqvKSgwkPH7F9pVNkAr2R2q14aG4EKgRfjVDeujizUUaH2BOEJGNc1_HbkJSUUx0t18kPuNfK65-hbmp4puXlg6SDG'
             ],
-            'tags'              => fake()->randomElement([
+            'tags' => $this->faker->randomElement([
                 ['Gaziantep Pistachios', 'Artisanal Butter'],
                 ['Akkawi Cheese', 'Rose Water'],
             ]),
-            'allergens'         => fake()->randomElement([
+            'allergens' => $this->faker->randomElement([
                 ['Nuts (Pistachios)', 'Gluten (Wheat)', 'Dairy (Milk)'],
                 ['Nuts (Almonds)', 'Dairy (Milk)'],
                 ['Nuts (Walnuts)', 'Gluten (Wheat)'],
                 ['Sesame', 'Dairy (Milk)'],
             ]),
-            'reviews_count'     => fake()->numberBetween(12, 240),
-            'rating_score'      => fake()->randomElement([4.7, 4.8, 4.9, 5.0]),
+            'reviews_count' => $this->faker->numberBetween(12, 240),
+            'rating_score' => $this->faker->randomElement([4.7, 4.8, 4.9, 5.0]),
         ];
     }
 }
