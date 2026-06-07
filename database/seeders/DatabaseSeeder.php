@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             Category::firstOrCreate(['name' => $category]);
        }
 
-       Product::factory(20)->create();
+       //Product::factory(20)->create();
 
 
     }
