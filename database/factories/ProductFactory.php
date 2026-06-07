@@ -10,6 +10,21 @@ class ProductFactory extends Factory
 {
     protected $model = Product::class;
 
+    protected static array $titles = [
+        'Pistachio Royal Baklava',
+        'Rose Water Kunafa',
+        'Walnut Mamoul Delight',
+        'Saffron Honey Baklava',
+        'Almond Crescent Pastry',
+        'Cashew Phyllo Stack',
+        'Classic Lebanese Baklava',
+        'Barcelona Gold Baklava',
+        'Cardamom Pistachio Roll',
+        'Honey Sesame Brittle',
+        'Mixed Nut Tray',
+        'Premium Gift Box Set',
+    ];
+
     public function definition(): array
     {
         $category = Category::inRandomOrder()->first() ?? Category::factory()->create();
@@ -25,27 +40,27 @@ class ProductFactory extends Factory
         $image = $imageMap[$category->name] ?? $imageMap['Baklava'];
 
         return [
-            'category_id' => $category->id,
-            'title' => $this->faker->unique()->words(3, true),
-            'price' => $this->faker->randomElement([4.50, 8.00, 14.00, 28.00, 42.00]),
-            'badge' => $this->faker->randomElement(['New Collection', 'Best Seller', 'Premium Choice', null]),
-            'description' => 'A delicate hand-crafted luxury dessert prepared fresh daily.',
-            'image' => $image,
+            'category_id'       => $category->id,
+            'title'             => array_shift(self::$titles),
+            'price'             => array_rand(array_flip([4.50, 8.00, 14.00, 28.00, 42.00])),
+            'badge'             => array_rand(array_flip(['New Collection', 'Best Seller', 'Premium Choice', null])),
+            'description'       => 'A delicate hand-crafted luxury dessert prepared fresh daily.',
+            'image'             => $image,
             'additional_images' => [
-                'https://lh3.googleusercontent.com/aida-public/AB6AXuBFifCS-VkTYKmUlBwOg8pw24ypZc8HqCmM4E-shPKbUQhxA5DJ4jm2HFIeVJrc4QOZCFeF6c7w2NeAxhUo2v-DZoc-b4bifNDNzhVx5bZd2ldTw7IyNUs7qsxURhEcL_v6_C91cX9Je9poT82oaKz2nrBNHamtGB4haL0zUeqqpEfb4zjdHRfqvKSgwkPH7F9pVNkAr2R2q14aG4EKgRfjVDeujizUUaH2BOEJGNc1_HbkJSUUx0t18kPuNfK65-hbmp4puXlg6SDG'
+                'https://lh3.googleusercontent.com/aida-public/AB6AXuBFifCS-VkTYKmUlBwOg8pw24ypZc8HqCmM4E-shPKbUQhxA5DJ4jm2HFIeVJrc4QOZCFeF6c7w2NeAxhUo2v-DZoc-b4bifNDNzhVx5bZd2ldTw7IyNUs7qsxURhEcL_v6_C91cX9Je9poT82oaKz2nrBNHamtGB4haL0zUeqqpEfb4zjdHRfqvKSgwkPH7F9pVNkAr2R2q14aG4EKgRfjVDeujizUUaH2BOEJGNc1_HbkJSUUx0t18kPuNfK65-hbmp4puXlg6SDG',
             ],
-            'tags' => $this->faker->randomElement([
-                ['Gaziantep Pistachios', 'Artisanal Butter'],
-                ['Akkawi Cheese', 'Rose Water'],
-            ]),
-            'allergens' => $this->faker->randomElement([
-                ['Nuts (Pistachios)', 'Gluten (Wheat)', 'Dairy (Milk)'],
-                ['Nuts (Almonds)', 'Dairy (Milk)'],
-                ['Nuts (Walnuts)', 'Gluten (Wheat)'],
-                ['Sesame', 'Dairy (Milk)'],
-            ]),
-            'reviews_count' => $this->faker->numberBetween(12, 240),
-            'rating_score' => $this->faker->randomElement([4.7, 4.8, 4.9, 5.0]),
+            'tags'              => array_rand(array_flip([
+                json_encode(['Gaziantep Pistachios', 'Artisanal Butter']),
+                json_encode(['Akkawi Cheese', 'Rose Water']),
+            ])),
+            'allergens'         => array_rand(array_flip([
+                json_encode(['Nuts (Pistachios)', 'Gluten (Wheat)', 'Dairy (Milk)']),
+                json_encode(['Nuts (Almonds)', 'Dairy (Milk)']),
+                json_encode(['Nuts (Walnuts)', 'Gluten (Wheat)']),
+                json_encode(['Sesame', 'Dairy (Milk)']),
+            ])),
+            'reviews_count'     => rand(12, 240),
+            'rating_score'      => array_rand(array_flip([4.7, 4.8, 4.9, 5.0])),
         ];
     }
 }
