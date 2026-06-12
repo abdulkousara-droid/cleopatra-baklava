@@ -2,7 +2,7 @@
 set -e
 
 echo "Running migrations..."
-php artisan migrate
+php artisan migrate:refresh --force
 
 echo "Seeding database..."
 php artisan db:seed --force
