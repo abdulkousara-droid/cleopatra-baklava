@@ -4,8 +4,6 @@ set -e
 echo "Running migrations..."
 php artisan migrate:refresh --force
 
-echo "Seeding database..."
-php artisan db:seed --force
 
 echo "Caching config..."
 php artisan config:cache
