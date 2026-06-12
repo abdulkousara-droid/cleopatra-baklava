@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+echo "Running migrations..."
+php artisan migrate
+
 echo "Seeding database..."
 php artisan db:seed --force
 
